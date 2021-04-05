@@ -1,13 +1,13 @@
 import React from 'react';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Router } from '@reach/router';
-import AppPage from './page/appPage/appPage';
+import LoginPage from './page/login/loginPage';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 
 const App = () => {
     return <Router>
-        <AppPage path='/'/>
+        <LoginPage path='/'/>
     </Router>;
 };
 
