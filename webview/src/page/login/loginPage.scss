@@ -1,12 +1,49 @@
+@import '../../asset/common.scss';
+
 .loginPage {
     .loginBody {
-        padding-top: 50px;
+        margin-top: 50px;
 
         .loginForm {
             width: 100%;
+            padding: 20px;
+
+            .form-group {
+                margin-bottom: 7px;
+
+                input {
+                    border: none !important;
+                    border-radius: 5px;
+                    font-weight: 500;
+
+                    &::placeholder {
+                        color: $DARK_SOULS;
+                        opacity: 0.8;
+                        font-weight: 400;
+                    }
+                }
+            }
 
             button {
+                margin-top: 40px;
                 width: 100%;
+                font-weight: 500;
+                background-image: linear-gradient(120deg, $SUNBURST, $BEER) !important;
+                border: none !important;
+                border-radius: 5px;
+            }
+
+            &:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: -1;
+                width: 100%;
+                height: 100%;
+                background: white;
+                opacity: 0.14;
+                border-radius: 30px;
             }
         }
     }

@@ -7,7 +7,7 @@ import './freshestLayout.scss';
 const FreshestLayout = ({ title, className, children }) => {
     return <Container fluid className={classNames('mainLayout freshestLayout', className)}>
         <Row xs={12}>
-            <Navbar expand="lg" bg="dark" variant="dark">
+            <Navbar expand="lg">
                 <Navbar.Brand>
                     {title || 'Home'}
                 </Navbar.Brand>
