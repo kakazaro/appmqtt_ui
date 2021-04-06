@@ -1,0 +1,44 @@
+.candyLayout {
+    height: 100%;
+    flex-flow: column;
+    display: flex;
+
+    > div {
+        flex: 0;
+
+        &.status {
+            min-height: 200px;
+
+        }
+
+        &.gauge {
+            min-height: 100px;
+            position: relative;
+            &:before {
+                content: '';
+                position: absolute;
+                top: 50px;
+                left: 0;
+                min-height: 50px;
+                width: 100%;
+                background: white;
+
+                border-top-left-radius: 30px;
+                border-top-right-radius: 30px;
+            }
+        }
+
+        &.layoutBody {
+            flex: 1;
+            background: white;
+        }
+    }
+}
+
+#root {
+    height: 100%;
+
+    > div {
+        height: 100%;
+    }
+}

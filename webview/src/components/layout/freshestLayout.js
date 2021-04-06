@@ -9,7 +9,7 @@ const FreshestLayout = ({ title, className, children }) => {
         <Row xs={12}>
             <Navbar expand="lg">
                 <Navbar.Brand>
-                    {title || 'Home'}
+                    {title}
                 </Navbar.Brand>
             </Navbar>
         </Row>

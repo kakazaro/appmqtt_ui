@@ -1,3 +1,68 @@
-.siteBadge {
+@import '../../asset/common.scss';
 
+.siteBadge {
+    min-height: 80px;
+    margin-top: 10px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 1px 1px 5px $SILVER_POLISH;
+    color: $FADING_NIGHT;
+    position: relative;
+    border: none;
+
+    &.fail {
+        color: $seekerColor;
+    }
+
+    > .row {
+        height: 100%;
+    }
+
+    .avatar {
+        text-align: center;
+
+        svg {
+            display: block;
+            font-size: 30px;
+            margin: auto;
+            height: 100%;
+        }
+    }
+
+    .siteDetail {
+        p {
+            margin-bottom: 0;
+        }
+
+        .siteName {
+            p {
+                font-weight: 500;
+                font-size: 17px;
+                margin-top: 2px;
+                margin-bottom: 3px;
+            }
+        }
+
+        .siteSubInfo {
+            font-size: 15px;
+            opacity: 0.6;
+        }
+    }
+
+    .status {
+        position: absolute;
+        display: block;
+        width: 15px;
+        height: 15px;
+        top: 6px;
+        right: 6px;
+        border-radius: 20px;
+        background-image: radial-gradient(circle, $SKIRRET_GREEN, $STADIUM_LAWN);
+    }
+
+    &.fail {
+        .status {
+            background-image: radial-gradient(circle, $REDDISH, $FUSION_RED);
+        }
+    }
 }

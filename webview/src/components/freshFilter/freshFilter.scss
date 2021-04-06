@@ -1,0 +1,59 @@
+@import '../../asset/common.scss';
+
+.freshFilter {
+    position: relative;
+    font-size: 17px;
+
+    &:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        background-color: white;
+        opacity: 0.3;
+        border-radius: 30px;
+    }
+
+    svg {
+        position: absolute;
+        top: 12px;
+        color: white;
+        opacity: 0.9;
+    }
+
+    .dropdown {
+        button {
+            opacity: 0.9;
+            width: 100%;
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            font-size: 18px;
+
+            &:after {
+                border: none !important;
+            }
+        }
+
+        .dropdown-menu {
+            width: calc(100% + 30px);
+            margin: 0 -15px !important;
+            background-color: transparent;
+            border: none;
+            padding-top: 2px;
+
+            a {
+                text-align: center;
+                margin: 5px 0;
+                background-color: $UNICORN_SILVER;
+                border-radius: 30px;
+                color: $MORE_THAN_A_WEEK;
+                font-weight: 500;
+                font-size: 18px;
+            }
+        }
+    }
+}

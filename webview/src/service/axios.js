@@ -18,7 +18,8 @@ mock.onPost('/login').reply(() => {
 mock.onGet('/sites').reply(() => {
     const number = 5 + Math.floor(Math.random() * 5);
     const sites = Array(number).fill('').map((dummy, index) => ({
-        name: 'Trạm điện số ' + index,
+        id: index,
+        name: 'Trạm điện số ' + (index + 1),
         isFail: Math.random() > 0.8,
         duration: Math.random() * 2 + 7,
         product: Math.random() * 7 + 40,
@@ -26,6 +27,15 @@ mock.onGet('/sites').reply(() => {
 
     return new Promise((resolve) => {
         resolve([200, { sites }]);
+    });
+});
+
+mock.onGet(/\/site\?.*/).reply((config) => {
+    const url = new URL(config.url);
+    console.log(url);
+
+    return new Promise((resolve) => {
+        resolve([200, {}]);
     });
 });
 

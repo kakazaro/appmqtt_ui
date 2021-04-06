@@ -3,6 +3,7 @@ import FreshestLayout from '../../components/layout/freshestLayout';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { navigate } from '@reach/router';
 import axios from '../../service/axios';
+import solarImg from '../../asset/picture/solar.jpg';
 
 import './loginPage.scss';
 
@@ -36,6 +37,7 @@ const LoginPage = () => {
             <Col>
                 <Row>
                     <Form className={'loginForm'}>
+                        <img src={solarImg} alt={'solarPanel'}/>
                         <Form.Group controlId='formBasicEmail'>
                             <Form.Control type='text' name='id' value={user.id} placeholder='Tên đăng nhập' onChange={handleInput}/>
                         </Form.Group>

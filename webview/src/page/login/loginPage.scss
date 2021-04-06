@@ -2,11 +2,18 @@
 
 .loginPage {
     .loginBody {
-        margin-top: 50px;
+        margin-top: 70px;
 
         .loginForm {
             width: 100%;
             padding: 20px;
+
+            img {
+                display: block;
+                max-width: 60%;
+                border-radius: 100%;
+                margin: 5px auto 20px;
+            }
 
             .form-group {
                 margin-bottom: 7px;
