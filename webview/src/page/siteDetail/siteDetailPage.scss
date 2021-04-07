@@ -4,15 +4,20 @@
     .innerBarWatt {
         p {
             margin-bottom: 0;
+            color: $FADING_NIGHT;
+
+            &.description {
+                font-size: 13px;
+                margin-bottom: -7px;
+                opacity: 0.7;
+            }
 
             &.currentPower {
-                font-size: 30px;
+                font-size: 27px;
                 font-weight: bold;
-                color: $FADING_NIGHT;
             }
 
             &.unitPower {
-                color: $FADING_NIGHT;
                 opacity: 0.7;
                 margin-top: -7px;
                 font-size: 15px;

@@ -1,0 +1,37 @@
+@import '../../asset/common.scss';
+
+.siteOverview {
+    margin-top: 20px;
+
+    .product {
+        color: $FADING_NIGHT;
+        font-weight: 500;
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 10px;
+        box-shadow: 0 0 5px $UNICORN_SILVER;
+
+        p {
+            margin: 0;
+        }
+
+        .unit {
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .value {
+            font-size: 25px;
+        }
+
+        .description {
+            opacity: 0.7;
+        }
+
+        > div {
+            &:first-child {
+                border-right: solid 1px $UNICORN_SILVER;
+            }
+        }
+    }
+}

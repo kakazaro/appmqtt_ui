@@ -8,6 +8,7 @@ import CircularBar from '../../components/circularBar/circularBar';
 import siteService from '../../service/siteService';
 
 import './siteDetailPage.scss';
+import SiteOverview from '../../components/siteOverview/siteOverview';
 
 //https://codepen.io/qindazhu/pen/ZWNKoG
 
@@ -39,20 +40,30 @@ const SiteDetailPage = ({ location }) => {
         }
     }, [siteId]);
 
-    useEffect(() => {
-        console.log(siteOverView);
-    }, [siteOverView]);
+    // useEffect(() => {
+    //     console.log(siteOverView);
+    // }, [siteOverView]);
 
     const gaugeDom = useMemo(() => {
         return <CircularBar value={siteOverView ? siteOverView.current / siteOverView.max : 0} styles={buildStyles({
             pathColor: '#317ad4'
         })}>
             <div className={'innerBarWatt'}>
+                {siteOverView && <p className={'description'}>Công xuất</p>}
                 <p className={'currentPower'}>{siteOverView ? Math.floor(siteOverView.current * 10) / 10 : '- -'}</p>
                 {siteOverView && <p className={'unitPower'}>Watt</p>}
             </div>
         </CircularBar>;
     }, [siteOverView]);
+
+    const bodyDom = useMemo(() => {
+        switch (page) {
+            case 'overview':
+                return <SiteOverview data={siteOverView}/>;
+            default:
+                break;
+        }
+    }, [page, siteOverView]);
 
     return <CandyLayout
         className={'siteDetailPage'}
@@ -73,6 +84,9 @@ const SiteDetailPage = ({ location }) => {
                         <Nav.Link eventKey="charts">Biểu đồ</Nav.Link>
                     </Nav.Item>
                 </Nav>
+            </div>
+            <div className={'bodyContain'}>
+                {bodyDom}
             </div>
         </Container>
     </CandyLayout>;

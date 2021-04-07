@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { Container, Row, Col } from 'react-bootstrap';
 
-
 import './siteBadge.scss';
 
 const SiteBadge = ({ site, onClick }) => {

@@ -3,10 +3,11 @@ import axios from './axios';
 class SiteService {
     constructor() {
         this.handler = {};
-        this.loop();
+        this.start = false;
     }
 
     loop() {
+        this.start = true;
         (async () => {
             const ids = Object.keys(this.handler);
             for (let i = 0; i < ids.length; i++) {
@@ -37,6 +38,10 @@ class SiteService {
 
     registerId(id, handler) {
         this.handler[id + ''] = handler;
+
+        if (!this.start) {
+            this.loop();
+        }
     }
 
     unRegister(id) {
