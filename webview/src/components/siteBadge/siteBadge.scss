@@ -57,12 +57,41 @@
         top: 6px;
         right: 6px;
         border-radius: 20px;
-        background-image: radial-gradient(circle, $SKIRRET_GREEN, $STADIUM_LAWN);
+        animation: BackgroundColor 5s linear infinite;
+        @keyframes BackgroundColor {
+            0% {
+                background-color: $SKIRRET_GREEN;
+                box-shadow: 0 0 5px $SKIRRET_GREEN;
+            }
+            50% {
+                background-color: $STADIUM_LAWN;
+                box-shadow: 0 0 5px $STADIUM_LAWN;
+            }
+            100% {
+                background-color: $SKIRRET_GREEN;
+                box-shadow: 0 0 5px $SKIRRET_GREEN;
+
+            }
+        }
     }
 
     &.fail {
         .status {
-            background-image: radial-gradient(circle, $REDDISH, $FUSION_RED);
+            animation: BackgroundColor2 5s linear infinite;
+            @keyframes BackgroundColor2 {
+                0% {
+                    background-color: $REDDISH;
+                    box-shadow: 0 0 5px $REDDISH;
+                }
+                50% {
+                    background-color: $FUSION_RED;
+                    box-shadow: 0 0 5px $FUSION_RED;
+                }
+                100% {
+                    background-color: $REDDISH;
+                    box-shadow: 0 0 5px $REDDISH;
+                }
+            }
         }
     }
 }

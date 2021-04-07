@@ -1,3 +1,56 @@
-.siteDetailPage{
+@import '../../asset/common.scss';
 
+.siteDetailPage {
+    .innerBarWatt {
+        p {
+            margin-bottom: 0;
+
+            &.currentPower {
+                font-size: 30px;
+                font-weight: bold;
+                color: $FADING_NIGHT;
+            }
+
+            &.unitPower {
+                color: $FADING_NIGHT;
+                opacity: 0.7;
+                margin-top: -7px;
+                font-size: 15px;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .siteBody {
+        .navContain {
+            .nav {
+                display: block;
+                overflow: auto;
+                white-space: nowrap;
+
+                .nav-item {
+                    display: inline-block;
+                    font-weight: 500;
+
+                    .nav-link {
+                        color: $FADING_NIGHT !important;
+                        position: relative;
+
+                        &.active  {
+                            &:after {
+                                position: absolute;
+                                content: '';
+                                width: 50%;
+                                height: 4px;
+                                bottom: 0;
+                                left: 1rem;
+                                background-color: $FADING_NIGHT;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
 }

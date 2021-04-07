@@ -4,17 +4,19 @@ import { Container } from 'react-bootstrap';
 
 import './candyLayout.scss';
 
-const CandyLayout = ({ title, className, children, status, isOkay }) => {
+const CandyLayout = ({ title, className, gauge, children, status, isOkay }) => {
     return <div className={classNames('mainLayout candyLayout', className, { fail: !isOkay })}>
         <Container className={'status'}>
             <div>
-                <p>{title}</p>
-                <p>{`Trạng thái: ${status}`}</p>
-                <div className={'statusIndicate'}/>
+                <p className={'header'}>{title}</p>
+                <p className={'statusText'}>{`Trạng thái: ${status}`}</p>
+                <div className={classNames('statusIndicate', { fail: !isOkay })}/>
             </div>
         </Container>
         <div className={'gauge'}>
-
+            <div className={'bar'}>
+                {gauge}
+            </div>
         </div>
         <div className={'layoutBody'}>
             {children}
