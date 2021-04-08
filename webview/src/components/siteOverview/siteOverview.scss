@@ -3,6 +3,71 @@
 .siteOverview {
     margin-top: 20px;
 
+    .timeTypeSelect {
+        margin-bottom: 20px;
+
+        > div {
+            .MuiButton-root {
+                border-radius: 5px;
+                background-color: $UNICORN_SILVER;
+                color: $MORE_THAN_A_WEEK;
+                font-size: 12px;
+                text-transform: none;
+                box-shadow: 0 0 5px $UNICORN_SILVER;
+                width: 100%;
+
+                .MuiButton-label {
+                    margin-bottom: -2px;
+                }
+
+                &.active {
+                    background-image: linear-gradient(120deg, $SUNBURST, $BEER) !important;
+                    color: white;
+                }
+            }
+
+            &:first-child {
+                padding-left: 0;
+                padding-right: 30px;
+            }
+
+            &:last-child {
+                padding-left: 30px;
+                padding-right: 0;
+            }
+        }
+    }
+
+    .timePick {
+        margin-bottom: 20px;
+        padding: 1px 15px;
+
+        box-shadow: 0 0 5px $UNICORN_SILVER;
+        border-radius: 10px;
+        opacity: 0.9;
+
+        .MuiFormControl-root {
+            width: 100%;
+
+            .MuiInputBase-root {
+
+                &:before {
+                    border: none;
+                }
+
+                &:after {
+                    border: none;
+                }
+
+                input {
+                    color: $FADING_NIGHT;
+                    text-align: center;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+
     .product {
         color: $FADING_NIGHT;
         font-weight: 500;

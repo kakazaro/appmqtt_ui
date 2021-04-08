@@ -25,25 +25,12 @@
     > div {
         flex: 0;
 
-        &.status {
-            min-height: 100px;
-            padding-top: 40px;
-            text-align: center;
-
-            .header {
-                color: white;
-                font-weight: 500;
-                opacity: 0.9;
-                font-size: 18px;
-                margin-bottom: 0;
-            }
-
-            .statusText {
+        &.headerLayout {
+            .MuiSvgIcon-root {
+                margin-top: 14px;
                 color: white;
                 opacity: 0.7;
-                font-size: 15px;
             }
-
 
             .statusIndicate {
                 position: absolute;
@@ -90,6 +77,26 @@
             }
         }
 
+        &.status {
+            min-height: 80px;
+            padding-top: 10px;
+            text-align: center;
+
+            .header {
+                color: white;
+                font-weight: 500;
+                opacity: 0.9;
+                font-size: 18px;
+                margin-bottom: 0;
+            }
+
+            .statusText {
+                color: white;
+                opacity: 0.7;
+                font-size: 15px;
+            }
+        }
+
         &.gauge {
             min-height: 100px;
             position: relative;
@@ -120,6 +127,33 @@
         &.layoutBody {
             flex: 1;
             background: white;
+            padding-bottom: 65px;
+        }
+
+        &.bottomNav {
+            max-height: 56px;
+            min-height: 56px;
+            min-width: 100%;
+            box-shadow: 0 0 5px $UNICORN_SILVER;
+            position: fixed;
+            bottom: 0;
+
+            .MuiButtonBase-root {
+                color: $SILVER_POLISH;
+
+                .MuiBottomNavigationAction-label {
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+
+                &.Mui-selected {
+                    color: $FADING_NIGHT;
+
+                    .MuiBottomNavigationAction-label {
+                        font-size: 13px;
+                    }
+                }
+            }
         }
     }
 }

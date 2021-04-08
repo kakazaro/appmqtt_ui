@@ -5,6 +5,7 @@
     margin-top: 30px;
     border-radius: 10px;
     box-shadow: 0 0 5px $UNICORN_SILVER;
+    display: block;
 
     .headerChart {
         margin: 10px 15px 0 15px;
@@ -24,6 +25,10 @@
             opacity: 0.7;
             font-size: 12px;
         }
+    }
+
+    .chart{
+        margin-top: -30px;
     }
 
 }

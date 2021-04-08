@@ -1,16 +1,23 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Container } from 'react-bootstrap';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import './candyLayout.scss';
 
-const CandyLayout = ({ title, className, gauge, children, status, isOkay }) => {
+const CandyLayout = ({ title, className, gauge, children, status, isOkay, page, pages, onPageChange }) => {
     return <div className={classNames('mainLayout candyLayout', className, { fail: !isOkay })}>
+        <Container className={'headerLayout'}>
+            <ArrowBackIcon onClick={() => {
+                window.history.back();
+            }}/>
+            <div className={classNames('statusIndicate', { fail: !isOkay })}/>
+        </Container>
         <Container className={'status'}>
             <div>
                 <p className={'header'}>{title}</p>
                 <p className={'statusText'}>{`Trạng thái: ${status}`}</p>
-                <div className={classNames('statusIndicate', { fail: !isOkay })}/>
             </div>
         </Container>
         <div className={'gauge'}>
@@ -20,6 +27,17 @@ const CandyLayout = ({ title, className, gauge, children, status, isOkay }) => {
         </div>
         <div className={'layoutBody'}>
             {children}
+        </div>
+        <div className={'bottomNav'}>
+            <BottomNavigation
+                value={page}
+                onChange={(event, newValue) => {
+                    onPageChange(newValue);
+                }}
+                showLabels
+            >
+                {pages.map((page) => <BottomNavigationAction key={page.id} label={page.label} value={page.id} icon={page.icon}/>)}
+            </BottomNavigation>
         </div>
     </div>;
 };

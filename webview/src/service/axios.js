@@ -71,5 +71,24 @@ mock.onGet(/\/site\?.*/).reply((config) => {
     });
 });
 
+mock.onGet(/\/chart\?.*/).reply((config) => {
+    const url = config.url;
+    const query = queryParametersParser.parse(url.split('?')[1]);
+    const notes = parseInt(query['notes']);
+
+    let data;
+    if (save[url]) {
+        data = save[url];
+    } else {
+        data = Array(notes).fill('').map(() => Math.random() * 100);
+    }
+
+    save[url] = data;
+
+    return new Promise((resolve) => {
+        resolve([200, data]);
+    });
+});
+
 
 export default axios;
