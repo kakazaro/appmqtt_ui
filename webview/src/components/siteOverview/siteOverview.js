@@ -74,8 +74,8 @@ const SiteOverview = ({ data }) => {
                     value={time} onChange={(t) => setTime(t)}
                     format={timeType.format}
                     autoOk
-                    clearable
-                    disableFuture
+                    // clearable
+                    // disableFuture
                     views={timeType.views}
                 />
             </Row>

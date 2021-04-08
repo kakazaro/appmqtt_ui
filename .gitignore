@@ -22,6 +22,8 @@ dist/
 # Maven
 target/
 dist/
+build/
+/firebase/public/
 
 # JetBrains IDE
 .idea/
