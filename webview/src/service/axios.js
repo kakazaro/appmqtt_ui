@@ -39,7 +39,40 @@ mock.onGet('/sites').reply((config) => {
     });
 });
 
-mock.onGet(/\/site\?.*/).reply((config) => {
+mock.onGet(/\/site\/overview\?.*/).reply((config) => {
+    const url = config.url;
+    const id = queryParametersParser.parse(url.split('?')[1])['id'];
+    let data = {
+        id,
+        current: Math.random() * 10 + 20,
+        max: 35,
+    };
+
+    if (save[url]) {
+        data = save[url];
+    } else if (save['/sites']) {
+        data = { ...save['/sites'][parseInt(id)], ...data };
+    } else {
+        data = {
+            ...data,
+            duration: Math.random() * 2 + 7,
+            product: Math.random() * 7 + 40,
+        };
+    }
+
+    data.current = Math.random() * 10 + 20;
+    data.product += Math.random() * 0.05;
+    data.duration += 0.001;
+
+    save[url] = data;
+    console.log('here');
+
+    return new Promise((resolve) => {
+        setTimeout(() => resolve([200, data]), 2000);
+    });
+});
+
+mock.onGet(/\/site\/devices\?.*/).reply((config) => {
     const url = config.url;
     const id = queryParametersParser.parse(url.split('?')[1])['id'];
     let data = {

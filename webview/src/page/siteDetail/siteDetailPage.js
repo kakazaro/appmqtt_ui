@@ -1,14 +1,12 @@
 import React, { useState, useMemo, useEffect, useLayoutEffect } from 'react';
 import { navigate } from '@reach/router';
 import { Container } from 'react-bootstrap';
-import { buildStyles } from 'react-circular-progressbar';
 import CandyLayout from '../../components/layout/candyLayout';
 import queryParser from '../../service/queryParametersParser';
-import CircularBar from '../../components/circularBar/circularBar';
-import siteService from '../../service/siteService';
 import SiteOverview from '../../components/siteOverview/siteOverview';
 
 import './siteDetailPage.scss';
+import SiteDevices from '../../components/siteDevices/siteDevices';
 
 //https://codepen.io/qindazhu/pen/ZWNKoG
 
@@ -32,8 +30,8 @@ const pages = [
 
 const SiteDetailPage = ({ location }) => {
     const [site] = useState(location?.state?.site);
-    const [siteOverView, setSiteOverView] = useState();
     const [page, setPage] = useState(pages[0].id);
+    const [gaugeDom, setGaugeDom] = useState();
 
     const siteId = useMemo(() => queryParser.parse(location.search)['id'], [location]);
 
@@ -47,39 +45,22 @@ const SiteDetailPage = ({ location }) => {
         }
     }, [site]);
 
-    useEffect(() => {
-        if (siteId) {
-            const handle = (data) => setSiteOverView(data);
-            siteService.registerId(siteId, handle);
-
-            return () => {
-                siteService.unRegister(siteId);
-            };
-        }
-    }, [siteId]);
-
-    const gaugeDom = useMemo(() => {
-        return <CircularBar value={siteOverView ? siteOverView.current / siteOverView.max : 0} styles={buildStyles({
-            pathColor: '#317ad4'
-        })}>
-            <div className={'innerBarWatt'}>
-                {siteOverView && <p className={'description'}>Công xuất</p>}
-                <p className={'currentPower'}>{siteOverView ? Math.floor(siteOverView.current * 10) / 10 : '- -'}</p>
-                {siteOverView && <p className={'unitPower'}>Watt</p>}
-            </div>
-        </CircularBar>;
-    }, [siteOverView]);
-
     const bodyDom = useMemo(() => {
         switch (page) {
             case 'overview':
                 return <SiteOverview
-                    data={siteOverView}
+                    siteId={siteId}
+                    onGaugeChange={(dom) => setGaugeDom(dom)}
                 />;
+            case 'devices':
+                return <SiteDevices
+                    siteId={siteId}
+                    onGaugeChange={(dom) => setGaugeDom(dom)}
+                />
             default:
                 break;
         }
-    }, [page, siteOverView]);
+    }, [page]);
 
     return <CandyLayout
         className={'siteDetailPage'}
