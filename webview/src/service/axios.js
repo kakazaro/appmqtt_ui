@@ -68,7 +68,7 @@ mock.onGet(/\/site\/overview\?.*/).reply((config) => {
     save[url] = data;
 
     return new Promise((resolve) => {
-        setTimeout(() => resolve([200, data]), 2000);
+        setTimeout(() => resolve([200, data]), 100);
     });
 });
 
@@ -175,12 +175,24 @@ mock.onGet(/\/chart\?.*/).reply((config) => {
     const url = config.url;
     const query = queryParametersParser.parse(url.split('?')[1]);
     const notes = parseInt(query['notes']);
+    let time = parseInt(query['time']);
+    time = moment(new Date(time));
+    const space = query['space'];
 
     let data;
     if (save[url]) {
         data = save[url];
     } else {
-        data = Array(notes).fill('').map(() => Math.random() * 100);
+        const series = Array(notes).fill('').map(() => Math.random() * 100);
+        let times = Array(notes).fill('').map(() => {
+            const cur = time.toDate().getTime();
+            time = time.add(-1, space);
+            return cur;
+        });
+        times = times.reverse();
+        data = {
+            series, times
+        };
     }
 
     save[url] = data;

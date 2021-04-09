@@ -4,7 +4,7 @@ import sizeService from '../../service/sizeService';
 
 import './siteChart.scss';
 
-const SiteChart = ({ title, data, unit }) => {
+const SiteChart = ({ title, data, unit, onClick }) => {
     const ref = useRef(null);
     const [series, SetSeries] = useState();
     const [options, SetOptions] = useState();
@@ -28,12 +28,8 @@ const SiteChart = ({ title, data, unit }) => {
         SetSeries([
                 {
                     name: 'series1',
-                    data
+                    data: data.series
                 },
-                // {
-                //     name: 'series2',
-                //     data: [11, 32, 45, 32, 34, 52, 41]
-                // }
             ]
         );
 
@@ -112,7 +108,12 @@ const SiteChart = ({ title, data, unit }) => {
         return null;
     }
 
-    return <div className="siteChart" ref={ref}>
+    return <div className="siteChart" ref={ref} onClick={(e) => {
+        e.preventDefault();
+        if (onClick) {
+            onClick(e);
+        }
+    }}>
         <p className={'headerChart'}><span className={'title'}>{title}</span> <span className={'unit'}>{unit}</span></p>
         <Chart
             className={'chart'}
