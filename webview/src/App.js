@@ -3,6 +3,7 @@ import { Router } from '@reach/router';
 import LoginPage from './page/login/loginPage';
 import SitesPage from './page/sites/sitesPage';
 import SiteDetailPage from './page/siteDetail/siteDetailPage';
+import ChartDetail from './page/chartDetail/chartDetail';
 import sizeService from './service/sizeService';
 
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -36,6 +37,7 @@ const App = () => {
             <LoginPage path="/"/>
             <SitesPage path="/sites"/>
             <SiteDetailPage path="/site"/>
+            <ChartDetail path="/site/chart"/>
         </Router>
     </MuiPickersUtilsProvider>;
 };

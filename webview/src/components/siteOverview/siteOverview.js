@@ -9,8 +9,10 @@ import axios from '../../service/axios';
 import siteService from '../../service/siteService';
 import CircularBar from '../circularBar/circularBar';
 import { buildStyles } from 'react-circular-progressbar';
+import { navigate } from '@reach/router';
 
 import './siteOverview.scss';
+import moment from 'moment';
 
 const timeTypes = [
     {
@@ -19,6 +21,9 @@ const timeTypes = [
         views: ['year', 'month', 'date'],
         format: '[ngày] D MMMM [năm] YYYY',
         notes: 24,
+        space: 'h',
+        timeFormatChart: 'H[h] D/M',
+        timeFormatTable: 'H[h00] [ngày] D, MMM',
     },
     {
         id: 'month',
@@ -26,6 +31,9 @@ const timeTypes = [
         views: ['year', 'month'],
         format: 'MMMM [năm] YYYY',
         notes: 30,
+        space: 'd',
+        timeFormatChart: 'D/M',
+        timeFormatTable: '[ngày] D, MMM',
     },
     {
         id: 'year',
@@ -33,6 +41,9 @@ const timeTypes = [
         views: ['year'],
         format: '[năm] YYYY',
         notes: 12,
+        space: 'M',
+        timeFormatChart: 'M/YYYY',
+        timeFormatTable: 'MMM, [năm] YYYY',
     },
 ];
 
@@ -72,9 +83,10 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
     useEffect(() => {
         (async () => {
             try {
-                const t = new Date(time);
-                let d = '' + t.getFullYear() + t.getMonth() + t.getDay();
-                const response = await axios.get(`/chart?notes=${encodeURIComponent(timeType.notes)}&time=${encodeURIComponent(d)}`);
+                let m = moment(time);
+                m = m.add(-1 * m.millisecond(), 'm');
+                m = m.add(-1 * m.second(), 'm');
+                const response = await axios.get(`/chart?notes=${encodeURIComponent(timeType.notes)}&time=${encodeURIComponent(m.toDate().getTime())}&space=${timeType.space}`);
                 setDataChart(response.data);
             } catch (err) {
                 console.error(err);
@@ -118,7 +130,9 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
                 </Col>
             </Row>
             <Row className={'chartPower'}>
-                <SiteChart title={'Sản lượng điện'} unit={''} data={dataChart}/>
+                <SiteChart title={'Sản lượng điện'} unit={''} data={dataChart} onClick={() => {
+                    navigate('/site/chart', { state: { dataChart, timeType, title: 'Sản lượng điện' } });
+                }}/>
             </Row>
         </Col>
     </Container>;
