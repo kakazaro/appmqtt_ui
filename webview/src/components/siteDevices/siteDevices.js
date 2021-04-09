@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import classNames from 'classnames';
 import siteService from '../../service/siteService';
 import CircularBar from '../circularBar/circularBar';
 import { buildStyles } from 'react-circular-progressbar';
 import { Container } from 'react-bootstrap';
+import DeviceBadge from '../deviceBadge/deviceBadge';
 
 import './siteDevices.scss';
 
@@ -13,33 +13,38 @@ const SiteDevices = ({ siteId, onGaugeChange }) => {
     useEffect(() => {
         if (siteId) {
             const handle = (data) => setDevicesData(data);
-            siteService.registerSiteData(siteId, 'devices', handle, 15000);
+            const registerId = siteService.registerSiteData(siteId, 'devices', handle, 15000);
 
             return () => {
-                siteService.unRegisterSiteData(siteId, 'devices');
+                siteService.unRegisterSiteData(registerId);
             };
         }
     }, [siteId]);
 
+    const okayDevices = useMemo(() => devicesData ? devicesData.filter(d => !d.isFail) : [], [devicesData]);
+    const failDevices = useMemo(() => devicesData ? devicesData.filter(d => d.isFail) : [], [devicesData]);
+
+
     useEffect(() => {
-        const dom = null;
-        // const dom = <CircularBar value={siteOverviewData ? siteOverviewData.current / siteOverviewData.max : 0} styles={buildStyles({
-        //     pathColor: '#317ad4'
-        // })}>
-        //     <div className={'innerBarWatt'}>
-        //         {siteOverviewData && <p className={'description'}>Công xuất</p>}
-        //         <p className={'currentPower'}>{siteOverviewData ? Math.floor(siteOverviewData.current * 10) / 10 : '- -'}</p>
-        //         {siteOverviewData && <p className={'unitPower'}>Watt</p>}
-        //     </div>
-        // </CircularBar>;
+        const dom = <CircularBar value={devicesData ? okayDevices?.length / devicesData.length : 0} styles={buildStyles({
+            pathColor: '#317ad4',
+            trailColor: '#ff5e5e',
+        })}>
+            <div className={'innerBarDevices'}>
+                <p className={'okayDevices'}>{devicesData ? okayDevices.length : '- -'}<span className={'totalDevices'}>{devicesData ? ('/ ' + devicesData?.length) : ''}</span></p>
+                {devicesData && <p className={'description'}>hoạt động</p>}
+            </div>
+        </CircularBar>;
         onGaugeChange(dom);
-    }, [devicesData, onGaugeChange]);
+    }, [devicesData, okayDevices, failDevices, onGaugeChange]);
 
     if (!devicesData?.length) {
         return null;
     }
 
     return <Container className={'siteDevices'}>
+        {devicesData.map((device, index) => <DeviceBadge key={index} device={device} onClick={() => {
+        }}/>)}
     </Container>;
 };
 

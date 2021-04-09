@@ -48,17 +48,17 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
     useEffect(() => {
         if (siteId) {
             const handle = (data) => setSiteOverviewData(data);
-            siteService.registerSiteData(siteId, 'overview', handle);
+            const registerId = siteService.registerSiteData(siteId, 'overview', handle);
 
             return () => {
-                siteService.unRegisterSiteData(siteId, 'overview');
+                siteService.unRegisterSiteData(registerId);
             };
         }
     }, [siteId]);
 
     useEffect(() => {
         const dom = <CircularBar value={siteOverviewData ? siteOverviewData.current / siteOverviewData.max : 0} styles={buildStyles({
-            pathColor: '#317ad4'
+            pathColor: '#317ad4',
         })}>
             <div className={'innerBarWatt'}>
                 {siteOverviewData && <p className={'description'}>Công xuất</p>}

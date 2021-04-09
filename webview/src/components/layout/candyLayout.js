@@ -12,15 +12,18 @@ const CandyLayout = ({ title, className, gauge, children, status, isOkay, page, 
             <ArrowBackIcon onClick={() => {
                 window.history.back();
             }}/>
-            <div className={classNames('statusIndicate', { fail: !isOkay })}/>
+            <div className={classNames('statusIndicate', { fail: !isOkay })}>
+                {!isOkay && <i className="fas fa-exclamation-triangle"/>}
+                {isOkay && <i className="fas fa-circle"/>}
+            </div>
         </Container>
-        <Container className={'status'}>
+        <Container className={'statusLayout'}>
             <div>
                 <p className={'header'}>{title}</p>
                 <p className={'statusText'}>{`Trạng thái: ${status}`}</p>
             </div>
         </Container>
-        <div className={'gauge'}>
+        <div className={'gaugeLayout'}>
             <div className={'bar'}>
                 {gauge}
             </div>

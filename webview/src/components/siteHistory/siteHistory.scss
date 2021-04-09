@@ -1,0 +1,101 @@
+@import '../../asset/common.scss';
+
+.siteHistory {
+    padding: 0 !important;
+    margin: 0 !important;
+
+    .MuiTimeline-root {
+        .MuiTimelineContent-root {
+            .container {
+                box-shadow: 0 0 5px $SKIRRET_GREEN;
+                border-radius: 10px;
+
+                &.fail {
+                    box-shadow: 0 0 5px $FUSION_RED;
+                }
+
+                &.warning {
+                    box-shadow: 0 0 5px $BEER;
+                }
+            }
+        }
+
+        .MuiTimelineItem-alignAlternate:nth-child(even) {
+            .MuiTimelineContent-root {
+                padding-left: 0;
+            }
+
+            .MuiTimelineOppositeContent-root {
+                padding-right: 0;
+            }
+        }
+
+        .MuiTimelineItem-alignAlternate:nth-child(odd) {
+            .MuiTimelineContent-root {
+                padding-right: 0;
+            }
+
+            .MuiTimelineOppositeContent-root {
+                padding-left: 0;
+            }
+        }
+
+        .MuiTimelineDot-root {
+            background-color: $SKIRRET_GREEN;
+            text-align: center;
+
+            svg {
+                margin: auto;
+            }
+
+            &.fail {
+                background-color: $FUSION_RED;
+            }
+
+            &.warning {
+                background-color: $BEER;
+            }
+        }
+    }
+
+    .historyTime {
+        padding-top: 10px;
+        font-size: 14px;
+        color: $MORE_THAN_A_WEEK;
+    }
+
+    .historyBadge {
+        padding-top: 4px;
+        padding-bottom: 4px;
+
+        p {
+            margin-bottom: 0;
+        }
+
+        .historyStatus {
+            font-weight: 500;
+        }
+
+        .historyCause {
+            font-size: 12px;
+            color: $MORE_THAN_A_WEEK;
+        }
+    }
+}
+
+.innerBarHistory {
+    p {
+        margin-bottom: 0;
+        color: $FADING_NIGHT;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .fail {
+        color: $FUSION_RED;
+    }
+
+    .warning {
+        color: $BEER;
+    }
+}

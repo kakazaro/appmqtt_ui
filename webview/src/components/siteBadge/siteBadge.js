@@ -25,6 +25,7 @@ const SiteBadge = ({ site, onClick }) => {
         header={site?.name}
         avatar={<i className="fas fa-solar-panel"/>}
         info={infoDom}
+        isFail={site?.isFail}
     />;
 };
 

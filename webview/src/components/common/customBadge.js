@@ -22,7 +22,7 @@ const CustomBadge = ({ className, avatar, isFail, header, info, onClick }) => {
                 </Row>
             </Col>
         </Row>
-        <div className="status"/>
+        <div className="statusBadge"/>
     </Container>;
 };
 

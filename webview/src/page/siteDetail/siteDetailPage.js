@@ -4,9 +4,10 @@ import { Container } from 'react-bootstrap';
 import CandyLayout from '../../components/layout/candyLayout';
 import queryParser from '../../service/queryParametersParser';
 import SiteOverview from '../../components/siteOverview/siteOverview';
+import SiteDevices from '../../components/siteDevices/siteDevices';
+import SiteHistory from '../../components/siteHistory/siteHistory';
 
 import './siteDetailPage.scss';
-import SiteDevices from '../../components/siteDevices/siteDevices';
 
 //https://codepen.io/qindazhu/pen/ZWNKoG
 
@@ -22,8 +23,8 @@ const pages = [
         icon: <i className="fas fa-server"/>
     },
     {
-        id: 'issue',
-        label: 'Sự cố',
+        id: 'history',
+        label: 'Lịch sử',
         icon: <i className="fas fa-exclamation-triangle"/>
     },
 ];
@@ -56,11 +57,16 @@ const SiteDetailPage = ({ location }) => {
                 return <SiteDevices
                     siteId={siteId}
                     onGaugeChange={(dom) => setGaugeDom(dom)}
-                />
+                />;
+            case 'history':
+                return <SiteHistory
+                    siteId={siteId}
+                    onGaugeChange={(dom) => setGaugeDom(dom)}
+                />;
             default:
                 break;
         }
-    }, [page]);
+    }, [page, siteId]);
 
     return <CandyLayout
         className={'siteDetailPage'}

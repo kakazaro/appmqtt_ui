@@ -25,6 +25,7 @@ const DeviceBadge = ({ device, onClick }) => {
         header={device?.name}
         avatar={<i className="fas fa-charging-station"/>}
         info={infoDom}
+        isFail={device?.isFail}
     />;
 };
 

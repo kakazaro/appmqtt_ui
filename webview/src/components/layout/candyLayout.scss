@@ -38,46 +38,44 @@
                 width: 15px;
                 height: 15px;
                 top: 16px;
-                right: 16px;
-                border-radius: 20px;
-                animation: BackgroundColor 5s linear infinite;
-                @keyframes BackgroundColor {
-                    0% {
-                        background-color: $SKIRRET_GREEN;
-                        box-shadow: 0 0 5px $SKIRRET_GREEN;
-                    }
-                    50% {
-                        background-color: $STADIUM_LAWN;
-                        box-shadow: 0 0 5px $STADIUM_LAWN;
-                    }
-                    100% {
-                        background-color: $SKIRRET_GREEN;
-                        box-shadow: 0 0 5px $SKIRRET_GREEN;
+                right: 26px;
+                font-size: 20px;
 
+                svg {
+                    animation: BackgroundColor 5s linear infinite;
+                    @keyframes BackgroundColor {
+                        0% {
+                            color: $SKIRRET_GREEN;
+                        }
+                        50% {
+                            color: $STADIUM_LAWN;
+                        }
+                        100% {
+                            color: $SKIRRET_GREEN;
+                        }
                     }
                 }
 
                 &.fail {
-                    animation: BackgroundColor2 5s linear infinite;
-                    @keyframes BackgroundColor2 {
-                        0% {
-                            background-color: $REDDISH;
-                            box-shadow: 0 0 5px $REDDISH;
-                        }
-                        50% {
-                            background-color: $FUSION_RED;
-                            box-shadow: 0 0 5px $FUSION_RED;
-                        }
-                        100% {
-                            background-color: $REDDISH;
-                            box-shadow: 0 0 5px $REDDISH;
+                    svg {
+                        animation: BackgroundColor2 5s linear infinite;
+                        @keyframes BackgroundColor2 {
+                            0% {
+                                color: $REDDISH;
+                            }
+                            50% {
+                                color: $FUSION_RED;
+                            }
+                            100% {
+                                color: $REDDISH;
+                            }
                         }
                     }
                 }
             }
         }
 
-        &.status {
+        &.statusLayout {
             min-height: 80px;
             padding-top: 10px;
             text-align: center;
@@ -97,7 +95,7 @@
             }
         }
 
-        &.gauge {
+        &.gaugeLayout {
             min-height: 100px;
             position: relative;
 
