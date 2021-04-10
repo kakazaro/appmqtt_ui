@@ -13,7 +13,7 @@ const SiteDevices = ({ siteId, onGaugeChange }) => {
     useEffect(() => {
         if (siteId) {
             const handle = (data) => setDevicesData(data);
-            const registerId = siteService.registerSiteData(siteId, 'devices', handle, 15000);
+            const registerId = siteService.registerSiteData(siteId, 'devices', handle, undefined, 15000);
 
             return () => {
                 siteService.unRegisterSiteData(registerId);

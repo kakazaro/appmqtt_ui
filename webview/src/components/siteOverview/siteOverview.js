@@ -5,7 +5,6 @@ import utility from '../../service/utility';
 import SiteChart from '../siteChart/siteChart';
 import { Button } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
-import axios from '../../service/axios';
 import siteService from '../../service/siteService';
 import CircularBar from '../circularBar/circularBar';
 import { buildStyles } from 'react-circular-progressbar';
@@ -21,9 +20,10 @@ const timeTypes = [
         views: ['year', 'month', 'date'],
         format: '[ngày] D MMMM [năm] YYYY',
         notes: 24,
+        start: 'd',
         space: 'h',
-        timeFormatChart: 'H[h] D/M',
-        timeFormatTable: 'H[h00] [ngày] D, MMM',
+        timeFormatChart: 'H[h]',
+        timeFormatTable: 'H [giờ]',
     },
     {
         id: 'month',
@@ -31,9 +31,10 @@ const timeTypes = [
         views: ['year', 'month'],
         format: 'MMMM [năm] YYYY',
         notes: 30,
+        start: 'M',
         space: 'd',
-        timeFormatChart: 'D/M',
-        timeFormatTable: '[ngày] D, MMM',
+        timeFormatChart: 'D',
+        timeFormatTable: '[ngày] D',
     },
     {
         id: 'year',
@@ -41,9 +42,10 @@ const timeTypes = [
         views: ['year'],
         format: '[năm] YYYY',
         notes: 12,
+        start: 'y',
         space: 'M',
-        timeFormatChart: 'M/YYYY',
-        timeFormatTable: 'MMM, [năm] YYYY',
+        timeFormatChart: 'M',
+        timeFormatTable: '[tháng] MM',
     },
 ];
 
@@ -53,19 +55,25 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
     const [time, setTime] = useState(new Date());
 
     const product = useMemo(() => siteOverviewData ? Math.floor(siteOverviewData.product * 100) / 100 : 0, [siteOverviewData]);
-    const income = useMemo(() => siteOverviewData ? siteOverviewData.product * 2000 : 0, [siteOverviewData]);
-    const [dataChart, setDataChart] = useState([]);
+    const income = useMemo(() => siteOverviewData ? siteOverviewData.product * 1871 : 0, [siteOverviewData]);
+    const dataChart = useMemo(() => siteOverviewData?.chart, [siteOverviewData]);
 
     useEffect(() => {
         if (siteId) {
             const handle = (data) => setSiteOverviewData(data);
-            const registerId = siteService.registerSiteData(siteId, 'overview', handle);
+            let m = moment(time);
+            const registerId = siteService.registerSiteData(siteId, 'overview', handle, {
+                time: m.toDate().getTime(),
+                space: timeType.space,
+                start: timeType.start,
+                notes: timeType.notes
+            });
 
             return () => {
                 siteService.unRegisterSiteData(registerId);
             };
         }
-    }, [siteId]);
+    }, [siteId, timeType, time]);
 
     useEffect(() => {
         const dom = <CircularBar value={siteOverviewData ? siteOverviewData.current / siteOverviewData.max : 0} styles={buildStyles({
@@ -79,20 +87,6 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
         </CircularBar>;
         onGaugeChange(dom);
     }, [siteOverviewData, onGaugeChange]);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                let m = moment(time);
-                m = m.add(-1 * m.millisecond(), 'm');
-                m = m.add(-1 * m.second(), 'm');
-                const response = await axios.get(`/chart?notes=${encodeURIComponent(timeType.notes)}&time=${encodeURIComponent(m.toDate().getTime())}&space=${timeType.space}`);
-                setDataChart(response.data);
-            } catch (err) {
-                console.error(err);
-            }
-        })();
-    }, [timeType, time]);
 
     if (!siteOverviewData) {
         return null;
@@ -121,7 +115,7 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
             </Row>
             <Row className={'product'}>
                 <Col xs={6}>
-                    <p><span className={'unit'}>kWh</span> <span className={'value'}>{product}</span></p>
+                    <p><span className={'unit'}>{utility.makeupProduct(product).unit}</span> <span className={'value'}>{utility.makeupProduct(product).value}</span></p>
                     <p className={'description'}>Điện sản xuất</p>
                 </Col>
                 <Col xs={6}>
@@ -130,8 +124,8 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
                 </Col>
             </Row>
             <Row className={'chartPower'}>
-                <SiteChart title={'Sản lượng điện'} unit={''} data={dataChart} onClick={() => {
-                    navigate('/site/chart', { state: { dataChart, timeType, title: 'Sản lượng điện' } });
+                <SiteChart title={'Sản lượng điện'} data={dataChart} timeType={timeType} onClick={() => {
+                    navigate('/site/chart', { state: { dataChart, timeType, title: 'Sản lượng điện', date: time } });
                 }}/>
             </Row>
         </Col>

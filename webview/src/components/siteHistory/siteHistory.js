@@ -16,7 +16,7 @@ const SiteHistory = ({ siteId, onGaugeChange }) => {
     useEffect(() => {
         if (siteId) {
             const handle = (data) => setHistoryData(data);
-            const registerId = siteService.registerSiteData(siteId, 'history', handle, 30000);
+            const registerId = siteService.registerSiteData(siteId, 'history', handle, undefined, 30000);
 
             return () => {
                 siteService.unRegisterSiteData(registerId);

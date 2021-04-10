@@ -12,6 +12,7 @@ const axios = axiosModule.create({
 const mock = new MockAdapter(axios);
 
 const save = {};
+const chart = {};
 
 mock.onPost('/login').reply(() => {
     return new Promise((resolve) => {
@@ -40,32 +41,81 @@ mock.onGet('/sites').reply((config) => {
     });
 });
 
+const buildProductChart = (time, space, current = moment(new Date())) => {
+    let timeMoment = moment(time);
+
+    if (space === 'h') {
+        if (chart[time]) {
+            if (timeMoment.isSame(current, 'h')) {
+                chart[time] += 5 * Math.random();
+            }
+        } else {
+            if (timeMoment.isAfter(current, 'h')) {
+                chart[time] = 0;
+            } else {
+                chart[time] = 3600 * Math.random() + 0.0000001;
+            }
+        }
+        return chart[time];
+    } else {
+        let sum = 0;
+        const saveTimeMoment = moment(time);
+        do {
+            sum += buildProductChart(timeMoment, 'h', current);
+            timeMoment = timeMoment.add(1, 'h');
+        } while (timeMoment.isSame(saveTimeMoment, space));
+        return sum;
+    }
+};
+
 mock.onGet(/\/site\/overview\?.*/).reply((config) => {
     const url = config.url;
-    const id = queryParametersParser.parse(url.split('?')[1])['id'];
+    const query = queryParametersParser.parse(url.split('?')[1]);
+    const id = query['id'];
+    let time = parseInt(query['time']);
+    // let notes = parseInt(query['notes']);
+    let space = query['space'];
+    let start = query['start'];
+
     let data = {
         id,
         current: Math.random() * 10 + 20,
         max: 35,
     };
 
-    if (save[url]) {
-        data = save[url];
-    } else if (save['/sites']) {
-        data = { ...save['/sites'][parseInt(id)], ...data };
-    } else {
-        data = {
-            ...data,
-            duration: Math.random() * 2 + 7,
-            product: Math.random() * 7 + 40,
-        };
-    }
+    const current = moment(new Date());
+    let m = moment(new Date(time));
 
-    data.current = Math.random() * 10 + 20;
-    data.product += Math.random() * 0.05;
-    data.duration += 0.001;
+    let pointTime = moment(new Date(time)).startOf(start);
+    const times = [];
+    do {
+        const t = pointTime.toDate().getTime();
+        pointTime = pointTime.add(1, space);
+        times.push(t);
+    } while (m.get(start) === pointTime.get(start));
 
-    save[url] = data;
+    const series = [...times].map(time => {
+        return buildProductChart(time, space, current) / 100;
+    });
+
+    data.product = series.reduce((sum, cur) => sum + cur, 0);
+    data.chart = { series, times };
+
+    // if (save[url]) {
+    //     data = save[url];
+    // } else if (save['/sites']) {
+    //     data = { ...save['/sites'][parseInt(id)], ...data };
+    // } else {
+    //     data = {
+    //         ...data,
+    //         product: Math.random() * 7 + 40,
+    //     };
+    // }
+
+    // data.current = Math.random() * 10 + 20;
+    // data.product = Math.random() * 0.05;
+
+    // save[url] = data;
 
     return new Promise((resolve) => {
         setTimeout(() => resolve([200, data]), 100);
@@ -84,6 +134,7 @@ mock.onGet(/\/site\/devices\?.*/).reply((config) => {
             name: 'Inverter No.' + (index + 1),
             isFail: Math.random() > 0.8,
             duration: Math.random() * 2 + 7,
+            current: Math.random() * 10 + 3,
             product: Math.random() * 7 + 10,
         }));
     }

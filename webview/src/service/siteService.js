@@ -7,11 +7,17 @@ class SiteService {
         this.start = {};
     }
 
-    loopGetSiteData(type, id, handler, uid, duration = 5000) {
+    loopGetSiteData(type, id, handler, query, uid, duration = 5000) {
         (async () => {
             if (this.start[uid]) {
                 try {
-                    const response = await axios.get('/site/' + type + '?id=' + encodeURIComponent(id));
+                    let url = '/site/' + type + '?id=' + encodeURIComponent(id);
+                    if (query) {
+                        Object.keys(query).forEach(key => {
+                            url += `&${key}=${encodeURIComponent(query[key])}`;
+                        });
+                    }
+                    const response = await axios.get(url);
                     if (this.start[uid]) {
                         handler(response.data);
                     }
@@ -24,7 +30,7 @@ class SiteService {
                 this.start[uid] = 0;
             } else {
                 this.start[uid] = setTimeout(() => {
-                    this.loopGetSiteData(type, id, handler, uid, duration);
+                    this.loopGetSiteData(type, id, handler, query, uid, duration);
                 }, duration);
             }
         })();
@@ -36,10 +42,10 @@ class SiteService {
         }
     }
 
-    registerSiteData(id, type, handler, duration) {
+    registerSiteData(id, type, handler, query, duration) {
         const uid = randomstring.generate();
         this.start[uid] = true;
-        this.loopGetSiteData(type, id, handler, uid, duration);
+        this.loopGetSiteData(type, id, handler, query, uid, duration);
         return uid;
     }
 
