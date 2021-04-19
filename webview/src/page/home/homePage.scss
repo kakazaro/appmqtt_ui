@@ -1,0 +1,30 @@
+@import '../../asset/common.scss';
+
+.homePage {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .homeBody {
+        flex: 1;
+        overflow: scroll;
+    }
+
+    .homeNav {
+        flex: 0;
+        border-top: 1px solid $UNICORN_SILVER;
+
+        .MuiBottomNavigationAction-root {
+            padding-top: 2px;
+            padding-bottom: 2px;
+
+            &.Mui-selected {
+                color: $PHILIPPINE_ORANGE;
+            }
+
+            .MuiBottomNavigationAction-label {
+                font-size: 12px !important;
+            }
+        }
+    }
+}

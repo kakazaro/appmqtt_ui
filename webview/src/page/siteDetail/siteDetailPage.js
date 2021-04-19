@@ -15,24 +15,27 @@ const pages = [
     {
         id: 'overview',
         label: 'Thông số',
-        icon: <i className="fas fa-clipboard-list"/>
+        icon: <i className="fas fa-clipboard-list"/>,
+        page: SiteOverview
     },
     {
         id: 'devices',
         label: 'Thiết bị',
-        icon: <i className="fas fa-server"/>
+        icon: <i className="fas fa-server"/>,
+        page: SiteDevices
     },
     {
         id: 'history',
         label: 'Lịch sử',
-        icon: <i className="fas fa-exclamation-triangle"/>
+        icon: <i className="fas fa-exclamation-triangle"/>,
+        page: SiteHistory
     },
 ];
 
-const SiteDetailPage = ({ location }) => {
+const SiteDetailPage = ({ location, page }) => {
     const [site] = useState(location?.state?.site);
-    const [page, setPage] = useState(pages[0].id);
     const [gaugeDom, setGaugeDom] = useState();
+    const selectedPage = useMemo(() => page || pages[0].id, [page]);
 
     const siteId = useMemo(() => queryParser.parse(location.search)['id'], [location]);
 
@@ -42,31 +45,16 @@ const SiteDetailPage = ({ location }) => {
 
     useEffect(() => {
         if (!site) {
-            navigate('/sites');
+            navigate('/');
         }
     }, [site]);
 
     const bodyDom = useMemo(() => {
-        switch (page) {
-            case 'overview':
-                return <SiteOverview
-                    siteId={siteId}
-                    onGaugeChange={(dom) => setGaugeDom(dom)}
-                />;
-            case 'devices':
-                return <SiteDevices
-                    siteId={siteId}
-                    onGaugeChange={(dom) => setGaugeDom(dom)}
-                />;
-            case 'history':
-                return <SiteHistory
-                    siteId={siteId}
-                    onGaugeChange={(dom) => setGaugeDom(dom)}
-                />;
-            default:
-                break;
+        const PageFunc = selectedPage && pages.find(p => p.id === selectedPage)?.page;
+        if (selectedPage) {
+            return <PageFunc siteId={siteId} onGaugeChange={(dom) => setGaugeDom(dom)}/>;
         }
-    }, [page, siteId]);
+    }, [selectedPage, siteId]);
 
     return <CandyLayout
         className={'siteDetailPage'}
@@ -75,8 +63,8 @@ const SiteDetailPage = ({ location }) => {
         isOkay={!site?.isFail}
         gauge={gaugeDom}
         pages={pages}
-        page={page}
-        onPageChange={(page) => setPage(page)}
+        page={selectedPage}
+        onPageChange={(page) => navigate('/site/' + page + '?id=' + encodeURIComponent(site.id), { state: { site } }).then()}
     >
         <Container className="siteBody">
             <div className={'bodyContain'}>

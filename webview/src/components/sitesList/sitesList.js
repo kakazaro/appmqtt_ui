@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import FreshestLayout from '../../components/layout/freshestLayout';
-import { Container, Row, Col } from 'react-bootstrap';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
+import FreshestLayout from '../layout/freshestLayout';
+import { Row, Col } from 'react-bootstrap';
 import { navigate } from '@reach/router';
 import axios from '../../service/axios';
-import queryParser from '../../service/queryParametersParser';
-import SiteBadge from '../../components/siteBadge/siteBadge';
-import FreshFilter from '../../components/freshFilter/freshFilter';
+import SiteBadge from '../siteBadge/siteBadge';
+import FreshFilter from '../freshFilter/freshFilter';
+import UserContext from '../userContext/userContext';
 
-import './sitesPage.scss';
+import './sitesList.scss';
 
 const ITEMS_FILTER = [
     {
@@ -24,14 +24,15 @@ const ITEMS_FILTER = [
     },
 ];
 
-const SitesPage = ({ location }) => {
+const SitesList = () => {
     const [sites, setSites] = useState();
     const [filterValue, setFilterValue] = useState(ITEMS_FILTER[0]);
+    const userContext = useContext(UserContext);
+    const token = useMemo(() => userContext?.token, [userContext]);
 
-    const token = useMemo(() => queryParser.parse(location.search)['token'], [location]);
+    // const token = useMemo(() => queryParser.parse(location.search)['token'], [location]);
 
     useEffect(() => {
-        console.log(token);
         if (token) {
             (async () => {
                 try {
@@ -60,18 +61,18 @@ const SitesPage = ({ location }) => {
         return <FreshFilter items={ITEMS_FILTER} value={filterValue} onChange={(item) => setFilterValue(item)}/>;
     }, [filterValue]);
 
-    return <FreshestLayout className='sitesPage' title={'Trạm điện'}>
-        <Container className='sitesBody'>
+    return <FreshestLayout className="sitesList" title={'Trạm điện'}>
+        <div className="sitesBody">
             <Col>
-                <Row>
+                <Row className={'filterRow'}>
                     {filterDom}
                 </Row>
                 <Row>
                     {sitesDom}
                 </Row>
             </Col>
-        </Container>
+        </div>
     </FreshestLayout>;
 };
 
-export default SitesPage;
+export default SitesList;

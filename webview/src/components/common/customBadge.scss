@@ -3,31 +3,9 @@
 .customBadge {
     min-height: 80px;
     margin-top: 10px;
-    background-color: white;
-    border-radius: 15px;
-    box-shadow: 1px 1px 5px $SILVER_POLISH;
-    color: $FADING_NIGHT;
+    color: $primaryText;
     position: relative;
-    border: none;
-
-    &.fail {
-        color: $seekerColor;
-    }
-
-    > .row {
-        height: 100%;
-    }
-
-    .avatar {
-        text-align: center;
-
-        svg {
-            display: block;
-            font-size: 30px;
-            margin: auto;
-            height: 100%;
-        }
-    }
+    border-bottom: 1px solid $UNICORN_SILVER;
 
     .badgeBody {
         p {
@@ -36,63 +14,17 @@
 
         .header {
             p {
-                font-weight: 500;
-                font-size: 17px;
+                font-weight: bold;
+                font-size: 15px;
                 margin-top: 2px;
                 margin-bottom: 3px;
             }
         }
 
         .info {
-            font-size: 15px;
-            opacity: 0.6;
+            font-size: 13px;
+            color: $secondaryText;
             display: grid;
-        }
-    }
-
-    .statusBadge {
-        position: absolute;
-        display: block;
-        width: 15px;
-        height: 15px;
-        top: 6px;
-        right: 6px;
-        border-radius: 20px;
-        animation: IconColor 5s linear infinite;
-        @keyframes IconColor {
-            0% {
-                background-color: $SKIRRET_GREEN;
-                box-shadow: 0 0 5px $SKIRRET_GREEN;
-            }
-            50% {
-                background-color: $STADIUM_LAWN;
-                box-shadow: 0 0 5px $STADIUM_LAWN;
-            }
-            100% {
-                background-color: $SKIRRET_GREEN;
-                box-shadow: 0 0 5px $SKIRRET_GREEN;
-
-            }
-        }
-    }
-
-    &.fail {
-        .statusBadge {
-            animation: IconColor2 5s linear infinite;
-            @keyframes IconColor2 {
-                0% {
-                    background-color: $REDDISH;
-                    box-shadow: 0 0 5px $REDDISH;
-                }
-                50% {
-                    background-color: $FUSION_RED;
-                    box-shadow: 0 0 5px $FUSION_RED;
-                }
-                100% {
-                    background-color: $REDDISH;
-                    box-shadow: 0 0 5px $REDDISH;
-                }
-            }
         }
     }
 }
