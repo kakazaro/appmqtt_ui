@@ -1,5 +1,47 @@
 @import '../../asset/common.scss';
 
 .siteBadge {
-    
+    .badgeAvatar {
+        margin-right: 15px;
+        padding-top: 10px;
+
+        img {
+            width: 35px;
+            border-radius: 5px;
+        }
+    }
+
+    .siteSubInfo {
+        .statusIndicate {
+            &:before {
+                content: '';
+                width: 10px;
+                height: 10px;
+                margin-right: 5px;
+                display: inline-block;
+                background-color: $normal;
+                border-radius: 13px;
+            }
+
+            &.alarm {
+                &:before {
+                    background-color: $alarm;
+                }
+            }
+
+            &.fault {
+                &:before {
+                    background-color: $fault;
+                }
+            }
+
+            &.offline {
+                &:before {
+                    background-color: $offline;
+                }
+            }
+        }
+
+
+    }
 }

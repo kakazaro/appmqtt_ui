@@ -26,11 +26,14 @@
 
     .navbar {
         width: 100%;
+        padding-bottom: 0;
 
         .navbar-brand {
             color: $primaryText;
+            font-weight: bold;
+            font-size: 18px;
             opacity: 0.9;
-            margin-left: auto;
+            //margin-left: auto;
             margin-right: auto;
         }
     }

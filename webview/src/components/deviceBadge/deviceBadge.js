@@ -22,10 +22,10 @@ const DeviceBadge = ({ device, onClick }) => {
     }, [device]);
 
     return <CustomBadge
-        className
+        className={'deviceBadge'}
         onClick={() => onClick(device)}
         header={device?.name}
-        avatar={<i className="fas fa-charging-station"/>}
+        avatar={(<></>)}
         info={infoDom}
         isFail={device?.isFail}
     />;

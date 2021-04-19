@@ -1,13 +1,19 @@
 @import '../../asset/common';
 
 .customBadge {
-    min-height: 80px;
-    margin-top: 10px;
+    padding: 10px 0;
     color: $primaryText;
-    position: relative;
+    background-color: white;
     border-bottom: 1px solid $UNICORN_SILVER;
+    display: flex;
+
+    .badgeAvatar {
+        flex: 0;
+    }
 
     .badgeBody {
+        flex: 1;
+
         p {
             margin-bottom: 0;
         }

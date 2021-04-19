@@ -25,12 +25,16 @@
         .dropdown-menu {
             width: 100%;
             border-radius: 0;
+            border: none;
+            border-top: 1px solid $UNICORN_SILVER;
+            padding: 0;
 
             a {
                 text-align: center;
-                margin: 5px 0;
+                margin-top: 5px;
                 width: 100%;
                 color: $primaryText;
+                border-bottom: 1px solid $UNICORN_SILVER;
             }
         }
     }

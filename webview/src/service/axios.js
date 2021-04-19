@@ -2,6 +2,7 @@ import axiosModule from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import queryParametersParser from './queryParametersParser';
 import moment from 'moment';
+import utility from './utility';
 
 const axios = axiosModule.create({
     baseURL: 'https://my-api.domain.com',
@@ -22,11 +23,13 @@ mock.onPost('/login').reply(() => {
 
 mock.onGet('/sites').reply((config) => {
     const number = 5 + Math.floor(Math.random() * 5);
+    const statusKey = Object.keys(utility.STATUS);
+
     let sites = Array(number).fill('').map((dummy, index) => ({
         id: index,
         name: 'Trạm điện số ' + (index + 1),
-        isFail: Math.random() > 0.8,
-        duration: Math.random() * 2 + 7,
+        status: utility.STATUS[statusKey[Math.floor(Math.random() * statusKey.length)]].id,
+        workingHours: Math.random() * 2 + 7,
         product: Math.random() * 7 + 40,
     }));
 

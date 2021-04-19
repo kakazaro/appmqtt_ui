@@ -8,20 +8,13 @@ import FreshFilter from '../freshFilter/freshFilter';
 import UserContext from '../userContext/userContext';
 
 import './sitesList.scss';
+import utility from '../../service/utility';
 
 const ITEMS_FILTER = [
     {
-        name: 'Tất cả trạm điện',
+        name: 'Tất cả',
         key: 'all'
-    },
-    {
-        name: 'Các trạm điện bị sự cố',
-        key: 'fail'
-    },
-    {
-        name: 'Các trạm điện trạng thái tốt',
-        key: 'good'
-    },
+    }
 ];
 
 const SitesList = () => {
@@ -58,16 +51,17 @@ const SitesList = () => {
     }, [sites]);
 
     const filterDom = useMemo(() => {
-        return <FreshFilter items={ITEMS_FILTER} value={filterValue} onChange={(item) => setFilterValue(item)}/>;
+        const filters = ITEMS_FILTER.concat(Object.keys(utility.STATUS).map(key => ({ name: utility.STATUS[key].label, key: utility.STATUS[key].id })));
+        return <FreshFilter items={filters} value={filterValue} onChange={(item) => setFilterValue(item)}/>;
     }, [filterValue]);
 
-    return <FreshestLayout className="sitesList" title={'Trạm điện'}>
+    return <FreshestLayout className="sitesList" title={'NT.V Corp'}>
         <div className="sitesBody">
             <Col>
                 <Row className={'filterRow'}>
                     {filterDom}
                 </Row>
-                <Row>
+                <Row className={'sitesRow'}>
                     {sitesDom}
                 </Row>
             </Col>

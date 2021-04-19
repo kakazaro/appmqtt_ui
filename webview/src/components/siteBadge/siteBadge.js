@@ -1,31 +1,35 @@
 import React, { useMemo } from 'react';
+import classNames from 'classnames';
 import CustomBadge from '../common/customBadge';
+import solarImg from '../../asset/picture/solar.jpg';
+import utility from '../../service/utility';
 
 import './siteBadge.scss';
 
 const SiteBadge = ({ site, onClick }) => {
 
     const infoDom = useMemo(() => {
-        if (site?.isFail) {
-            return <>
-                <p className="siteSubInfo">Đang xảy ra sự cố</p>
-                <p className="siteSubInfo">{`Thời gian sự cố: ${Math.floor(site.duration * 10) / 10} giờ`}</p>
-            </>;
-        } else if (site) {
-            return <>
-                <p className="siteSubInfo">{`Thời gian hoạt động: ${Math.floor(site.duration * 10) / 10} giờ`}</p>
-                <p className="siteSubInfo">{`Tổng sản lượng điện: ${Math.floor(site.product * 10) / 10} kWh`}</p>
-            </>;
-        }
+        const statusId = site?.status;
+        const key = Object.keys(utility.STATUS).find(key => utility.STATUS[key].id === statusId);
+        let status = key ? utility.STATUS[key] : undefined;
+
+        return <>
+            {status && <p className="siteSubInfo">
+                Trạng thái: <span className={classNames('statusIndicate', (status?.id || '').toLowerCase())}/>
+                <span>{status.label}</span>
+                {typeof site?.noStatus === 'number' && typeof site?.noTotal === 'number' && <span>{`(${site?.noStatus}/${site?.noTotal})`}</span>}
+            </p>}
+            <p className="siteSubInfo">{`Thời gian hoạt động: ${Math.floor(site.workingHours * 10) / 10} giờ`}</p>
+            <p className="siteSubInfo">{`Tổng sản lượng điện: ${utility.makeupProduct(site.product).value} ${utility.makeupProduct(site.product).unit}`}</p>
+        </>;
     }, [site]);
 
     return <CustomBadge
-        className
+        className={classNames('siteBadge', (site?.status || '').toLowerCase())}
         onClick={() => onClick(site)}
         header={site?.name}
-        avatar={<i className="fas fa-solar-panel"/>}
+        avatar={<img src={solarImg} alt={'solar'}/>}
         info={infoDom}
-        isFail={site?.isFail}
     />;
 };
 

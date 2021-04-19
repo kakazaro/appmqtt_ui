@@ -1,4 +1,22 @@
 export default {
+    STATUS: {
+        FAULT: {
+            id: 'fault',
+            label: 'Sự cố'
+        },
+        ALARM: {
+            id: 'alarm',
+            label: 'Cảnh báo'
+        },
+        OFFLINE: {
+            id: 'offline',
+            label: 'Không hoạt động'
+        },
+        NORMAL: {
+            id: 'normal',
+            label: 'Bình thường'
+        }
+    },
     makeupMoney(value) {
         let even = Math.floor(value);
         // const odd = value - even;

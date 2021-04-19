@@ -15,6 +15,9 @@ const FreshestLayout = ({ title, className, children, canBack }) => {
                 <Navbar.Brand>
                     {title}
                 </Navbar.Brand>
+                <Navbar.Collapse className={'justify-content-end'}>
+
+                </Navbar.Collapse>
             </Navbar>
         </Row>
         <Row className={'layoutBody'}>

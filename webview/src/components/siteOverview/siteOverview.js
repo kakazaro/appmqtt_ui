@@ -6,8 +6,6 @@ import SiteChart from '../siteChart/siteChart';
 import { Button } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
 import siteService from '../../service/siteService';
-import CircularBar from '../circularBar/circularBar';
-import { buildStyles } from 'react-circular-progressbar';
 import { navigate } from '@reach/router';
 
 import './siteOverview.scss';
@@ -49,7 +47,7 @@ const timeTypes = [
     },
 ];
 
-const SiteOverview = ({ siteId, onGaugeChange }) => {
+const SiteOverview = ({ site }) => {
     const [siteOverviewData, setSiteOverviewData] = useState();
     const [timeType, setTimeType] = useState(timeTypes[0]);
     const [time, setTime] = useState(new Date());
@@ -58,11 +56,17 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
     const income = useMemo(() => siteOverviewData ? siteOverviewData.product * 1871 : 0, [siteOverviewData]);
     const dataChart = useMemo(() => siteOverviewData?.chart, [siteOverviewData]);
 
+    const siteStatus = useMemo(() => {
+        const statusId = site?.status;
+        const key = Object.keys(utility.STATUS).find(key => utility.STATUS[key].id === statusId);
+        return key ? utility.STATUS[key] : undefined;
+    }, [site]);
+
     useEffect(() => {
-        if (siteId) {
+        if (site) {
             const handle = (data) => setSiteOverviewData(data);
             let m = moment(time);
-            const registerId = siteService.registerSiteData(siteId, 'overview', handle, {
+            const registerId = siteService.registerSiteData(site.id, 'overview', handle, {
                 time: m.toDate().getTime(),
                 space: timeType.space,
                 start: timeType.start,
@@ -72,21 +76,10 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
             return () => {
                 siteService.unRegisterSiteData(registerId);
             };
+        } else {
+            navigate('/').then();
         }
-    }, [siteId, timeType, time]);
-
-    useEffect(() => {
-        const dom = <CircularBar value={siteOverviewData ? siteOverviewData.current / siteOverviewData.max : 0} styles={buildStyles({
-            pathColor: '#317ad4',
-        })}>
-            <div className={'innerBarWatt'}>
-                {siteOverviewData && <p className={'description'}>Công xuất</p>}
-                <p className={'currentPower'}>{siteOverviewData ? Math.floor(siteOverviewData.current * 10) / 10 : '- -'}</p>
-                {siteOverviewData && <p className={'unitPower'}>Watt</p>}
-            </div>
-        </CircularBar>;
-        onGaugeChange(dom);
-    }, [siteOverviewData, onGaugeChange]);
+    }, [site, timeType, time]);
 
     if (!siteOverviewData) {
         return null;
@@ -94,6 +87,9 @@ const SiteOverview = ({ siteId, onGaugeChange }) => {
 
     return <Container className={'siteOverview'}>
         <Col>
+            <Row>
+
+            </Row>
             <Row className={'timeTypeSelect'}>
                 {timeTypes.map((type) => <Col key={type.id} xs={12 / timeTypes.length}>
                     <Button
