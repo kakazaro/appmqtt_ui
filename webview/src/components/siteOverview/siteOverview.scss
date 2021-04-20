@@ -1,101 +1,86 @@
 @import '../../asset/common.scss';
 
 .siteOverview {
-    margin-top: 20px;
+    .statusRow {
+        background-color: white;
 
-    .timeTypeSelect {
-        margin-bottom: 20px;
+        .container {
+            margin: 5px 0;
+            font-size: 14px;
+            color: $secondaryText;
 
-        > div {
-            .MuiButton-root {
-                border-radius: 5px;
-                background-color: $UNICORN_SILVER;
-                color: $MORE_THAN_A_WEEK;
-                font-size: 12px;
-                text-transform: none;
-                box-shadow: 0 0 5px $UNICORN_SILVER;
-                width: 100%;
+            .statusText {
+                .statusIndicate {
+                    &:before {
+                        content: '';
+                        width: 12px;
+                        height: 12px;
+                        margin-right: 8px;
+                        display: inline-block;
+                        background-color: $normal;
+                        border-radius: 13px;
+                    }
 
-                .MuiButton-label {
-                    margin-bottom: -2px;
+                    &.alarm {
+                        &:before {
+                            background-color: $alarm;
+                        }
+                    }
+
+                    &.fault {
+                        &:before {
+                            background-color: $fault;
+                        }
+                    }
+
+                    &.offline {
+                        &:before {
+                            background-color: $offline;
+                        }
+                    }
                 }
 
-                &.active {
-                    background-image: linear-gradient(120deg, $SUNBURST, $BEER) !important;
-                    color: white;
-                }
-            }
-
-            &:first-child {
-                padding-left: 0;
-                padding-right: 30px;
-            }
-
-            &:last-child {
-                padding-left: 30px;
-                padding-right: 0;
-            }
-        }
-    }
-
-    .timePick {
-        margin-bottom: 20px;
-        padding: 1px 15px;
-
-        box-shadow: 0 0 5px $UNICORN_SILVER;
-        border-radius: 10px;
-        opacity: 0.9;
-
-        .MuiFormControl-root {
-            width: 100%;
-
-            .MuiInputBase-root {
-
-                &:before {
-                    border: none;
-                }
-
-                &:after {
-                    border: none;
-                }
-
-                input {
-                    color: $FADING_NIGHT;
-                    text-align: center;
-                    font-weight: 500;
-                }
+                color: $primaryText;
             }
         }
     }
 
     .product {
-        color: $FADING_NIGHT;
-        font-weight: 500;
-        text-align: center;
-        padding: 8px 0;
-        border-radius: 10px;
-        box-shadow: 0 0 5px $UNICORN_SILVER;
+        .siteCard {
+            background-color: white;
+            margin-top: 7px;
 
-        p {
-            margin: 0;
-        }
+            .mainRow {
+                color: $primaryText;
+                padding-top: 10px;
 
-        .unit {
-            font-size: 13px;
-            opacity: 0.6;
-        }
+                .textRow {
+                    font-size: 14px;
+                }
 
-        .value {
-            font-size: 25px;
-        }
+                .valueRow {
+                    font-size: 20px;
+                    text-align: right;
+                    display: block;
+                    padding-bottom: 5px;
+                    border-bottom: 1px solid $UNICORN_SILVER;
 
-        .description {
-            opacity: 0.7;
-        }
+                    .valueUnit {
+                        font-size: 14px;
+                        margin-left: 4px;
+                    }
+                }
+            }
 
-        > div {
-            &:first-child {
-                border-right: solid 1px $UNICORN_SILVER;
+            .subRow {
+                font-size: 13px;
+                color: $secondaryText;
+                padding: 7px 0;
+
+                .valueRow {
+                    text-align: right;
+                    display: block;
+                }
             }
         }
     }

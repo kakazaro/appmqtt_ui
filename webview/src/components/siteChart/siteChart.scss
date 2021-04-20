@@ -2,33 +2,76 @@
 
 .siteChart {
     width: 100%;
-    margin-top: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px $UNICORN_SILVER;
-    display: block;
+    margin-top: 7px;
+    background-color: white;
 
-    .headerChart {
-        margin: 10px 15px 0 15px;
-        font-weight: 500;
-        color: $FADING_NIGHT;
-        vertical-align: bottom;
-        position: relative;
+    .timeTypeSelector {
+        display: flex;
+        margin-top: 10px;
+        width: 100%;
 
-        .title {
-            font-size: 20px;
+        > div {
+            font-size: 14px;
+            flex: 1;
+            text-align: center;
+            color: $secondaryText;
+
+            &.isSelected {
+                color: $PHILIPPINE_ORANGE;
+                padding-bottom: 6px;
+                position: relative;
+
+                &:before {
+                    content: '';
+                    width: 50%;
+                    display: block;
+                    position: absolute;
+                    border-bottom: 3px solid $PHILIPPINE_ORANGE;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+            }
+        }
+    }
+
+    .timePick {
+        width: 100%;
+        margin-top: 10px;
+        padding: 1px 15px;
+        display: flex;
+
+        > div {
+            flex: 0;
+
+            &.disable {
+                color: $UNICORN_SILVER;
+            }
         }
 
-        .unit {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            opacity: 0.7;
-            font-size: 12px;
+        .MuiFormControl-root {
+            flex: 1;
+
+            .MuiInputBase-root {
+
+                &:before {
+                    border: none;
+                }
+
+                &:after {
+                    border: none;
+                }
+
+                input {
+                    color: $primaryText;
+                    text-align: center;
+                    font-size: 15px;
+                }
+            }
         }
     }
 
     .chart {
-        //margin-top: -30px;
     }
 
 }

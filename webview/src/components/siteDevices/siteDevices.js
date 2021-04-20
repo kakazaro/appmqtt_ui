@@ -1,51 +1,34 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import siteService from '../../service/siteService';
-import CircularBar from '../circularBar/circularBar';
-import { buildStyles } from 'react-circular-progressbar';
-import { Container } from 'react-bootstrap';
 import DeviceBadge from '../deviceBadge/deviceBadge';
+import { navigate } from '@reach/router';
 
 import './siteDevices.scss';
 
-const SiteDevices = ({ siteId, onGaugeChange }) => {
+const SiteDevices = ({ site }) => {
     const [devicesData, setDevicesData] = useState();
 
     useEffect(() => {
-        if (siteId) {
+        if (site) {
             const handle = (data) => setDevicesData(data);
-            const registerId = siteService.registerSiteData(siteId, 'devices', handle, undefined, 15000);
+            const registerId = siteService.registerSiteData(site.id, 'devices', handle, undefined, 15000);
 
             return () => {
                 siteService.unRegisterSiteData(registerId);
             };
+        } else {
+            navigate('/')
         }
-    }, [siteId]);
-
-    const okayDevices = useMemo(() => devicesData ? devicesData.filter(d => !d.isFail) : [], [devicesData]);
-    const failDevices = useMemo(() => devicesData ? devicesData.filter(d => d.isFail) : [], [devicesData]);
-
-
-    useEffect(() => {
-        const dom = <CircularBar value={devicesData ? okayDevices?.length / devicesData.length : 0} styles={buildStyles({
-            pathColor: '#317ad4',
-            trailColor: '#ff5e5e',
-        })}>
-            <div className={'innerBarDevices'}>
-                <p className={'okayDevices'}>{devicesData ? okayDevices.length : '- -'}<span className={'totalDevices'}>{devicesData ? ('/ ' + devicesData?.length) : ''}</span></p>
-                {devicesData && <p className={'description'}>hoạt động</p>}
-            </div>
-        </CircularBar>;
-        onGaugeChange(dom);
-    }, [devicesData, okayDevices, failDevices, onGaugeChange]);
+    }, [site]);
 
     if (!devicesData?.length) {
         return null;
     }
 
-    return <Container className={'siteDevices'}>
+    return <div className={'siteDevices'}>
         {devicesData.map((device, index) => <DeviceBadge key={index} device={device} onClick={() => {
         }}/>)}
-    </Container>;
+    </div>;
 };
 
 export default SiteDevices;

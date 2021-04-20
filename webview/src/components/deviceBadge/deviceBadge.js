@@ -1,31 +1,28 @@
 import React, { useMemo } from 'react';
 import CustomBadge from '../common/customBadge';
 import utility from '../../service/utility';
+import './deviceBadge.scss';
+import classNames from 'classnames';
 
 import './deviceBadge.scss';
 
 const DeviceBadge = ({ device, onClick }) => {
 
     const infoDom = useMemo(() => {
-        if (device?.isFail) {
-            return <>
-                <p className="siteSubInfo">{`Công suất hiện tại: ${Math.floor(device.current * 10) / 10} W`}</p>
-                <p className="siteSubInfo">{`Thời gian sự cố: ${Math.floor(device.duration * 10) / 10} giờ trước`}</p>
-            </>;
-        } else if (device) {
-            const product = utility.makeupProduct(device.product);
-            return <>
-                <p className="siteSubInfo">{`Công suất hiện tại: ${Math.floor(device.current * 10) / 10} W`}</p>
-                <p className="siteSubInfo">{`Tổng sản lượng điện: ${product.value + product.unit}`}</p>
-            </>;
-        }
+        const curActPower = utility.makeupPower(device.curActPower);
+        const todayEnergy = utility.makeupProduct(device.todayEnergy);
+
+        return <>
+            <p className="siteSubInfo">{`Công suất hiện tại: ${curActPower.value} ${curActPower.unit}`}</p>
+            <p className="siteSubInfo">{`Sản lượng điện trong ngày: ${todayEnergy.value} ${todayEnergy.unit}`}</p>
+        </>;
     }, [device]);
 
     return <CustomBadge
         className={'deviceBadge'}
         onClick={() => onClick(device)}
         header={device?.name}
-        avatar={(<></>)}
+        avatar={(<div className={classNames('deviceAvatar', (device?.status || '').toLowerCase())}/>)}
         info={infoDom}
         isFail={device?.isFail}
     />;

@@ -14,6 +14,7 @@ const mock = new MockAdapter(axios);
 
 const save = {};
 const chart = {};
+const statusKey = Object.keys(utility.STATUS);
 
 mock.onPost('/login').reply(() => {
     return new Promise((resolve) => {
@@ -23,14 +24,13 @@ mock.onPost('/login').reply(() => {
 
 mock.onGet('/sites').reply((config) => {
     const number = 5 + Math.floor(Math.random() * 5);
-    const statusKey = Object.keys(utility.STATUS);
 
     let sites = Array(number).fill('').map((dummy, index) => ({
         id: index,
         name: 'Trạm điện số ' + (index + 1),
         status: utility.STATUS[statusKey[Math.floor(Math.random() * statusKey.length)]].id,
         workingHours: Math.random() * 2 + 7,
-        product: Math.random() * 7 + 40,
+        product: getChart(index + '', Date.now(), 'h', 'd').series.reduce((sum, cur) => sum + cur, 0),
     }));
 
     if (save[config.url]) {
@@ -44,48 +44,42 @@ mock.onGet('/sites').reply((config) => {
     });
 });
 
-const buildProductChart = (time, space, current = moment(new Date())) => {
+const createHoursChart = (id, time, current) => {
     let timeMoment = moment(time);
+    if (!chart[id]) {
+        chart[id] = {};
+    }
 
-    if (space === 'h') {
-        if (chart[time]) {
-            if (timeMoment.isSame(current, 'h')) {
-                chart[time] += 5 * Math.random();
-            }
-        } else {
-            if (timeMoment.isAfter(current, 'h')) {
-                chart[time] = 0;
-            } else {
-                chart[time] = 3600 * Math.random() + 0.0000001;
-            }
+    if (chart[id][time]) {
+        if (timeMoment.isSame(current, 'h')) {
+            chart[id][time] += 5 * Math.random();
         }
-        return chart[time];
+    } else {
+        if (timeMoment.isAfter(current, 'h')) {
+            chart[id][time] = 0;
+        } else {
+            chart[id][time] = 3600 * Math.random() + 0.0000001;
+        }
+    }
+    return chart[id][time];
+};
+
+const buildProductChart = (id, time, space, current = moment(new Date())) => {
+    if (space === 'h') {
+        return createHoursChart(id, time, current);
     } else {
         let sum = 0;
         const saveTimeMoment = moment(time);
+        let timeMoment = moment(time);
         do {
-            sum += buildProductChart(timeMoment, 'h', current);
+            sum += createHoursChart(id, time, current);
             timeMoment = timeMoment.add(1, 'h');
         } while (timeMoment.isSame(saveTimeMoment, space));
         return sum;
     }
 };
 
-mock.onGet(/\/site\/overview\?.*/).reply((config) => {
-    const url = config.url;
-    const query = queryParametersParser.parse(url.split('?')[1]);
-    const id = query['id'];
-    let time = parseInt(query['time']);
-    // let notes = parseInt(query['notes']);
-    let space = query['space'];
-    let start = query['start'];
-
-    let data = {
-        id,
-        current: Math.random() * 10 + 20,
-        max: 35,
-    };
-
+const getChart = (id, time, space, start) => {
     const current = moment(new Date());
     let m = moment(new Date(time));
 
@@ -97,28 +91,37 @@ mock.onGet(/\/site\/overview\?.*/).reply((config) => {
         times.push(t);
     } while (m.get(start) === pointTime.get(start));
 
-    const series = [...times].map(time => {
-        return buildProductChart(time, space, current) / 100;
-    });
+    return {
+        series: [...times].map(time => {
+            return buildProductChart(id, time, space, current) / 100;
+        }),
+        times
+    };
+};
 
-    data.product = series.reduce((sum, cur) => sum + cur, 0);
-    data.chart = { series, times };
+const saveOverview = {};
 
-    // if (save[url]) {
-    //     data = save[url];
-    // } else if (save['/sites']) {
-    //     data = { ...save['/sites'][parseInt(id)], ...data };
-    // } else {
-    //     data = {
-    //         ...data,
-    //         product: Math.random() * 7 + 40,
-    //     };
-    // }
+mock.onGet(/\/site\/overview\?.*/).reply((config) => {
+    const url = config.url;
+    const query = queryParametersParser.parse(url.split('?')[1]);
+    const id = query['id'];
 
-    // data.current = Math.random() * 10 + 20;
-    // data.product = Math.random() * 0.05;
+    let data = {
+        id,
+        curSumActPower: Math.random() * 10 + 20,
+    };
 
-    // save[url] = data;
+    if (!saveOverview[id]) {
+        const ratedSumPower = Math.random() * 5 + 30;
+        const allSumEnergy = Math.random() * 15000 + 20000;
+        saveOverview[id] = { ratedSumPower, allSumEnergy };
+    }
+
+    const chart = getChart(id, Date.now(), 'h', 'd');
+
+    data.todaySumEnergy = chart.series.reduce((sum, cur) => sum + cur, 0);
+    data = { ...data, ...saveOverview[id] };
+
 
     return new Promise((resolve) => {
         setTimeout(() => resolve([200, data]), 100);
@@ -135,10 +138,9 @@ mock.onGet(/\/site\/devices\?.*/).reply((config) => {
         data = Array(10 + Math.floor(Math.random() * 5)).fill('').map((v, index) => ({
             id: index,
             name: 'Inverter No.' + (index + 1),
-            isFail: Math.random() > 0.8,
-            duration: Math.random() * 2 + 7,
-            current: Math.random() * 10 + 3,
-            product: Math.random() * 7 + 10,
+            status: utility.STATUS[statusKey[Math.floor(Math.random() * statusKey.length)]].id,
+            curActPower: Math.random() * 10 + 3,
+            todayEnergy: Math.random() * 7 + 10,
         }));
     }
 
@@ -225,31 +227,15 @@ mock.onGet(/\/site\/history\?.*/).reply((config) => {
     });
 });
 
-mock.onGet(/\/chart\?.*/).reply((config) => {
+mock.onGet(/\/site\/chart\?.*/).reply((config) => {
     const url = config.url;
     const query = queryParametersParser.parse(url.split('?')[1]);
-    const notes = parseInt(query['notes']);
+    const id = parseInt(query['id']);
     let time = parseInt(query['time']);
-    time = moment(new Date(time));
     const space = query['space'];
+    const start = query['start'];
 
-    let data;
-    if (save[url]) {
-        data = save[url];
-    } else {
-        const series = Array(notes).fill('').map(() => Math.random() * 100);
-        let times = Array(notes).fill('').map(() => {
-            const cur = time.toDate().getTime();
-            time = time.add(-1, space);
-            return cur;
-        });
-        times = times.reverse();
-        data = {
-            series, times
-        };
-    }
-
-    save[url] = data;
+    const data = getChart(id, time, space, start);
 
     return new Promise((resolve) => {
         resolve([200, data]);

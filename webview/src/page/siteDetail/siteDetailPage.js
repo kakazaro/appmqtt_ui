@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useEffect, useLayoutEffect } from 'react';
 import { navigate } from '@reach/router';
-import { Container } from 'react-bootstrap';
 import CandyLayout from '../../components/layout/candyLayout';
-import queryParser from '../../service/queryParametersParser';
 import SiteOverview from '../../components/siteOverview/siteOverview';
 import SiteDevices from '../../components/siteDevices/siteDevices';
 import SiteHistory from '../../components/siteHistory/siteHistory';
@@ -59,11 +57,11 @@ const SiteDetailPage = ({ location, page }) => {
         selectedPage={selectedPage}
         onPageChange={(page) => navigate('/site/' + page, { state: { site } }).then()}
     >
-        <Container className="siteBody">
+        <div className="siteBody">
             <div className={'bodyContain'}>
                 {bodyDom}
             </div>
-        </Container>
+        </div>
     </CandyLayout>;
 };
 

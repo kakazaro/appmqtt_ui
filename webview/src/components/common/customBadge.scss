@@ -4,7 +4,6 @@
     padding: 10px 0;
     color: $primaryText;
     background-color: white;
-    border-bottom: 1px solid $UNICORN_SILVER;
     display: flex;
 
     .badgeAvatar {
@@ -13,6 +12,8 @@
 
     .badgeBody {
         flex: 1;
+        padding-bottom: 7px;
+        border-bottom: 1px solid $UNICORN_SILVER;
 
         p {
             margin-bottom: 0;

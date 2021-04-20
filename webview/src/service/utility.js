@@ -35,7 +35,26 @@ export default {
         // even = even.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         // return even + '.' + Math.floor(odd * 100);
 
-        return (even + '' + unit).trim();
+        return { value: even, unit: unit + 'đ' };
+    },
+    makeupPower(value, postfix = '') {
+        let even = value;
+        let unit = '';
+        if (value > 1000 * 1000 * 1000) {
+            unit = 'GW';
+            even = Math.floor(value / (100 * 1000 * 1000)) / 10;
+        } else if (value > 1000 * 1000) {
+            unit = 'MW';
+            even = Math.floor(value / (100 * 1000)) / 10;
+        } else if (value > 1000) {
+            unit = 'KW';
+            even = Math.floor(value / (100)) / 10;
+        } else {
+            unit = 'W';
+            even = Math.floor(value * 10) / 10;
+        }
+
+        return { value: even, unit: unit + postfix };
     },
     makeupProduct(value) {
         let even = value;
@@ -57,7 +76,7 @@ export default {
         return { value: even, unit };
     },
     findProductUnit(values) {
-        let unit = 'KWh';
+        let unit = 'W';
         let div = 1;
 
         if (!values?.length) {
@@ -66,18 +85,18 @@ export default {
 
         const value = values.reduce((max, cur) => cur > max ? cur : max, 0);
 
-        if (value > 1000 * 1000) {
-            unit = 'GWh';
+        if (value > 1000 * 1000 * 1000) {
+            unit = 'GW';
+            div = 1000 * 1000 * 1000;
+        } else if (value > 1000 * 1000) {
+            unit = 'MW';
             div = 1000 * 1000;
         } else if (value > 1000) {
-            unit = 'MWh';
+            unit = 'kW';
             div = 1000;
-        } else if (value > 0) {
-            unit = 'KWh';
-            div = 1;
         } else {
-            unit = 'Wh';
-            div = 1 / 1000;
+            unit = 'W';
+            div = 1;
         }
 
         return { unit, div };
