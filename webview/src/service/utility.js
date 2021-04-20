@@ -17,6 +17,34 @@ export default {
             label: 'Bình thường'
         }
     },
+    EVENT_TYPE: {
+        FAULT: {
+            id: 'fault',
+            label: 'Sự cố'
+        },
+        ALARM: {
+            id: 'alarm',
+            label: 'Cảnh báo'
+        }
+    },
+    EVENT_STATUS: {
+        ACTIVE: {
+            id: 'active',
+            label: 'Chưa xử lý'
+        },
+        PROCESSING: {
+            id: 'processing',
+            label: 'Đang xử lý'
+        },
+        RESOLVED: {
+            id: 'resolved',
+            label: 'Đã xử lý'
+        },
+        UNCONFIRMED: {
+            id: 'unconfirmed',
+            label: 'Không xác định'
+        }
+    },
     makeupMoney(value) {
         let even = Math.floor(value);
         // const odd = value - even;

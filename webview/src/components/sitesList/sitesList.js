@@ -3,7 +3,7 @@ import FreshestLayout from '../layout/freshestLayout';
 import { Row, Col } from 'react-bootstrap';
 import { navigate } from '@reach/router';
 import axios from '../../service/axios';
-import SiteBadge from '../siteBadge/siteBadge';
+import SiteBadge from '../badge/siteBadge/siteBadge';
 import FreshFilter from '../freshFilter/freshFilter';
 import UserContext from '../userContext/userContext';
 

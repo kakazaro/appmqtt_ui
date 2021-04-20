@@ -3,7 +3,7 @@ import { navigate } from '@reach/router';
 import CandyLayout from '../../components/layout/candyLayout';
 import SiteOverview from '../../components/siteOverview/siteOverview';
 import SiteDevices from '../../components/siteDevices/siteDevices';
-import SiteHistory from '../../components/siteHistory/siteHistory';
+import SiteEvent from '../../components/siteEvent/siteEvent';
 
 import './siteDetailPage.scss';
 
@@ -21,9 +21,9 @@ const pages = [
         page: SiteDevices
     },
     {
-        id: 'history',
-        label: 'Lịch sử',
-        page: SiteHistory
+        id: 'events',
+        label: 'Sự cố',
+        page: SiteEvent
     },
 ];
 

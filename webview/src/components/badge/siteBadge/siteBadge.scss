@@ -1,4 +1,4 @@
-@import '../../asset/common.scss';
+@import '../../../asset/common';
 
 .siteBadge {
     .badgeAvatar {
@@ -11,13 +11,13 @@
         }
     }
 
-    .siteSubInfo {
+    .info {
         .statusIndicate {
             &:before {
                 content: '';
                 width: 10px;
                 height: 10px;
-                margin-right: 5px;
+                margin: 0 5px;
                 display: inline-block;
                 background-color: $normal;
                 border-radius: 13px;
@@ -41,7 +41,5 @@
                 }
             }
         }
-
-
     }
 }

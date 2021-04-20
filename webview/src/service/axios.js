@@ -151,70 +151,58 @@ mock.onGet(/\/site\/devices\?.*/).reply((config) => {
     });
 });
 
-const historyExample = [
-    {
-        status: 'Ổn định',
-        code: 0,
-    },
-    {
-        status: 'Sự cố',
-        code: 1,
-    },
-    {
-        status: 'Nguy cơ',
-        code: 2,
-    }
-];
+// const historyExample = [
+//     {
+//         status: 'Ổn định',
+//         code: 0,
+//     },
+//     {
+//         status: 'Sự cố',
+//         code: 1,
+//     },
+//     {
+//         status: 'Nguy cơ',
+//         code: 2,
+//     }
+// ];
 
-const possibleCode = [
-    [1, 2], [0, 2], [0]
-];
+// const possibleCode = [
+//     [1, 2], [0, 2], [0]
+// ];
 
 const issueCauseExample = [
     'Rò rỉ đường dây', 'Đoản mạch', 'Hỏng biến tần', 'Hư hại do thời tiết', 'Hỏng cảm biến', 'Chưa xác định'
 ];
 
-const noIssueCause = 'Hệ thông hoạt động bình thường';
+// const noIssueCause = 'Hệ thông hoạt động bình thường';
 
-mock.onGet(/\/site\/history\?.*/).reply((config) => {
+const eventTypeKeys = Object.keys(utility.EVENT_TYPE);
+const eventStatusKeys = Object.keys(utility.EVENT_STATUS);
+
+mock.onGet(/\/site\/events\?.*/).reply((config) => {
     const url = config.url;
-    const id = queryParametersParser.parse(url.split('?')[1])['id'];
-    let data, site;
+    // const id = queryParametersParser.parse(url.split('?')[1])['id'];
+    let data;
+    // , site;
 
-    if (save['/sites']) {
-        site = save['/sites'][parseInt(id)];
-    }
+    // if (save['/sites']) {
+    //     site = save['/sites'][parseInt(id)];
+    // }
 
     if (save[url]) {
         data = save[url];
     } else {
-        const firstCode = site?.isFail ? 1 : 0;
-        data = [{
-            timeStamp: 0,
-            cause: firstCode !== 0 ? issueCauseExample[Math.floor(Math.random() * issueCauseExample.length)] : noIssueCause,
-            ...historyExample[firstCode]
-        }];
+        data = [];
 
         let date = moment(new Date());
         const l = 10 + Math.floor(Math.random() * 5);
         for (let i = 1; i <= l; i++) {
             date = date.add(-1 * (0.4 + Math.random() * 60), 'hour');
-
-            const before = data[i - 1];
-            // Find the early code
-            const code = possibleCode[before.code][Math.floor(Math.random() * possibleCode[before.code].length)];
-
-            let cause = issueCauseExample[Math.floor(Math.random() * issueCauseExample.length)];
-            if (code === 2 && before.code === 1) {
-                cause = before.cause;
-            } else if (code === 0) {
-                cause = noIssueCause;
-            }
-
             data.push({
-                timeStamp: date.toDate().getTime(),
-                ...historyExample[code],
-                cause,
+                caption: issueCauseExample[Math.floor(Math.random() * issueCauseExample.length)],
+                time: date.toDate().getTime(),
+                eventType: utility.EVENT_TYPE[eventTypeKeys[Math.floor(Math.random() * eventTypeKeys.length)]].id,
+                status: utility.EVENT_STATUS[eventStatusKeys[Math.floor(Math.random() * eventStatusKeys.length)]].id,
             });
         }
 

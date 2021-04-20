@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import CustomBadge from '../common/customBadge';
-import solarImg from '../../asset/picture/solar.jpg';
-import utility from '../../service/utility';
+import CustomBadge from '../customBadge';
+import solarImg from '../../../asset/picture/solar.jpg';
+import utility from '../../../service/utility';
 
 import './siteBadge.scss';
 
@@ -14,13 +14,13 @@ const SiteBadge = ({ site, onClick }) => {
         let status = key ? utility.STATUS[key] : undefined;
 
         return <>
-            {status && <p className="siteSubInfo">
+            {status && <p>
                 Trạng thái: <span className={classNames('statusIndicate', (status?.id || '').toLowerCase())}/>
                 <span>{status.label}</span>
                 {typeof site?.noStatus === 'number' && typeof site?.noTotal === 'number' && <span>{`(${site?.noStatus}/${site?.noTotal})`}</span>}
             </p>}
-            <p className="siteSubInfo">{`Thời gian hoạt động: ${Math.floor(site.workingHours * 10) / 10} giờ`}</p>
-            <p className="siteSubInfo">{`Tổng sản lượng điện: ${utility.makeupProduct(site.product).value} ${utility.makeupProduct(site.product).unit}`}</p>
+            <p>{`Thời gian hoạt động: ${Math.floor(site.workingHours * 10) / 10} giờ`}</p>
+            <p>{`Tổng sản lượng điện: ${utility.makeupProduct(site.product).value} ${utility.makeupProduct(site.product).unit}`}</p>
         </>;
     }, [site]);
 

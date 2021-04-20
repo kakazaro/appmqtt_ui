@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import siteService from '../../service/siteService';
-import DeviceBadge from '../deviceBadge/deviceBadge';
+import DeviceBadge from '../badge/deviceBadge/deviceBadge';
 import { navigate } from '@reach/router';
 
 import './siteDevices.scss';

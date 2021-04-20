@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import CustomBadge from '../common/customBadge';
-import utility from '../../service/utility';
+import CustomBadge from '../customBadge';
+import utility from '../../../service/utility';
 import './deviceBadge.scss';
 import classNames from 'classnames';
 
