@@ -16,13 +16,13 @@ const save = {};
 const chart = {};
 const statusKey = Object.keys(utility.STATUS);
 
-mock.onPost('/login').reply(() => {
+mock.onPost(/^\/login$/).reply(() => {
     return new Promise((resolve) => {
         resolve([200, { success: true, token: 'abc_token' }]);
     });
 });
 
-mock.onGet('/sites').reply((config) => {
+mock.onGet(/^\/sites$/).reply((config) => {
     const number = 5 + Math.floor(Math.random() * 5);
 
     let sites = Array(number).fill('').map((dummy, index) => ({
@@ -101,7 +101,7 @@ const getChart = (id, time, space, start) => {
 
 const saveOverview = {};
 
-mock.onGet(/\/site\/overview\?.*/).reply((config) => {
+mock.onGet(/^\/site\/overview\?.*/).reply((config) => {
     const url = config.url;
     const query = queryParametersParser.parse(url.split('?')[1]);
     const id = query['id'];
@@ -128,7 +128,7 @@ mock.onGet(/\/site\/overview\?.*/).reply((config) => {
     });
 });
 
-mock.onGet(/\/site\/devices\?.*/).reply((config) => {
+mock.onGet(/^\/site\/devices\?.*/).reply((config) => {
     const url = config.url;
     let data;
 
@@ -179,7 +179,37 @@ const issueCauseExample = [
 const eventTypeKeys = Object.keys(utility.EVENT_TYPE);
 const eventStatusKeys = Object.keys(utility.EVENT_STATUS);
 
-mock.onGet(/\/site\/events\?.*/).reply((config) => {
+mock.onGet(/^\/events$/).reply((config) => {
+    const url = config.url;
+    let data;
+
+    if (save[url]) {
+        data = save[url];
+    } else {
+        data = [];
+
+        let date = moment(new Date());
+        const l = 30 + Math.floor(Math.random() * 15);
+        for (let i = 1; i <= l; i++) {
+            date = date.add(-1 * (0.4 + Math.random() * 60), 'hour');
+            data.push({
+                caption: issueCauseExample[Math.floor(Math.random() * issueCauseExample.length)],
+                time: date.toDate().getTime(),
+                eventType: utility.EVENT_TYPE[eventTypeKeys[Math.floor(Math.random() * eventTypeKeys.length)]].id,
+                status: utility.EVENT_STATUS[eventStatusKeys[Math.floor(Math.random() * eventStatusKeys.length)]].id,
+            });
+        }
+
+    }
+
+    save[url] = data;
+
+    return new Promise((resolve) => {
+        resolve([200, data]);
+    });
+});
+
+mock.onGet(/^\/site\/events\?.*/).reply((config) => {
     const url = config.url;
     // const id = queryParametersParser.parse(url.split('?')[1])['id'];
     let data;
@@ -215,7 +245,7 @@ mock.onGet(/\/site\/events\?.*/).reply((config) => {
     });
 });
 
-mock.onGet(/\/site\/chart\?.*/).reply((config) => {
+mock.onGet(/^\/site\/chart\?.*/).reply((config) => {
     const url = config.url;
     const query = queryParametersParser.parse(url.split('?')[1]);
     const id = parseInt(query['id']);

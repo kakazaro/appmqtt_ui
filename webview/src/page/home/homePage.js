@@ -3,6 +3,7 @@ import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { Home, HomeOutlined, ErrorOutline, Error, SupervisedUserCircleOutlined, SupervisedUserCircle } from '@material-ui/icons';
 import { navigate } from '@reach/router';
 import SitesList from '../../components/sitesList/sitesList';
+import GlobalEvent from '../../components/globalEvents/globalEvent';
 
 import './homePage.scss';
 
@@ -18,7 +19,8 @@ const pages = [
         id: 'events',
         label: 'Sự cố',
         icon: <ErrorOutline/>,
-        selectedIcon: <Error/>
+        selectedIcon: <Error/>,
+        page: GlobalEvent
     },
     {
         id: 'manage',

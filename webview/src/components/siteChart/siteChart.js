@@ -105,8 +105,31 @@ const SiteChart = ({ siteId }) => {
             chart: {
                 type: timeType.type,
                 toolbar: {
-                    show: false
+                    show: false,
+                    offsetY: 10,
+                    offsetX: -10,
+                    tools: {
+                        download: false,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false,
+                        customIcons: [{
+                            icon: '<i class="fas fa-expand-alt"/>',
+                            index: 0,
+                            title: 'tooltip of the icon',
+                            class: 'custom-icon',
+                            click: function (chart, options, e) {
+                                console.log("clicked custom-icon")
+                            }
+                        }]
+                    }
                 },
+                selection: {
+                    enabled: false
+                }
             },
             dataLabels: {
                 enabled: false
@@ -184,7 +207,13 @@ const SiteChart = ({ siteId }) => {
                 },
             },
             tooltip: {
-                enabled: false
+                enabled: true,
+                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                    const makeup = utility.makeupPower(series[seriesIndex][dataPointIndex]);
+                    return '<div class="arrow_box">' +
+                        '<span>' + makeup.value + ' ' + makeup.unit + '</span>' +
+                        '</div>';
+                }
             },
             legend: {
                 show: true,
