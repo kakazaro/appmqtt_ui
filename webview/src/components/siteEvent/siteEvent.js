@@ -10,8 +10,10 @@ const SiteEvent = ({ site }) => {
 
     useEffect(() => {
         if (site) {
-            const handle = (data) => setEventsData(data);
-            const registerId = siteService.registerSiteData(site.id, 'events', handle, undefined, 30000);
+            const handle = (data) => setEventsData(data.events);
+            const registerId = siteService.registerSiteData(site.id, 'events', handle, {
+                id: site.id
+            }, 30000);
 
             return () => {
                 siteService.unRegisterSiteData(registerId);
@@ -26,7 +28,7 @@ const SiteEvent = ({ site }) => {
     }
 
     return <div className={'siteEvent'}>
-        {eventsData.map(event => <EventBadge event={event} onClick={() => {
+        {eventsData.map((event, index) => <EventBadge event={event} key={index} onClick={() => {
         }}/>)}
     </div>;
 };

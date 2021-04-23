@@ -34,9 +34,9 @@
     "react-switch": "^5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "deploy": "rmdir /Q /S \"../firebase/public\" && react-scripts build && move build ../firebase/public && cd ../firebase && firebase deploy --only hosting",
+    "start": "set REACT_APP_ENV=local && react-scripts start",
+    "build": "set REACT_APP_ENV=prod && react-scripts build",
+    "deploy": "rmdir /Q /S \"../firebase/public\" && set REACT_APP_ENV=prod && react-scripts build && move build ../firebase/public && cd ../firebase && firebase deploy --only hosting",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

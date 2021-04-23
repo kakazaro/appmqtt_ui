@@ -13,7 +13,7 @@ const LoginPage = ({ onToken }) => {
         e.preventDefault();
         (async () => {
             try {
-                const response = await axios.post('/login', { user });
+                const response = await axios.post('users/login', { user });
                 onToken(response.data.token);
             } catch (err) {
                 console.error(err);

@@ -5,10 +5,12 @@ import moment from 'moment';
 import utility from './utility';
 
 const axios = axiosModule.create({
-    baseURL: 'https://my-api.domain.com',
+    baseURL: process.env.REACT_APP_ENV === 'prod' ? process.env.REACT_APP_BASE_URL_PROD : process.env.REACT_APP_BASE_URL_LOCAL,
     timeout: 30000,
-    withCredentials: true
+    // withCredentials: true
 });
+
+export default axios;
 
 const mock = new MockAdapter(axios);
 
@@ -16,13 +18,13 @@ const save = {};
 const chart = {};
 const statusKey = Object.keys(utility.STATUS);
 
-mock.onPost(/^\/login$/).reply(() => {
+mock.onPost(/^\/users\/login$/).reply(() => {
     return new Promise((resolve) => {
         resolve([200, { success: true, token: 'abc_token' }]);
     });
 });
 
-mock.onGet(/^\/sites$/).reply((config) => {
+mock.onGet(/^\/site\/list$/).reply((config) => {
     const number = 5 + Math.floor(Math.random() * 5);
 
     let sites = Array(number).fill('').map((dummy, index) => ({
@@ -179,7 +181,7 @@ const issueCauseExample = [
 const eventTypeKeys = Object.keys(utility.EVENT_TYPE);
 const eventStatusKeys = Object.keys(utility.EVENT_STATUS);
 
-mock.onGet(/^\/events$/).reply((config) => {
+mock.onGet(/^\/site\/events$/).reply((config) => {
     const url = config.url;
     let data;
 
@@ -245,7 +247,7 @@ mock.onGet(/^\/site\/events\?.*/).reply((config) => {
     });
 });
 
-mock.onGet(/^\/site\/chart\?.*/).reply((config) => {
+mock.onGet(/^\/site\/trend\?.*/).reply((config) => {
     const url = config.url;
     const query = queryParametersParser.parse(url.split('?')[1]);
     const id = parseInt(query['id']);
@@ -261,4 +263,3 @@ mock.onGet(/^\/site\/chart\?.*/).reply((config) => {
 });
 
 
-export default axios;

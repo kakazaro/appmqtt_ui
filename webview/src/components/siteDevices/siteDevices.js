@@ -10,7 +10,7 @@ const SiteDevices = ({ site }) => {
 
     useEffect(() => {
         if (site) {
-            const handle = (data) => setDevicesData(data);
+            const handle = (data) => setDevicesData(data.devices);
             const registerId = siteService.registerSiteData(site.id, 'devices', handle, undefined, 15000);
 
             return () => {

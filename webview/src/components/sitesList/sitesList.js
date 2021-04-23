@@ -29,7 +29,7 @@ const SitesList = () => {
         if (token) {
             (async () => {
                 try {
-                    const response = await axios.get('/sites', {
+                    const response = await axios.get('/site/list', {
                         headers: {
                             token
                         }

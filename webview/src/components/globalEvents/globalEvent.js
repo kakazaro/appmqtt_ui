@@ -15,12 +15,12 @@ const GlobalEvent = () => {
         if (token) {
             (async () => {
                 try {
-                    const response = await axios.get('/events', {
+                    const response = await axios.get('site/events', {
                         headers: {
                             token
                         }
                     });
-                    setEventsData(response.data);
+                    setEventsData(response.data.events);
                 } catch (err) {
                     console.error(err);
                 }

@@ -18,6 +18,7 @@ const timeTypes = [
         views: ['year', 'month', 'date'],
         format: 'YYYY-MM-DD',
         openTo: 'date',
+        basedTime: 'day',
         start: 'd',
         space: 'h',
         timeFormatChart: 'H[h]',
@@ -31,6 +32,7 @@ const timeTypes = [
         views: ['year', 'month'],
         format: 'YYYY-MM',
         openTo: 'month',
+        basedTime: 'month',
         start: 'M',
         space: 'd',
         timeFormatChart: 'D',
@@ -44,6 +46,7 @@ const timeTypes = [
         views: ['year'],
         format: 'YYYY',
         openTo: 'year',
+        basedTime: 'year',
         start: 'y',
         space: 'M',
         timeFormatChart: 'M',
@@ -81,10 +84,9 @@ const SiteChart = ({ siteId }) => {
     useEffect(() => {
         const handle = (data) => setData(data);
         let m = moment(time);
-        const registerId = siteService.registerSiteData(siteId, 'chart', handle, {
-            time: m.toDate().getTime(),
-            space: timeType.space,
-            start: timeType.start
+        const registerId = siteService.registerSiteData(siteId, 'trend', handle, {
+            date: m.format('YYYY-MM-DD'),
+            basedTime: timeType.basedTime
         });
 
         return () => {
@@ -93,6 +95,16 @@ const SiteChart = ({ siteId }) => {
     }, [siteId, timeType, time]);
 
     useEffect(() => {
+
+        const times = [];
+        if (data?.series?.length) {
+            let start = moment(time).startOf(timeType.start);
+            for (let i = 0; i < data.series.length; i++) {
+                times.push(start.toDate().getTime());
+                start = start.add(1, timeType.space);
+            }
+        }
+
         SetSeries([
                 {
                     name: `Công xuất ${divNumber.unit}`,
@@ -121,9 +133,9 @@ const SiteChart = ({ siteId }) => {
                             index: 0,
                             title: 'tooltip of the icon',
                             class: 'custom-icon',
-                            click: function (chart, options, e) {
-                                console.log("clicked custom-icon")
-                            }
+                            // click: function (chart, options, e) {
+                            //     console.log('clicked custom-icon');
+                            // }
                         }]
                     }
                 },
@@ -134,7 +146,7 @@ const SiteChart = ({ siteId }) => {
             dataLabels: {
                 enabled: false
             },
-            labels: data.times,
+            labels: times,
             colors: ['#ff7300'],
             fill: {
                 type: 'solid',
@@ -208,7 +220,7 @@ const SiteChart = ({ siteId }) => {
             },
             tooltip: {
                 enabled: true,
-                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                custom: function ({ series, seriesIndex, dataPointIndex }) {
                     const makeup = utility.makeupPower(series[seriesIndex][dataPointIndex]);
                     return '<div class="arrow_box">' +
                         '<span>' + makeup.value + ' ' + makeup.unit + '</span>' +
@@ -234,7 +246,7 @@ const SiteChart = ({ siteId }) => {
                 }
             }
         });
-    }, [data, timeType, divNumber]);
+    }, [data, timeType, divNumber, time]);
 
     const isCanNext = useMemo(() => Date.now() > moment(time).add(1, timeType.start), [time, timeType]);
 
@@ -245,7 +257,8 @@ const SiteChart = ({ siteId }) => {
     return <Col className="siteChart">
         <Row>
             <div className={'timeTypeSelector'}>
-                {timeTypes.map(type => <div
+                {timeTypes.map((type, index) => <div
+                    key={index}
                     className={classNames('timeType', { isSelected: type.id === timeType.id })}
                     onClick={() => setTimeType(type)}
                 >
