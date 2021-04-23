@@ -18,8 +18,6 @@ import './App.scss';
 moment.locale('vi');
 
 const App = () => {
-    console.log(process.env.REACT_APP_BASE_URL_LOCAL)
-
     useEffect(() => {
         const handleResize = () => {
             sizeService.sizeChange(window.innerWidth);
