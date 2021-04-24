@@ -6,9 +6,9 @@ import axios from '../../service/axios';
 import SiteBadge from '../badge/siteBadge/siteBadge';
 import FreshFilter from '../freshFilter/freshFilter';
 import UserContext from '../userContext/userContext';
+import utility from '../../service/utility';
 
 import './sitesList.scss';
-import utility from '../../service/utility';
 
 const ITEMS_FILTER = [
     {
@@ -55,7 +55,7 @@ const SitesList = () => {
         return <FreshFilter items={filters} value={filterValue} onChange={(item) => setFilterValue(item)}/>;
     }, [filterValue]);
 
-    return <FreshestLayout className="sitesList" title={'NT.V Corp'}>
+    return <FreshestLayout className="sitesList" title={'N.T.V SOLAR'}>
         <div className="sitesBody">
             <Col>
                 <Row className={'filterRow'}>

@@ -1,6 +1,13 @@
 @import '../../asset/common';
 
 .sitesList {
+
+    .headerLayout {
+        .navbar-brand {
+            color: $PHILIPPINE_ORANGE;
+        }
+    }
+
     .sitesBody {
         width: 100%;
 
