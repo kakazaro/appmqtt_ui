@@ -5,6 +5,7 @@ import utility from '../../service/utility';
 import SiteChart from '../siteChart/siteChart';
 import siteService from '../../service/siteService';
 import { navigate } from '@reach/router';
+import { Skeleton } from '@material-ui/lab';
 
 import './siteOverview.scss';
 
@@ -18,8 +19,12 @@ const SiteCard = ({ info }) => {
                             {info.main.text}
                         </Row>
                         <Row className={'valueRow'}>
-                            <span>{info.main.value}</span>
-                            <span className={'valueUnit'}>{info.main.unit}</span>
+                            {info.main.value === undefined ?
+                                <Skeleton width={(Math.random() * 20 + 20) + '%'} height={30} style={{ marginRight: 0, marginLeft: 'auto' }}/>
+                                : <>
+                                    <span>{info.main.value}</span>
+                                    <span className={'valueUnit'}>{info.main.unit}</span>
+                                </>}
                         </Row>
                     </Col>
                 </Container>
@@ -31,8 +36,12 @@ const SiteCard = ({ info }) => {
                             {info.sub.text}
                         </Col>
                         <Col className={'valueRow'} xs={5}>
-                            <span>{info.sub.value}</span>
-                            <span>{info.sub.unit}</span>
+                            {info.sub.value === undefined ?
+                                <Skeleton width={(Math.random() * 30 + 40) + '%'} height={20} style={{ marginRight: 0, marginLeft: 'auto' }}/>
+                                : <>
+                                    <span>{info.sub.value}</span>
+                                    <span>{info.sub.unit}</span>
+                                </>}
                         </Col>
                     </Row>
                 </Container>
@@ -75,45 +84,39 @@ const SiteOverview = ({ site }) => {
     }, [site]);
 
     const cardDom = useMemo(() => {
-        if (siteOverviewData) {
-            return <Col>
-                <SiteCard info={{
-                    main: {
-                        text: 'Công xuất hiện tại',
-                        ...utility.makeupPower(siteOverviewData.curSumActPower)
-                    },
-                    sub: {
-                        text: 'Công xuất danh định',
-                        ...utility.makeupPower(siteOverviewData.ratedSumPower, 'p')
-                    }
-                }}/>
-                <SiteCard info={{
-                    main: {
-                        text: 'Tổng Sản lượng điện trong ngày',
-                        ...utility.makeupProduct(siteOverviewData.todaySumEnergy)
-                    },
-                    sub: {
-                        text: 'Tổng Sản lượng tích lũy',
-                        ...utility.makeupProduct(siteOverviewData.allSumEnergy)
-                    }
-                }}/>
-                <SiteCard info={{
-                    main: {
-                        text: 'Lợi nhuận trong ngày',
-                        ...utility.makeupMoney(siteOverviewData.todaySumEnergy * 1720)
-                    },
-                    sub: {
-                        text: 'Tổng doanh thu',
-                        ...utility.makeupMoney(siteOverviewData.allSumEnergy * 1720)
-                    }
-                }}/>
-            </Col>;
-        }
+        return <Col>
+            <SiteCard info={{
+                main: {
+                    text: 'Công xuất hiện tại',
+                    ...(siteOverviewData ? utility.makeupPower(siteOverviewData.curSumActPower) : undefined)
+                },
+                sub: {
+                    text: 'Công xuất danh định',
+                    ...(siteOverviewData ? utility.makeupPower(siteOverviewData.ratedSumPower, 'p') : undefined)
+                }
+            }}/>
+            <SiteCard info={{
+                main: {
+                    text: 'Tổng Sản lượng điện trong ngày',
+                    ...(siteOverviewData ? utility.makeupProduct(siteOverviewData.todaySumEnergy) : undefined)
+                },
+                sub: {
+                    text: 'Tổng Sản lượng tích lũy',
+                    ...(siteOverviewData ? utility.makeupProduct(siteOverviewData.allSumEnergy) : undefined)
+                }
+            }}/>
+            <SiteCard info={{
+                main: {
+                    text: 'Lợi nhuận trong ngày',
+                    ...(siteOverviewData ? utility.makeupMoney(siteOverviewData.todaySumEnergy * 1720) : undefined)
+                },
+                sub: {
+                    text: 'Tổng doanh thu',
+                    ...(siteOverviewData ? utility.makeupMoney(siteOverviewData.allSumEnergy * 1720) : undefined)
+                }
+            }}/>
+        </Col>;
     }, [siteOverviewData]);
-
-    if (!siteOverviewData) {
-        return null;
-    }
 
     return <div className={'siteOverview'}>
         <Col>

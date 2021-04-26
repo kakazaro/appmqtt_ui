@@ -23,8 +23,6 @@ const SitesList = () => {
     const userContext = useContext(UserContext);
     const token = useMemo(() => userContext?.token, [userContext]);
 
-    // const token = useMemo(() => queryParser.parse(location.search)['token'], [location]);
-
     useEffect(() => {
         if (token) {
             (async () => {
@@ -43,7 +41,12 @@ const SitesList = () => {
     }, [token]);
 
     const sitesDom = useMemo(() => {
-        if (sites) {
+        if (!sites) {
+            return Array(5).fill('').map((s, index) => <SiteBadge key={index} onClick={() => {
+            }}/>);
+        } else if (!sites.length) {
+            return <p className={'noData'}>Hiện chưa có dữ liệu để hiển thị.</p>;
+        } else {
             return sites.map((site, index) => <SiteBadge key={index} site={site} onClick={() => {
                 navigate('/site?id=' + encodeURIComponent(site.id), { state: { site } }).then();
             }}/>);

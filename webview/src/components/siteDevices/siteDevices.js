@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import siteService from '../../service/siteService';
 import DeviceBadge from '../badge/deviceBadge/deviceBadge';
 import { navigate } from '@reach/router';
@@ -17,17 +17,24 @@ const SiteDevices = ({ site }) => {
                 siteService.unRegisterSiteData(registerId);
             };
         } else {
-            navigate('/')
+            navigate('/');
         }
     }, [site]);
 
-    if (!devicesData?.length) {
-        return null;
-    }
+    const dom = useMemo(() => {
+        if (!devicesData) {
+            return Array(10).fill('').map((v, index) => <DeviceBadge key={index} onClick={() => {
+            }}/>);
+        } else if (!devicesData.length) {
+            return <p className={'noData'}>Hiện chưa có dữ liệu để hiển thị.</p>;
+        }
+
+        return devicesData.map((device, index) => <DeviceBadge key={index} device={device} onClick={() => {
+        }}/>);
+    }, [devicesData]);
 
     return <div className={'siteDevices'}>
-        {devicesData.map((device, index) => <DeviceBadge key={index} device={device} onClick={() => {
-        }}/>)}
+        {dom}
     </div>;
 };
 

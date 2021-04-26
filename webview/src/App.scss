@@ -13,4 +13,12 @@ body {
     //    z-index: -100;
     //    background-image: linear-gradient(120deg, $LAKE_THUN, $KIKORANGI_BLUE);
     //}
+
+    .noData {
+        font-size: 13px;
+        text-align: center;
+        width: 100%;
+        margin-top: 30px;
+        color: $DARK_SOULS;
+    }
 }

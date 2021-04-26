@@ -28,18 +28,21 @@ const GlobalEvent = () => {
         }
     }, [token]);
 
-    if (!eventsData?.length) {
-        return null;
-    }
+    const dom = useMemo(() => {
+        if (!eventsData) {
+            return Array(30).fill('').map((v, index) => <EventBadge key={index} onClick={() => {
+            }}/>);
+        } else if (!eventsData.length) {
+            return <p className={'noData'}>Hiện chưa có dữ liệu để hiển thị.</p>;
+        }
 
-    // return <div className={'globalEvent'}>
-    //
-    // </div>;
+        return eventsData.map(event => <EventBadge event={event} onClick={() => {
+        }}/>);
+    }, [eventsData]);
 
     return <FreshestLayout className="globalEvent" title={'Sự cố các trạm điện'}>
         <div className="eventBody">
-            {eventsData.map(event => <EventBadge event={event} onClick={() => {
-            }}/>)}
+            {dom}
         </div>
     </FreshestLayout>;
 };
