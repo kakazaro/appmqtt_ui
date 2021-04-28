@@ -76,7 +76,7 @@ const LoginPage = ({ onToken }) => {
                     onToken(response.data.token);
                 } catch (err) {
                     console.error(err);
-                    if (err.response.status === 400) {
+                    if (err?.response?.status === 400) {
                         setError('Email hoặc mật khẩu không đúng');
                     } else {
                         setError('Đăng nhập không thành công');
