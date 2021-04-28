@@ -1,8 +1,9 @@
 import axiosModule from 'axios';
 
 const axios = axiosModule.create({
-    baseURL: process.env.REACT_APP_ENV.trim() === 'prod' ? process.env.REACT_APP_BASE_URL_PROD : process.env.REACT_APP_BASE_URL_LOCAL,
+    // baseURL: process.env.REACT_APP_ENV.trim() === 'prod' ? process.env.REACT_APP_BASE_URL_PROD : process.env.REACT_APP_BASE_URL_LOCAL,
     // baseURL: 'http://113.161.79.146:5001',
+    baseURL: 'https://isolar-dummy.herokuapp.com',
     // baseURL: 'http://localhost:3001',
     timeout: 30000,
     // withCredentials: true
