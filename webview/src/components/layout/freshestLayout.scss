@@ -43,3 +43,30 @@
         }
     }
 }
+
+.logoutModal {
+    .MuiDialog-paper {
+        padding: 20px 40px;
+
+        h2 {
+            text-align: center;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            min-width: 150px;
+
+            &.btn-primary {
+                background-color: $PHILIPPINE_ORANGE;
+                border: none;
+            }
+
+            &.btn-outline-primary {
+                border-color: $PHILIPPINE_ORANGE;
+                color: $PHILIPPINE_ORANGE;
+            }
+        }
+    }
+}

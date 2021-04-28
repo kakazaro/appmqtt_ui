@@ -87,7 +87,7 @@ const SiteChart = ({ siteId }) => {
         const registerId = siteService.registerSiteData(siteId, 'trend', handle, {
             date: m.format('YYYY-MM-DD'),
             basedTime: timeType.basedTime
-        });
+        }, 60000 * 5);
 
         return () => {
             siteService.unRegisterSiteData(registerId);
@@ -99,9 +99,14 @@ const SiteChart = ({ siteId }) => {
         const times = [];
         if (data?.series?.length) {
             let start = moment(time).startOf(timeType.start);
+            let end = moment(time).startOf(timeType.start).add(1, timeType.start);
+
+            let duration = end.toDate().getTime() - start.toDate().getTime();
+            let space = duration / data.series.length;
+
             for (let i = 0; i < data.series.length; i++) {
                 times.push(start.toDate().getTime());
-                start = start.add(1, timeType.space);
+                start = start.add(space, 'ms');
             }
         }
 
@@ -254,7 +259,7 @@ const SiteChart = ({ siteId }) => {
         return null;
     }
 
-    return <Col className="siteChart">
+    return <Col className='siteChart'>
         <Row>
             <div className={'timeTypeSelector'}>
                 {timeTypes.map((type, index) => <div

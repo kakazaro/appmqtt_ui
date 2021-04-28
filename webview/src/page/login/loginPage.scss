@@ -4,7 +4,7 @@
     .loginBody {
         margin-top: 30px;
 
-        .loginForm {
+        form {
             width: 100%;
             padding: 20px;
 
@@ -15,31 +15,54 @@
                 margin: 5px auto 20px;
             }
 
-            .form-group {
+            .MuiFormControl-root {
+                width: 100% !important;
                 margin-bottom: 7px;
 
-                input {
-                    border: none;
-                    border-radius: 0;
-                    border-bottom: 1px solid $DARK_SOULS;
-                    font-weight: 500;
+                .Mui-checked {
+                    color: $PHILIPPINE_ORANGE;
+                }
 
-                    &::placeholder {
-                        color: $DARK_SOULS;
-                        opacity: 0.8;
-                        font-weight: 400;
-                    }
+                .MuiFormControlLabel-root {
+                    margin-bottom: 0;
                 }
             }
 
+            .errorText {
+                font-size: 13px;
+            }
+
             button {
-                margin-top: 10px;
-                width: 100%;
-                //font-weight: 500;
-                background-color: $PHILIPPINE_ORANGE;
-                border: none !important;
-                border-radius: 5px;
+                &.btn-primary {
+                    margin-top: 10px;
+                    width: 100%;
+                    //font-weight: 500;
+                    background-color: $PHILIPPINE_ORANGE;
+                    border: none !important;
+                    border-radius: 5px;
+                }
+
+                &.btn-link {
+                    font-size: 13px;
+                    width: 100%;
+                    margin-top: 10px;
+                }
             }
         }
+    }
+}
+
+.registerModal {
+    .MuiDialog-paper {
+        p {
+            font-weight: bold;
+        }
+
+        button {
+            background-color: $PHILIPPINE_ORANGE;
+            border: none;
+        }
+
+        padding: 20px;
     }
 }

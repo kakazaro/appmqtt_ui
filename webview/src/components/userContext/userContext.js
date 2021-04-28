@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import LoginPage from '../../page/login/loginPage';
+import axios from '../../service/axios';
 
 const defaultUser = { token: '' };
 const TOKEN_KEY = '__token';
@@ -20,6 +21,8 @@ export const UserProvider = ({ children }) => {
     }, [token]);
 
     const value = useMemo(() => {
+        axios.updateToken(token);
+
         return {
             ...defaultUser,
             token,

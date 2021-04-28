@@ -73,7 +73,7 @@ const SiteOverview = ({ site }) => {
     useEffect(() => {
         if (site) {
             const handle = (data) => setSiteOverviewData(data.site);
-            const registerId = siteService.registerSiteData(site.id, 'overview', handle);
+            const registerId = siteService.registerSiteData(site.id, 'overview', handle, undefined, 10000);
 
             return () => {
                 siteService.unRegisterSiteData(registerId);
