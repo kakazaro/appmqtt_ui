@@ -47,17 +47,16 @@ const MainScreen = () => {
     };
 
     return <SafeAreaView style={styles.container}>
+        <StatusBar style='auto'/>
         <NavigationContainer>
             <Stack.Navigator initialRouteName={!userContext.token ? 'login' : 'home'} headerMode='screen' screenOptions={{ header: mainAppBar, ...myTransition }}>
                 <Stack.Screen name={'login'} options={{ title: 'Đăng Nhập' }} component={LoginScreen}/>
                 <Stack.Screen name={'register'} options={{ title: 'Đăng ký tài khoản' }} component={RegisterScreen}/>
                 <Stack.Screen name={'home'} options={GetOptionsHomeScreen} component={HomeScreen}/>
-                <Stack.Screen name={'site'} component={SiteScreen}/>
+                <Stack.Screen name={'site'} options={{title: '', showSiteMenu: true}} component={SiteScreen}/>
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
-
-        <StatusBar style='auto'/>
     </SafeAreaView>;
 };
 

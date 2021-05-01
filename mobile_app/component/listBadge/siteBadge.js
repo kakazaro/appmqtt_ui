@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
+import { Divider, Text, TouchableRipple } from 'react-native-paper';
 import utility from '../../common/utility';
 import { colors } from '../../common/themes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import {
     Placeholder,
     PlaceholderMedia,
@@ -12,6 +13,7 @@ import {
 } from 'rn-placeholder';
 
 const SiteBadge = ({ item }) => {
+    const navigation = useNavigation();
 
     const siteInfoDom = useMemo(() => {
         const site = item;
@@ -42,23 +44,31 @@ const SiteBadge = ({ item }) => {
 
     }, [item]);
 
-    return <View>
-        <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'start', alignItems: 'start', paddingStart: 15, paddingEnd: 15, paddingTop: 15, backgroundColor: 'white' }}>
-            <View style={{ marginEnd: 10 }}>
-                {item ?
-                    <Image style={{ width: 34, height: 34, borderRadius: 5 }} source={require('../../assets/picture/solar.jpg')}/>
-                    :
-                    <Placeholder Animation={ShineOverlay}>
-                        <PlaceholderMedia size={34}/>
-                    </Placeholder>
-                }
-            </View>
-            <View style={{ flex: 1, flexDirection: 'column' }}>
-                {siteInfoDom}
-                <Divider/>
+    const onPress = () => {
+        if (item) {
+            navigation.navigate('site', { screen: 'siteOverview', site: item, params: { site: item } });
+        }
+    };
+
+    return <TouchableRipple onPress={onPress}>
+        <View>
+            <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'start', alignItems: 'start', paddingStart: 15, paddingEnd: 15, paddingTop: 15, backgroundColor: 'white' }}>
+                <View style={{ marginEnd: 10 }}>
+                    {item ?
+                        <Image style={{ width: 34, height: 34, borderRadius: 5 }} source={require('../../assets/picture/solar.jpg')}/>
+                        :
+                        <Placeholder Animation={ShineOverlay}>
+                            <PlaceholderMedia size={34}/>
+                        </Placeholder>
+                    }
+                </View>
+                <View style={{ flex: 1, flexDirection: 'column' }}>
+                    {siteInfoDom}
+                    <Divider/>
+                </View>
             </View>
         </View>
-    </View>;
+    </TouchableRipple>;
 };
 
 const styles = StyleSheet.create({

@@ -113,6 +113,7 @@ const RegisterScreen = ({ navigation }) => {
             style={{ backgroundColor: colors.PHILIPPINE_ORANGE, width: '100%', marginTop: 5 }}
             disabled={loading || !canRegister}
             onPress={onRegisterClick}
+            loading={loading}
         >
             Đăng Ký
         </Button>

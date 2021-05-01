@@ -111,6 +111,7 @@ const LoginScreen = ({ navigation }) => {
             style={{ backgroundColor: colors.PHILIPPINE_ORANGE, width: '100%', marginTop: 5 }}
             disabled={loading || !canLogin}
             onPress={onLoginClick}
+            loading={loading}
         >
             Đăng Nhập
         </Button>

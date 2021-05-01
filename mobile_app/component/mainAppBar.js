@@ -5,9 +5,10 @@ import { colors } from '../common/themes';
 import UserContext from '../context/userContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
-const MainAppBar = ({ scene, navigation }) => {
+const MainAppBar = ({ scene, previous, navigation }) => {
     const userContext = useContext(UserContext);
+
+    const isCanBack = !!previous;
 
     const { options } = scene.descriptor;
     const [visibleMenu, setVisibleMenu] = useState(false);
@@ -21,6 +22,7 @@ const MainAppBar = ({ scene, navigation }) => {
 
     const showMenu = !!options?.showMenu;
     return <Appbar.Header style={styles.bar}>
+        {isCanBack && <Appbar.BackAction onPress={() => navigation.goBack()}/>}
         <Appbar.Content titleStyle={styles.title} title={title}/>
         {showMenu && <Menu
             visible={visibleMenu}

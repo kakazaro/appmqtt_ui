@@ -36,12 +36,6 @@ class SiteService {
         })();
     }
 
-    pushEvent(id, data, type) {
-        if (this.handler[type][id + '']) {
-            this.handler[type][id + ''](data);
-        }
-    }
-
     registerSiteData(id, type, handler, query, duration) {
         const uid = randomstring.generate();
         this.start[uid] = true;

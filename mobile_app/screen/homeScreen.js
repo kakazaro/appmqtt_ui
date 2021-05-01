@@ -10,7 +10,7 @@ import { Text } from 'react-native-paper';
 
 const Tab = createBottomTabNavigator();
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
 
     return (
         <Tab.Navigator>
