@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { colors } from '../../common/themes';
 
 const AlarmsTab = () => {
     return <View style={styles.container}>
-        <Text>AlarmTab!</Text>
+        <Text style={{color: colors.DARK_SOULS}}>Chưa có dữ liệu</Text>
     </View>;
 };
 

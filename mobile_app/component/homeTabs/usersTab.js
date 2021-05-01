@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { colors } from '../../common/themes';
 
 const UsersTab = () => {
     return <View style={styles.container}>
-        <Text>UsersTab!</Text>
+        <Text style={{ color: colors.DARK_SOULS }}>Chưa có dữ liệu</Text>
     </View>;
 };
 

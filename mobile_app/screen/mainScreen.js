@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import UserContext from '../context/userContext';
 import LoginScreen from './loginScreen';
 import HomeScreen from './homeScreen';
@@ -37,9 +37,18 @@ const MainScreen = () => {
         return options;
     };
 
-    return <View style={styles.container}>
+    const myTransition = {
+        gestureDirection: 'horizontal',
+        transitionSpec: {
+            open: TransitionSpecs.TransitionIOSSpec,
+            close: TransitionSpecs.TransitionIOSSpec,
+        },
+        headerStyleInterpolator: HeaderStyleInterpolators.forFade,
+    };
+
+    return <SafeAreaView style={styles.container}>
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={!userContext.token ? 'login' : 'home'} headerMode='screen' screenOptions={{ header: mainAppBar }}>
+            <Stack.Navigator initialRouteName={!userContext.token ? 'login' : 'home'} headerMode='screen' screenOptions={{ header: mainAppBar, ...myTransition }}>
                 <Stack.Screen name={'login'} options={{ title: 'Đăng Nhập' }} component={LoginScreen}/>
                 <Stack.Screen name={'register'} options={{ title: 'Đăng ký tài khoản' }} component={RegisterScreen}/>
                 <Stack.Screen name={'home'} options={GetOptionsHomeScreen} component={HomeScreen}/>
@@ -49,7 +58,7 @@ const MainScreen = () => {
         </NavigationContainer>
 
         <StatusBar style='auto'/>
-    </View>;
+    </SafeAreaView>;
 };
 
 const styles = StyleSheet.create({

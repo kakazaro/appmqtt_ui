@@ -1,8 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
-// import UserContext from '../context/userContext';
-// import Ionicons from '@expo/vector-icons/Ionicons';
-// import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SitesTab from '../component/homeTabs/sitesTab';
 import AlarmsTab from '../component/homeTabs/alarmsTab';
@@ -14,7 +11,6 @@ import { Text } from 'react-native-paper';
 const Tab = createBottomTabNavigator();
 
 const HomeScreen = ({ navigation }) => {
-    // const userContext = useContext(UserContext);
 
     return (
         <Tab.Navigator>
@@ -32,10 +28,6 @@ const HomeScreen = ({ navigation }) => {
             }} component={UsersTab}/>
         </Tab.Navigator>
     );
-
-    // return <View style={styles.container}>
-    //     <Text onPress={() => userContext.logout(navigation)}>Home!</Text>
-    // </View>;
 };
 
 const styles = StyleSheet.create({

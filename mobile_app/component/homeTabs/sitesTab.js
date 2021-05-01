@@ -1,9 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import ListScroll from '../listScroll';
+import SiteBadge from '../listBadge/siteBadge';
 
 const SitesTab = () => {
+
     return <View style={styles.container}>
-        <Text>SitesTab!</Text>
+        <ListScroll Component={SiteBadge} showPlaceholder={true} path={'sites'} url={'/site/list'}/>
     </View>;
 };
 
@@ -11,7 +14,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
 });
 
