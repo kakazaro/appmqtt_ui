@@ -19,10 +19,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ntvorg.ntvisolar",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "package": "com.ntvorg.ntvisolar",
+      "versionCode": 1000000,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
