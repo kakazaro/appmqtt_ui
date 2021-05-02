@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { colors } from '../common/themes';
+
 import SitesTab from '../component/homeTabs/sitesTab';
 import AlarmsTab from '../component/homeTabs/alarmsTab';
 import UsersTab from '../component/homeTabs/usersTab';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors } from '../common/themes';
 import { Text } from 'react-native-paper';
 
 const Tab = createBottomTabNavigator();
@@ -20,7 +21,7 @@ const HomeScreen = () => {
             }} component={SitesTab}/>
             <Tab.Screen name='alarms' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Cảnh báo lỗi</Text>,
-                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name='account-circle-outline' color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
+                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name='alert-outline' color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={AlarmsTab}/>
             <Tab.Screen name='users' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Quản lý</Text>,

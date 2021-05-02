@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import UserContext from './userContext';
 import axiosModule from 'axios';
-import randomstring from 'randomstring';
+import 'react-native-get-random-values';
+import { v4 as uidv4 } from 'uuid';
 
 // const REACT_APP_BASE_URL='http://113.161.79.146:5001'
 const REACT_APP_BASE_URL = 'https://isolar-dummy.herokuapp.com';
@@ -39,7 +40,7 @@ function DataControl(axios) {
 
     return {
         registerSiteData({ url, handler, query, duration }) {
-            const uid = randomstring.generate();
+            const uid = uidv4();
             start[uid] = true;
             loopGetSiteData(url, handler, query, uid, duration);
             return uid;

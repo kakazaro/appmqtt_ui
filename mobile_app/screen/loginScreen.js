@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../context/userContext';
 import constant from '../common/constant';
 import ServerContext from '../context/serverContext';
+import * as Analytics from 'expo-firebase-analytics';
 
 const RememberKey = 'RememberKey';
 const RememberIdKey = 'RememberIdKey';
@@ -49,6 +50,11 @@ const LoginScreen = ({ navigation }) => {
         setLoading(true);
 
         (async () => {
+            try {
+                await Analytics.logEvent('loginBtnClick');
+            } catch (e) {
+                //Ignore
+            }
             try {
                 const response = await serverContext.axios.post('/users/login', { email, password });
                 await AsyncStorage.setItem(RememberKey, rememberPassword ? 'true' : '');

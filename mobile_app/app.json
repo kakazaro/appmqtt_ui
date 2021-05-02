@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "isolar",
-    "slug": "isolar",
+    "name": "NTV solar",
+    "slug": "ntv_solar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#f47321"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,13 +18,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.vlorg.isolar"
+      "bundleIdentifier": "com.ntvorg.ntvisolar",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
-      "package": "com.vlorg.isolar",
+      "package": "com.ntvorg.ntvisolar",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#f47321"
       },
       "permissions": []
     },

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Appbar, Menu, Divider } from 'react-native-paper';
+import { Appbar, Menu, Divider, IconButton } from 'react-native-paper';
 import { colors } from '../common/themes';
 import UserContext from '../context/userContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -23,11 +23,11 @@ const MainAppBar = ({ scene, previous, navigation }) => {
     const showMenu = !!options?.showMenu;
     return <Appbar.Header style={styles.bar}>
         {isCanBack && <Appbar.BackAction onPress={() => navigation.goBack()}/>}
-        <Appbar.Content titleStyle={styles.title} title={title}/>
+        <Appbar.Content titleStyle={[styles.title, { color: options.brand ? colors.PHILIPPINE_ORANGE : colors.primaryText }]} title={title}/>
         {showMenu && <Menu
             visible={visibleMenu}
             onDismiss={() => setVisibleMenu(false)}
-            anchor={<Appbar.Action icon={() => <MaterialCommunityIcons name='dots-vertical' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleMenu(!visibleMenu)}/>}
+            anchor={<IconButton icon={() => <MaterialCommunityIcons name='dots-vertical' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleMenu(!visibleMenu)}/>}
         >
             <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
             }} title='Cài đặt'/>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: '600',
+        fontWeight: 'bold',
         color: colors.primaryText
     },
     menuTitle: {

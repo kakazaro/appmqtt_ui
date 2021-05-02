@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Divider, Text } from 'react-native-paper';
 import utility from '../../common/utility';
 import { colors } from '../../common/themes';
@@ -10,6 +10,8 @@ import {
     PlaceholderLine,
     ShineOverlay
 } from 'rn-placeholder';
+import SimpleChar from '../chart/simpleChart';
+import { SiteContext } from '../../screen/siteScreen';
 
 const OverviewInfo = ({ info }) => {
     return <View style={{ backgroundColor: 'white', width: '100%', marginTop: 5, paddingTop: 10, paddingBottom: 5, paddingStart: 15, paddingEnd: 15 }}>
@@ -23,7 +25,7 @@ const OverviewInfo = ({ info }) => {
                 </Placeholder>
                 :
                 <Text style={{ textAlign: 'right', color: colors.primaryText }}>
-                    <Text style={{ fontSize: 28 }}>{info.main.value}</Text>
+                    <Text style={{ fontSize: 22 }}>{info.main.value}</Text>
                     <Text style={{ fontSize: 15, marginStart: 5 }}>{info.main.unit}</Text>
                 </Text>}
         </View>
@@ -51,7 +53,9 @@ const OverviewInfo = ({ info }) => {
 
 const SiteOverviewTab = ({ route }) => {
     const serviceContext = useContext(ServerContext);
-    const site = useMemo(() => route?.params?.site, [route]);
+    const siteContext = useContext(SiteContext);
+
+    const site = useMemo(() => siteContext?.site, [siteContext]);
 
     const [overviewData, setOverviewData] = useState();
 
@@ -67,10 +71,6 @@ const SiteOverviewTab = ({ route }) => {
         }
     }, [site, serviceContext]);
 
-    useEffect(() => {
-        console.log(overviewData);
-    }, [overviewData]);
-
 
     const siteStatus = useMemo(() => {
         const statusId = site?.status;
@@ -84,10 +84,10 @@ const SiteOverviewTab = ({ route }) => {
                 </Text>
             </View>
             <View style={styles.statusView}>
-                {status && <Text>
-                    <MaterialCommunityIcons name={'checkbox-blank-circle'} size={12} color={colors[status.id] || colors.offline}/>
-                    <Text style={[styles.statusText, { marginStart: 3 }]}>{status.label}</Text>
-                </Text>}
+                {status && <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name={'checkbox-blank-circle'} size={14} color={colors[status.id] || colors.offline}/>
+                    <Text style={[styles.statusText, { paddingStart: 5 }]}>{status.label}</Text>
+                </View>}
             </View>
         </View>;
     }, [site]);
@@ -129,9 +129,14 @@ const SiteOverviewTab = ({ route }) => {
         </>;
     }, [overviewData]);
 
+    const chartDom = useMemo(() => site ? <SimpleChar url={'/site/trend?id=' + encodeURIComponent(site.id)}/> : <></>, [site]);
+
     return <View style={styles.container}>
-        {siteStatus}
-        {infoDom}
+        <ScrollView style={{ width: '100%' }}>
+            {siteStatus}
+            {infoDom}
+            {chartDom}
+        </ScrollView>
     </View>;
 };
 
@@ -139,7 +144,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'start',
+        justifyContent: 'flex-start',
         width: '100%'
     },
     statusView: {

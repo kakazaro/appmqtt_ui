@@ -31,8 +31,8 @@ const SiteBadge = ({ item }) => {
         let status = key ? utility.STATUS[key] : undefined;
 
         return <>
-            <Text style={{ fontSize: 18, color: colors.primaryText, fontWeight: 600, marginBottom: 5 }}>{site.name}</Text>
-            {status && <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 18, color: colors.primaryText, fontWeight: 'bold', marginBottom: 5 }}>{site.name}</Text>
+            {status && <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={styles.subText}>Trạng thái: </Text>
                 <MaterialCommunityIcons name={'checkbox-blank-circle'} size={12} color={colors[status.id] || colors.offline}/>
                 <Text style={[styles.subText, { marginStart: 3 }]}>{status.label}</Text>
@@ -46,16 +46,16 @@ const SiteBadge = ({ item }) => {
 
     const onPress = () => {
         if (item) {
-            navigation.navigate('site', { screen: 'siteOverview', site: item, params: { site: item } });
+            navigation.navigate('site', { site: item });
         }
     };
 
     return <TouchableRipple onPress={onPress}>
         <View>
-            <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'start', alignItems: 'start', paddingStart: 15, paddingEnd: 15, paddingTop: 15, backgroundColor: 'white' }}>
-                <View style={{ marginEnd: 10 }}>
+            <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'flex-start', alignItems: 'flex-start', paddingStart: 15, paddingEnd: 15, paddingTop: 15, backgroundColor: 'white' }}>
+                <View style={{ minWidth: 45 }}>
                     {item ?
-                        <Image style={{ width: 34, height: 34, borderRadius: 5 }} source={require('../../assets/picture/solar.jpg')}/>
+                        <Image style={{ width: 34, height: 34, borderRadius: 5, marginTop: 8 }} source={require('../../assets/picture/solar.jpg')}/>
                         :
                         <Placeholder Animation={ShineOverlay}>
                             <PlaceholderMedia size={34}/>

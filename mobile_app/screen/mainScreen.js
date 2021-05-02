@@ -30,7 +30,8 @@ const MainScreen = () => {
                 break;
             case 'sites':
             default:
-                options.title = 'Trạm Điện';
+                options.title = 'N.T.V SOLAR';
+                options.brand = true;
                 break;
         }
 
@@ -53,7 +54,7 @@ const MainScreen = () => {
                 <Stack.Screen name={'login'} options={{ title: 'Đăng Nhập' }} component={LoginScreen}/>
                 <Stack.Screen name={'register'} options={{ title: 'Đăng ký tài khoản' }} component={RegisterScreen}/>
                 <Stack.Screen name={'home'} options={GetOptionsHomeScreen} component={HomeScreen}/>
-                <Stack.Screen name={'site'} options={{title: '', showSiteMenu: true}} component={SiteScreen}/>
+                <Stack.Screen name={'site'} options={{ title: '', showSiteMenu: true }} component={SiteScreen}/>
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
             </Stack.Navigator>
         </NavigationContainer>

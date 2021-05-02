@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "760849494154",
+    "project_id": "isolarcloud-32d36",
+    "storage_bucket": "isolarcloud-32d36.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760849494154:android:06c992f177aca80191bd73",
+        "android_client_info": {
+          "package_name": "com.ntvorg.ntvisolar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760849494154-aijrk4cn5j01svb5loofqhtna908rvtl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfKcad-MlVvh7e98pBb2k1rArISTV77zY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760849494154-aijrk4cn5j01svb5loofqhtna908rvtl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
