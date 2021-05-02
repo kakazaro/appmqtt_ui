@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { StyleSheet, View, } from 'react-native';
-import { Avatar, Button, TextInput, Checkbox, Text, HelperText } from 'react-native-paper';
+import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
+import { ScrollView, StyleSheet, View, } from 'react-native';
+import { Avatar, Button, TextInput, Checkbox, Text, HelperText, Portal, Dialog } from 'react-native-paper';
 import { colors } from '../common/themes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../context/userContext';
@@ -12,12 +12,16 @@ const RememberKey = 'RememberKey';
 const RememberIdKey = 'RememberIdKey';
 const RememberPasswordKey = 'RememberPasswordKey';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, route }) => {
+    const passwordRef = useRef(null);
+
+    const [showModal, setShowModal] = useState(route?.params?.created);
+
     const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState(route?.params?.email || '');
+    const [password, setPassword] = useState(route?.params?.password || '');
     const [rememberPassword, setRememberPassword] = useState(false);
 
     const [loading, setLoading] = useState(true);
@@ -47,6 +51,10 @@ const LoginScreen = ({ navigation }) => {
     }, []);
 
     const onLoginClick = () => {
+        if (loading || !canLogin) {
+            return;
+        }
+
         setLoading(true);
 
         (async () => {
@@ -56,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
                 //Ignore
             }
             try {
-                const response = await serverContext.axios.post('/users/login', { email, password });
+                const response = await serverContext.axios.post('/users/login', { email: email.toLowerCase(), password });
                 await AsyncStorage.setItem(RememberKey, rememberPassword ? 'true' : '');
                 await AsyncStorage.setItem(RememberIdKey, rememberPassword ? email : '');
                 await AsyncStorage.setItem(RememberPasswordKey, rememberPassword ? password : '');
@@ -71,8 +79,8 @@ const LoginScreen = ({ navigation }) => {
 
     const themeInput = { colors: { primary: colors.PHILIPPINE_ORANGE, text: colors.primaryText, underlineColor: 'transparent' } };
 
-    return <View style={styles.container}>
-        <View style={{ alignItems: 'center', width: '100%' }}>
+    return <ScrollView style={styles.container}>
+        <View style={{ alignItems: 'center', width: '100%', marginTop: 20 }}>
             <Avatar.Image size={240} source={require('../assets/picture/solar.jpg')} style={{ backgroundColor: 'white' }}/>
         </View>
         <TextInput
@@ -81,15 +89,21 @@ const LoginScreen = ({ navigation }) => {
             style={styles.textInput}
             dense={true}
             value={email}
+            keyboardType={'email-address'}
             label={'Email đăng nhập'}
+            textContentType={'emailAddress'}
+            autoCapitalize={'none'}
             onChangeText={email => setEmail(email)}
             disabled={loading}
+            returnKeyType={'next'}
+            onSubmitEditing={() => passwordRef.current.focus()}
         />
-        <HelperText type='error' visible={!!emailError}>
+        {!!emailError && <HelperText type='error'>
             {emailError}
-        </HelperText>
+        </HelperText>}
 
         <TextInput
+            ref={passwordRef}
             theme={themeInput}
             mode={'outlined'}
             style={styles.textInput}
@@ -98,7 +112,10 @@ const LoginScreen = ({ navigation }) => {
             secureTextEntry={true}
             dense={true}
             onChangeText={password => setPassword(password)}
+            textContentType={'password'}
             disabled={loading}
+            onSubmitEditing={onLoginClick}
+            returnKeyType={'done'}
         />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginTop: 20, marginLeft: -10 }}>
@@ -131,16 +148,25 @@ const LoginScreen = ({ navigation }) => {
         >
             Đăng ký tài khoản
         </Button>
-    </View>;
+        <Portal>
+            <Dialog visible={showModal} onDismiss={() => setShowModal(false)}>
+                <Dialog.Title>Thông báo</Dialog.Title>
+                <Dialog.Content>
+                    <Text>Bạn đã đăng ký tài khoản thành công</Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button onPress={() => setShowModal(false)}>OK</Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>
+    </ScrollView>;
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         paddingStart: 30,
         paddingEnd: 30,
-        paddingBottom: '20%',
         backgroundColor: 'white'
     },
     textInput: {
