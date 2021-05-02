@@ -45,7 +45,33 @@ export default {
             label: 'Không xác định'
         }
     },
-    makeupMoney(value) {
+    findUnit(values, baseUnit = 'W', multiple = 1) {
+        let unit = baseUnit;
+        let div = 1;
+
+        if (!values?.length) {
+            return { unit, div: div / multiple };
+        }
+
+        const value = values.reduce((max, cur) => cur > max ? cur : max, 0);
+
+        if (value * multiple > 1000 * 1000 * 1000) {
+            unit = 'G';
+            div = 1000 * 1000 * 1000;
+        } else if (value * multiple > 1000 * 1000) {
+            unit = 'M';
+            div = 1000 * 1000;
+        } else if (value * multiple > 1000) {
+            unit = 'k';
+            div = 1000;
+        } else {
+            unit = '';
+            div = 1;
+        }
+
+        return { unit: unit + baseUnit, div: div / multiple };
+    },
+    makeupMoney(value, currency = 'đ') {
         let even = Math.floor(value);
         // const odd = value - even;
         let unit = '';
@@ -60,74 +86,17 @@ export default {
             even = Math.floor(even / 100) / 10;
         }
 
-        // even = even.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        even = even.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         // return even + '.' + Math.floor(odd * 100);
 
-        return { value: even, unit: unit + 'đ' };
+        return { value: even, unit: unit + currency };
     },
     makeupPower(value, postfix = '') {
-        let even = value;
-        let unit = '';
-        if (value > 1000 * 1000 * 1000) {
-            unit = 'GW';
-            even = Math.floor(value / (100 * 1000 * 1000)) / 10;
-        } else if (value > 1000 * 1000) {
-            unit = 'MW';
-            even = Math.floor(value / (100 * 1000)) / 10;
-        } else if (value > 1000) {
-            unit = 'KW';
-            even = Math.floor(value / (100)) / 10;
-        } else {
-            unit = 'W';
-            even = Math.floor(value * 10) / 10;
-        }
-
-        return { value: even, unit: unit + postfix };
+        let { unit, div } = this.findUnit([value], 'W', 1);
+        return { value: Math.floor((value / div) * 10) / 10, unit: unit + postfix };
     },
     makeupProduct(value) {
-        let even = value;
-        let unit = '';
-        if (value > 1000 * 1000) {
-            unit = 'GWh';
-            even = Math.floor(value / (100 * 1000)) / 10;
-        } else if (value > 1000) {
-            unit = 'MWh';
-            even = Math.floor(value / (100)) / 10;
-        } else if (value > 0) {
-            unit = 'KWh';
-            even = Math.floor(value * 10) / 10;
-        } else {
-            unit = 'Wh';
-            even = Math.floor(value * 10000) / 10;
-        }
-
-        return { value: even, unit };
+        let { unit, div } = this.findUnit([value], 'Wh', 1000);
+        return { value: Math.floor((value / div) * 10) / 10, unit };
     },
-    findProductUnit(values) {
-        let unit = 'W';
-        let div = 1;
-
-        if (!values?.length) {
-            return { unit, div };
-        }
-
-        const value = values.reduce((max, cur) => cur > max ? cur : max, 0);
-
-        if (value > 1000 * 1000 * 1000) {
-            unit = 'GW';
-            div = 1000 * 1000 * 1000;
-        } else if (value > 1000 * 1000) {
-            unit = 'MW';
-            div = 1000 * 1000;
-        } else if (value > 1000) {
-            unit = 'kW';
-            div = 1000;
-        } else {
-            unit = 'W';
-            div = 1;
-        }
-
-        return { unit, div };
-    }
-
 };

@@ -17,15 +17,15 @@ const HomeScreen = () => {
         <Tab.Navigator>
             <Tab.Screen name='sites' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Trạm điện</Text>,
-                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name='sitemap' color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
+                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={SitesTab}/>
             <Tab.Screen name='alarms' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Cảnh báo lỗi</Text>,
-                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name='alert-outline' color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
+                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'alert' : 'alert-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={AlarmsTab}/>
             <Tab.Screen name='users' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Quản lý</Text>,
-                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name='account-circle-outline' color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
+                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'account-circle' : 'account-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={UsersTab}/>
         </Tab.Navigator>
     );

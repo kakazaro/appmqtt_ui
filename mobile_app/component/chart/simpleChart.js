@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Dialog, IconButton, Portal, Text, TouchableRipple } from 'react-native-paper';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import ServerContext from '../../context/serverContext';
 import MonthSelectorCalendar from 'react-native-month-selector';
 import * as Localization from 'expo-localization';
 import { LineChart, Grid, YAxis, XAxis, BarChart } from 'react-native-svg-charts';
+import utility from '../../common/utility';
 
 const timeTypes = [
     {
@@ -21,12 +22,11 @@ const timeTypes = [
         start: 'd',
         space: 'h',
         timeFormatChart: 'H',
-        timeFormatTable: 'H [giờ]',
         type: 'power',
         chartType: LineChart,
-        legend: 'Công xuất (W)',
+        legend: 'Công xuất',
         svg: { stroke: colors.PHILIPPINE_ORANGE },
-        stroke: { width: 2 },
+        findUnitDiv: (series) => utility.findUnit(series, 'W', 1)
     },
     {
         id: 'month',
@@ -38,12 +38,11 @@ const timeTypes = [
         start: 'M',
         space: 'd',
         timeFormatChart: 'D',
-        timeFormatTable: '[ngày] D',
         type: 'energy',
         chartType: BarChart,
-        legend: 'Sản lương (kWh)',
+        legend: 'Sản lương',
         svg: { fill: colors.PHILIPPINE_ORANGE },
-        stroke: { width: 0 },
+        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1000)
     },
     {
         id: 'year',
@@ -55,12 +54,11 @@ const timeTypes = [
         start: 'y',
         space: 'M',
         timeFormatChart: 'M',
-        timeFormatTable: '[tháng] MM',
         type: 'energy',
         chartType: BarChart,
-        legend: 'Sản lương (kWh)',
+        legend: 'Sản lương',
         svg: { fill: colors.PHILIPPINE_ORANGE },
-        stroke: { width: 0 },
+        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1000)
     },
 ];
 
@@ -72,21 +70,33 @@ const SimpleChar = ({ url }) => {
     const [showPicker, setShowPicker] = useState(false);
 
     const [data, setData] = useState();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         let discard = false;
+        setLoading(true);
+        setError(false);
 
         (async () => {
             const type = { ...timeType };
             const getTime = moment(time);
-            const response = await serverContext.axios.get(url + (url.includes('?') ? '&' : '?') + `date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`);
-            if (!discard) {
-                setData({
-                    ...response.data,
-                    timeType: type,
-                    time: getTime.toDate()
-                });
+            try {
+                const response = await serverContext.axios.get(url + (url.includes('?') ? '&' : '?') + `date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`);
+                if (!discard) {
+                    setData({
+                        ...response.data,
+                        timeType: type,
+                        time: getTime.toDate()
+                    });
+                } else {
+                    return;
+                }
+            } catch (e) {
+                // ignore
+                setError(true);
             }
+            setLoading(false);
         })();
 
         return () => {
@@ -161,7 +171,7 @@ const SimpleChar = ({ url }) => {
     }, [timeType, time, showPicker, dateTimeButtonDom]);
 
     const chartDom = useMemo(() => {
-        let dataSeries = [0, 0], dataLabels = [0, 1];
+        let dataSeries = [0, 0], dataLabels = ['', ''];
         let { series, timeType, time } = (data || {});
         if (series?.length) {
             dataLabels = [];
@@ -172,8 +182,8 @@ const SimpleChar = ({ url }) => {
             let space = duration / series.length;
 
             for (let i = 0; i < series.length; i++) {
-                dataLabels.push(start.toDate().getTime());
-                // dataLabels.push(start.format(timeType.timeFormatChart));
+                // dataLabels.push(start.toDate().getTime());
+                dataLabels.push(start.format(timeType.timeFormatChart));
                 start = start.add(space, 'ms');
             }
 
@@ -187,24 +197,31 @@ const SimpleChar = ({ url }) => {
             const space = dataLabels.length / maxXLabels;
             for (let i = 0; i < dataLabels.length; i++) {
                 if ((i + 1) >= amount) {
-                    showLabels.push(moment(dataLabels[i]).format(timeType.timeFormatChart));
+                    showLabels.push(dataLabels[i]);
                     amount += space;
                 } else {
                     showLabels.push('');
                 }
             }
         } else {
-            showLabels = dataLabels.map(l => timeType ? moment(l).format(timeType.timeFormatChart) : '');
+            showLabels = dataLabels;
         }
 
         const Component = timeType ? timeType.chartType : timeTypes[0].chartType;
         const svg = timeType?.svg || timeTypes[0].svg;
         const legend = timeType?.legend || timeTypes[0].legend;
+        const findUnitDiv = timeType?.findUnitDiv || timeTypes[0].findUnitDiv;
+        // const id = timeType?.id || timeTypes[0].id;
 
-        return <View>
+        const { div, unit } = findUnitDiv(dataSeries);
+        dataSeries = dataSeries.map(s => s / div);
+
+        let marginHorizontal = 0;
+
+        return <View style={{ opacity: (loading || error) ? 0.5 : 1 }}>
             <View style={{ marginHorizontal: 15, flexDirection: 'row', alignItems: 'center' }}>
                 <MaterialCommunityIcons name={'checkbox-blank-circle'} size={12} color={colors.PHILIPPINE_ORANGE}/>
-                <Text style={{ fontSize: 13, color: colors.primaryText, marginLeft: 10 }}>{legend}</Text>
+                <Text style={{ fontSize: 13, color: colors.primaryText, marginLeft: 10 }}>{legend + ` (${unit})`}</Text>
             </View>
             <View style={{ height: 250, flexDirection: 'row', paddingStart: 10, paddingEnd: 10 }}>
                 <YAxis
@@ -230,21 +247,21 @@ const SimpleChar = ({ url }) => {
                         <Grid
                             svg={{ stroke: colors.UNICORN_SILVER }}
                         />
+                        {(loading || error) && <View style={{ width: '100%', alignItems: 'center', height: '100%', justifyContent: 'center' }}>
+                            <Text style={{ backgroundColor: colors.UNICORN_SILVER, padding: 5, borderRadius: 10 }}>{loading ? 'Đang tải...' : 'Đã xảy ra lỗi'}</Text>
+                        </View>}
                     </Component>
                     <XAxis
-                        style={{ marginHorizontal: -5, height: 30 }}
+                        style={{ marginHorizontal: marginHorizontal, height: 30 }}
                         data={dataSeries}
-                        formatLabel={(value, index) => {
-                            // console.log(index);
-                            return showLabels[index];
-                        }}
+                        formatLabel={(value, index) => showLabels[index]}
                         contentInset={{ left: 5, right: 5 }}
-                        svg={{ fontSize: 10, fill: colors.DARK_SOULS }}
+                        svg={{ fontSize: 10, fill: colors.DARK_SOULS, textAnchor: 'middle' }}
                     />
                 </View>
             </View>
         </View>;
-    }, [data]);
+    }, [data, loading]);
 
     return <View style={{ width: '100%', backgroundColor: 'white', marginTop: 5 }}>
         {dateTypeDom}

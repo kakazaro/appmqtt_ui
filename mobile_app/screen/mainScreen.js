@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import UserContext from '../context/userContext';
 import LoginScreen from './loginScreen';
@@ -10,8 +10,7 @@ import SiteScreen from './siteScreen';
 import DeviceScreen from './deviceScreen';
 import mainAppBar from '../component/mainAppBar';
 import RegisterScreen from './registerScreen';
-
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import SettingScreen from './settingScreen';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +55,7 @@ const MainScreen = () => {
                 <Stack.Screen name={'home'} options={GetOptionsHomeScreen} component={HomeScreen}/>
                 <Stack.Screen name={'site'} options={{ title: '', showSiteMenu: true }} component={SiteScreen}/>
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
+                <Stack.Screen name={'setting'} options={{ title: 'Cài đặt' }} component={SettingScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>;
