@@ -1,29 +1,45 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Appbar, Menu, Divider, IconButton } from 'react-native-paper';
 import { colors } from '../common/themes';
 import UserContext from '../context/userContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useFonts } from 'expo-font';
 
 const MainAppBar = ({ scene, previous, navigation }) => {
-    const userContext = useContext(UserContext);
-
-    const isCanBack = !!previous;
-
-    const { options } = scene.descriptor;
+    let [fontsLoaded] = useFonts({
+        'trivial-font': require('../assets/fonts/trivial-bold.otf')
+    });
     const [visibleMenu, setVisibleMenu] = useState(false);
 
-    const title =
-        options.headerTitle !== undefined
+    const userContext = useContext(UserContext);
+
+    const isCanBack = useMemo(() => !!previous, [previous]);
+    const { options } = useMemo(() => scene.descriptor, [scene]);
+    const title = useMemo(() => {
+        return options.headerTitle !== undefined
             ? options.headerTitle
             : options.title !== undefined
-            ? options.title
-            : scene.route.name;
+                ? options.title
+                : scene.route.name;
+    }, [options]);
 
-    const showMenu = !!options?.showMenu;
+    const showMenu = useMemo(() => !!options?.showMenu, [options]);
+
+    const fontTitle = useMemo(() => {
+        if (fontsLoaded && options.brand) {
+            return {
+                fontWeight: 'normal',
+                fontFamily: 'trivial-font'
+            };
+        }
+
+        return {};
+    }, [fontsLoaded, options]);
+
     return <Appbar.Header style={styles.bar}>
         {isCanBack && <Appbar.BackAction onPress={() => navigation.goBack()}/>}
-        <Appbar.Content titleStyle={[styles.title, { color: options.brand ? colors.PHILIPPINE_ORANGE : colors.primaryText }]} title={title}/>
+        <Appbar.Content titleStyle={[styles.title, { color: options.brand ? colors.PHILIPPINE_ORANGE : colors.primaryText }, fontTitle]} title={title}/>
         {showMenu && <Menu
             visible={visibleMenu}
             onDismiss={() => setVisibleMenu(false)}
@@ -52,7 +68,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         color: colors.primaryText
     },
     menuTitle: {

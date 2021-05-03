@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, View, } from 'react-native';
-import { Avatar, Button, TextInput, Checkbox, Text, HelperText, Portal, Dialog } from 'react-native-paper';
+import { Avatar, Button, Checkbox, Text, Portal, Dialog } from 'react-native-paper';
 import { colors } from '../common/themes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../context/userContext';
@@ -8,6 +8,7 @@ import constant from '../common/constant';
 import ServerContext from '../context/serverContext';
 import * as Analytics from 'expo-firebase-analytics';
 import { useFocusEffect } from '@react-navigation/native';
+import CustomInput from '../component/customInput';
 
 const RememberKey = 'RememberKey';
 const RememberIdKey = 'RememberIdKey';
@@ -16,7 +17,7 @@ const RememberPasswordKey = 'RememberPasswordKey';
 const LoginScreen = ({ navigation, route }) => {
     const passwordRef = useRef(null);
 
-    const [showModal, setShowModal] = useState(route?.params?.created);
+    const [showModal, setShowModal] = useState(route?.params?.created || route?.params?.changedPassword);
 
     const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
@@ -39,7 +40,7 @@ const LoginScreen = ({ navigation, route }) => {
             if (isRemember) {
                 try {
                     const email = await AsyncStorage.getItem(RememberIdKey) || '';
-                    let password = await AsyncStorage.getItem(RememberPasswordKey) || '';
+                    let password = route?.params?.changedPassword ? '' : (await AsyncStorage.getItem(RememberPasswordKey) || '');
                     setEmail(email);
                     setPassword(password);
                 } catch (e) {
@@ -78,17 +79,13 @@ const LoginScreen = ({ navigation, route }) => {
 
     };
 
-    const themeInput = { colors: { primary: colors.PHILIPPINE_ORANGE, text: colors.primaryText, underlineColor: 'transparent' } };
 
     return <ScrollView style={styles.container}>
         <View style={{ alignItems: 'center', width: '100%', marginTop: 20 }}>
             <Avatar.Image size={240} source={require('../assets/picture/solar.jpg')} style={{ backgroundColor: 'white' }}/>
         </View>
-        <TextInput
-            theme={themeInput}
-            mode={'outlined'}
+        <CustomInput
             style={styles.textInput}
-            dense={true}
             value={email}
             keyboardType={'email-address'}
             label={'Email đăng nhập'}
@@ -98,20 +95,15 @@ const LoginScreen = ({ navigation, route }) => {
             disabled={loading}
             returnKeyType={'next'}
             onSubmitEditing={() => passwordRef.current.focus()}
+            error={emailError}
         />
-        {!!emailError && <HelperText type='error'>
-            {emailError}
-        </HelperText>}
 
-        <TextInput
+        <CustomInput
             ref={passwordRef}
-            theme={themeInput}
-            mode={'outlined'}
             style={styles.textInput}
             value={password}
             label={'Mật khẩu'}
             secureTextEntry={true}
-            dense={true}
             onChangeText={password => setPassword(password)}
             textContentType={'password'}
             disabled={loading}
@@ -152,7 +144,7 @@ const LoginScreen = ({ navigation, route }) => {
             <Dialog visible={showModal} onDismiss={() => setShowModal(false)}>
                 <Dialog.Title>Thông báo</Dialog.Title>
                 <Dialog.Content>
-                    <Text>Bạn đã đăng ký tài khoản thành công</Text>
+                    <Text>{route?.params?.created ? 'Bạn đã đăng ký tài khoản thành công' : route?.params?.changedPassword ? 'Đổi mật thành công, vui lòng đăng nhập lại' : ''}</Text>
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button onPress={() => setShowModal(false)}>OK</Button>

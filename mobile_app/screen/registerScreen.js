@@ -1,10 +1,10 @@
 import React, { useState, useContext, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, View, } from 'react-native';
-import { Avatar, Button, TextInput, HelperText } from 'react-native-paper';
+import { Avatar, Button } from 'react-native-paper';
 import { colors } from '../common/themes';
-import UserContext from '../context/userContext';
 import constant from '../common/constant';
 import ServerContext from '../context/serverContext';
+import CustomInput from '../component/customInput';
 
 const RegisterScreen = ({ navigation }) => {
     const passwordRef = useRef(null);
@@ -51,18 +51,13 @@ const RegisterScreen = ({ navigation }) => {
 
     };
 
-    const themeInput = { colors: { primary: colors.PHILIPPINE_ORANGE, text: colors.primaryText, underlineColor: 'transparent' } };
-
     return <ScrollView style={styles.container}>
         <View style={{ alignItems: 'center', width: '100%', marginTop: 10 }}>
             <Avatar.Image size={240} source={require('../assets/picture/solar.jpg')} style={{ backgroundColor: 'white' }}/>
         </View>
         <View>
-            <TextInput
-                theme={themeInput}
-                mode={'outlined'}
+            <CustomInput
                 style={styles.textInput}
-                dense={true}
                 value={email}
                 label={'Email đăng nhập*'}
                 onChangeText={email => setEmail(email)}
@@ -72,55 +67,40 @@ const RegisterScreen = ({ navigation }) => {
                 disabled={loading}
                 returnKeyType={'next'}
                 onSubmitEditing={() => passwordRef.current.focus()}
+                error={emailError}
             />
-            {!!emailError && <HelperText type='error'>
-                {emailError}
-            </HelperText>}
 
-            <TextInput
+            <CustomInput
                 ref={passwordRef}
-                theme={themeInput}
-                mode={'outlined'}
                 style={styles.textInput}
                 value={password}
                 label={'Mật khẩu*'}
                 secureTextEntry={true}
-                dense={true}
                 onChangeText={text => setPassword(text)}
                 textContentType={'password'}
                 disabled={loading}
                 returnKeyType={'next'}
                 onSubmitEditing={() => passwordConfirmRef.current.focus()}
+                error={passwordError}
             />
-            {!!passwordError && <HelperText type='error'>
-                {passwordError}
-            </HelperText>}
 
-            <TextInput
+            <CustomInput
                 ref={passwordConfirmRef}
-                theme={themeInput}
-                mode={'outlined'}
                 style={styles.textInput}
                 value={confirmPassword}
                 label={'Mật khẩu xác nhận*'}
                 secureTextEntry={true}
-                dense={true}
                 onChangeText={text => setConfirmPassword(text)}
                 textContentType={'password'}
                 disabled={loading}
                 returnKeyType={'next'}
                 onSubmitEditing={() => nameRef.current.focus()}
+                error={confirmError}
             />
-            {!!confirmError && <HelperText type='error'>
-                {confirmError}
-            </HelperText>}
 
-            <TextInput
+            <CustomInput
                 ref={nameRef}
-                theme={themeInput}
-                mode={'outlined'}
                 style={styles.textInput}
-                dense={true}
                 value={name}
                 label={'Tên người dùng*'}
                 onChangeText={name => setName(name)}
@@ -128,10 +108,8 @@ const RegisterScreen = ({ navigation }) => {
                 disabled={loading}
                 returnKeyType={'done'}
                 onSubmitEditing={onRegisterClick}
+                error={nameError}
             />
-            {!!nameError && <HelperText type='error'>
-                {nameError}
-            </HelperText>}
 
             <Button
                 mode='contained'

@@ -54,9 +54,11 @@ const MainScreen = () => {
             <Stack.Navigator initialRouteName={!userContext.token ? 'login' : 'home'} headerMode='screen' screenOptions={{ header: mainAppBar, ...myTransition }}>
                 <Stack.Screen name={'login'} options={{ title: 'Đăng Nhập' }} component={LoginScreen}/>
                 <Stack.Screen name={'register'} options={{ title: 'Đăng ký tài khoản' }} component={RegisterScreen}/>
+
                 <Stack.Screen name={'home'} options={GetOptionsHomeScreen} component={HomeScreen}/>
                 <Stack.Screen name={'site'} options={{ title: '', showSiteMenu: true }} component={SiteScreen}/>
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
+
                 <Stack.Screen name={'setting'} options={{ title: 'Cài đặt' }} component={SettingScreen}/>
                 <Stack.Screen name={'about'} options={{ title: 'Thông tin ứng dụng' }} component={AboutScreen}/>
                 <Stack.Screen name={'policy'} options={{ title: 'Chính sách' }} component={PolicyScreen}/>
