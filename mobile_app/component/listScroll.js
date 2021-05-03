@@ -9,8 +9,12 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
     const serverContext = useContext(ServerContext);
     const [loading, setLoading] = useState(false);
 
+    const [refreshing, setRefreshing] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+
+
     const [pageToken, setPageToken] = useState('');
-    const [data, setData] = useState([]);
+    const [data, setData] = useState();
     const [error, setError] = useState(false);
 
 
@@ -28,37 +32,60 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
         }
     };
 
-    const onReload = () => {
-        if (loading) {
-            return;
+    useEffect(() => {
+        let discard = false;
+        if (refreshing) {
+            if (!loading) {
+                setLoading(true);
+                setError(false);
+                (async () => {
+                    const result = await loadData();
+                    if (!discard) {
+                        setData(!result.error ? result.data : []);
+                        setPageToken(!result.error ? result.nextPageToken : '');
+                        setError(!!result.error);
+
+                        setLoading(false);
+                        setRefreshing(false);
+                    }
+                })();
+            }
         }
 
-        setLoading(true);
-        setError(false);
-        (async () => {
-            const result = await loadData();
-            setData(!result.error ? result.data : []);
-            setPageToken(!result.error ? result.nextPageToken : '');
-            setError(!!result.error);
+        return () => {
+            discard = true;
+        };
+    }, [refreshing]);
 
-            setLoading(false);
-        })();
+    const onReload = () => {
+        setRefreshing(true);
     };
 
-    const onLoadMore = () => {
-        if (loading || !pageToken) {
-            return;
+    useEffect(() => {
+        let discard = false;
+
+        if (loadingMore) {
+            if (!loading && pageToken) {
+                setLoading(true);
+                (async () => {
+                    const result = await loadData(pageToken);
+                    setData((preData) => !result.error ? preData.concat(result.data || []) : []);
+                    setPageToken(!result.error ? result.nextPageToken : '');
+                    setError(!!result.error);
+
+                    setLoading(false);
+                    setLoadingMore(false);
+                })();
+            }
         }
 
-        setLoading(true);
-        (async () => {
-            const result = await loadData(pageToken);
-            setData((preData) => !result.error ? preData.concat(result.data || []) : []);
-            setPageToken(!result.error ? result.nextPageToken : '');
-            setError(!!result.error);
+        return () => {
+            discard = true;
+        };
+    }, []);
 
-            setLoading(false);
-        })();
+    const onLoadMore = () => {
+        setLoadingMore(true);
     };
 
     useEffect(() => {
@@ -73,7 +100,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
 
     return <View style={{ flex: 1, width: '100%' }}>
         <VirtualizedList
-            data={data}
+            data={data || []}
             renderItem={({ item }) => <Component item={item}/>}
             keyExtractor={(item, index) => item?.id || item?._id || (index + '')}
             getItem={(data, index) => data[index]}
@@ -83,7 +110,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
             refreshing={loading}
             ListFooterComponent={footer}
             ListEmptyComponent={<>
-                {!loading && <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
+                {!loading && data && <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
                     <MaterialCommunityIcons name={!error ? 'help-network-outline' : 'weather-cloudy-alert'} size={100} color={colors.DARK_SOULS}/>
                     <Text style={{ color: colors.DARK_SOULS, marginTop: 20 }}>{!error ? 'Hiện chưa có Data để hiển thị' : 'Đã có lỗi xả ra khi tải dữ liệu'}</Text>
                     <Button labelStyle={{ color: colors.FADING_NIGHT, fontSize: 13, textTransform: 'none' }} onPress={onReload}>Thử lại</Button>

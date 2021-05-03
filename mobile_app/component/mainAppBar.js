@@ -30,11 +30,16 @@ const MainAppBar = ({ scene, previous, navigation }) => {
             anchor={<IconButton icon={() => <MaterialCommunityIcons name='dots-vertical' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleMenu(!visibleMenu)}/>}
         >
             <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                setVisibleMenu(false);
+                navigation.navigate('setting');
             }} title='Cài đặt'/>
-            <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='information-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
-            }} title='Thông tin'/>
+            {/*<Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='information-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {*/}
+            {/*}} title='Thông tin'/>*/}
             <Divider/>
-            <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='power' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => userContext.logout(navigation)} title='Đăng xuất'/>
+            <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='power' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                setVisibleMenu(false);
+                userContext.logout(navigation);
+            }} title='Đăng xuất'/>
         </Menu>}
     </Appbar.Header>;
 };

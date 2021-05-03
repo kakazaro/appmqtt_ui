@@ -118,9 +118,8 @@ const LoginScreen = ({ navigation, route }) => {
             returnKeyType={'done'}
         />
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginTop: 20, marginLeft: -10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginTop: 20 }}>
             <Checkbox
-                style={{ paddingStart: '0' }}
                 status={rememberPassword ? 'checked' : 'unchecked'}
                 onPress={() => !loading && setRememberPassword(!rememberPassword)}
                 color={colors.PHILIPPINE_ORANGE}
