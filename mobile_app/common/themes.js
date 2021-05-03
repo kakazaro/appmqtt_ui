@@ -1,5 +1,5 @@
-import { DefaultTheme } from '@react-navigation/native';
-import { configureFonts } from 'react-native-paper';
+// import { DefaultTheme } from '@react-navigation/native';
+// import { configureFonts } from 'react-native-paper';
 
 let colors = {
     // Dark theme
@@ -36,6 +36,7 @@ let colors = {
     KIKORANGI_BLUE: '#344bc4',
     FADING_NIGHT: '#317ad4',
     SUNBURST: '#fac187',
+    SUNBURST_LIGHT: 'rgba(250,193,135,0.2)',
     BEER: '#f7891b',
     PHILIPPINE_ORANGE: '#ff7300',
     SKIRRET_GREEN: '#54c242',

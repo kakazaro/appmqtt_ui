@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Dialog, IconButton, Portal, Text, TouchableRipple } from 'react-native-paper';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';

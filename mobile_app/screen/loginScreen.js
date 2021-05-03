@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
+import React, { useState, useContext, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, View, } from 'react-native';
 import { Avatar, Button, TextInput, Checkbox, Text, HelperText, Portal, Dialog } from 'react-native-paper';
 import { colors } from '../common/themes';
@@ -7,6 +7,7 @@ import UserContext from '../context/userContext';
 import constant from '../common/constant';
 import ServerContext from '../context/serverContext';
 import * as Analytics from 'expo-firebase-analytics';
+import { useFocusEffect } from '@react-navigation/native';
 
 const RememberKey = 'RememberKey';
 const RememberIdKey = 'RememberIdKey';
@@ -30,7 +31,7 @@ const LoginScreen = ({ navigation, route }) => {
     const emailError = useMemo(() => email && !constant.emailRegex.test(email) ? 'Email không hợp lệ' : '', [email]);
     const canLogin = useMemo(() => email && !emailError && password, [emailError, email, password]);
 
-    useEffect(() => {
+    useFocusEffect(React.useCallback(() => {
         (async () => {
             const isRemember = !!(await AsyncStorage.getItem(RememberKey)) || false;
             setRememberPassword(isRemember);
@@ -48,7 +49,7 @@ const LoginScreen = ({ navigation, route }) => {
 
             setLoading(false);
         })();
-    }, []);
+    }, []));
 
     const onLoginClick = () => {
         if (loading || !canLogin) {

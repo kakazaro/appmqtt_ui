@@ -11,6 +11,8 @@ import DeviceScreen from './deviceScreen';
 import mainAppBar from '../component/mainAppBar';
 import RegisterScreen from './registerScreen';
 import SettingScreen from './settingScreen';
+import AboutScreen from './setting/aboutScreen';
+import PolicyScreen from './setting/policy';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +58,8 @@ const MainScreen = () => {
                 <Stack.Screen name={'site'} options={{ title: '', showSiteMenu: true }} component={SiteScreen}/>
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
                 <Stack.Screen name={'setting'} options={{ title: 'Cài đặt' }} component={SettingScreen}/>
+                <Stack.Screen name={'about'} options={{ title: 'Thông tin ứng dụng' }} component={AboutScreen}/>
+                <Stack.Screen name={'policy'} options={{ title: 'Chính sách' }} component={PolicyScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>;

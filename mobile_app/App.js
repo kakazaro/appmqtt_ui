@@ -3,15 +3,18 @@ import { Provider } from 'react-native-paper';
 import MainScreen from './screen/mainScreen';
 import { UserProvider } from './context/userContext';
 import { ServerProvider } from './context/serverContext';
+import { RootSiblingParent } from 'react-native-root-siblings';
 import moment from 'moment'
-import 'moment/locale/vi'  // without this line it didn't work
+import 'moment/locale/vi'
 moment.locale('vi')
 
 export default function App() {
     return <UserProvider>
         <ServerProvider>
             <Provider>
-                <MainScreen/>
+                <RootSiblingParent>
+                    <MainScreen/>
+                </RootSiblingParent>
             </Provider>
         </ServerProvider>
     </UserProvider>;
