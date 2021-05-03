@@ -3,7 +3,7 @@ import { Image, ScrollView, View } from 'react-native';
 import Constants from 'expo-constants';
 import { colors } from '../../common/themes';
 import { Text } from 'react-native-paper';
-import FlatNavButton from '../../component/flatNavButton';
+import FlatButton from '../../component/flatButton';
 
 const AboutScreen = ({ navigation }) => {
 
@@ -17,7 +17,7 @@ const AboutScreen = ({ navigation }) => {
                 <Text style={{ color: colors.primaryText, fontSize: 16, fontWeight: 'bold' }}>Phiên bản ứng dụng:</Text>
                 <Text style={{ color: colors.secondaryText, marginTop: 5, fontSize: 14 }}>{`V${Constants.nativeAppVersion} (build: ${Constants.nativeBuildVersion})`}</Text>
             </View>
-            <FlatNavButton
+            <FlatButton
                 title={'Chính sách sử dụng'}
                 style={{ borderTopStyle: 'solid', borderTopWidth: 1, borderTopColor: colors.UNICORN_SILVER, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: colors.UNICORN_SILVER }}
                 onPress={() => navigation.navigate('policy')}

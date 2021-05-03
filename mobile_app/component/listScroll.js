@@ -82,7 +82,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
         return () => {
             discard = true;
         };
-    }, []);
+    }, [loadingMore]);
 
     const onLoadMore = () => {
         setLoadingMore(true);

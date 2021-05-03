@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ListScroll from '../listScroll';
-import { SiteContext } from '../../screen/siteScreen';
+import SiteContext from '../../context/siteContext';
 import DeviceBadge from '../listBadge/deviceBadge';
 
 const SiteDevicesTab = () => {

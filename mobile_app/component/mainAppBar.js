@@ -25,6 +25,7 @@ const MainAppBar = ({ scene, previous, navigation }) => {
     }, [options]);
 
     const showMenu = useMemo(() => !!options?.showMenu, [options]);
+    const showSiteMenu = useMemo(() => !!options?.showSiteMenu, [options]);
 
     const fontTitle = useMemo(() => {
         if (fontsLoaded && options.brand) {
@@ -57,6 +58,7 @@ const MainAppBar = ({ scene, previous, navigation }) => {
                 userContext.logout(navigation);
             }} title='Đăng xuất'/>
         </Menu>}
+        {showSiteMenu && <IconButton icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('siteSetting')}/>}
     </Appbar.Header>;
 };
 

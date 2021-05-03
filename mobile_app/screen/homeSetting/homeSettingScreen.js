@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Dialog, HelperText, List, Portal } from 'react-native-paper';
+import { Button, Dialog, HelperText, List, Portal, Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors } from '../common/themes';
-import FlatNavButton from '../component/flatNavButton';
-import CustomInput from '../component/customInput';
-import ServerContext from '../context/serverContext';
+import { colors } from '../../common/themes';
+import FlatButton from '../../component/flatButton';
+import CustomInput from '../../component/customInput';
+import ServerContext from '../../context/serverContext';
 
 const LANGUAGE = [
     {
@@ -19,7 +19,7 @@ const LANGUAGE = [
 ];
 
 
-const SettingScreen = ({ navigation }) => {
+const HomeSettingScreen = ({ navigation }) => {
     const serverContext = useContext(ServerContext);
 
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
@@ -52,6 +52,7 @@ const SettingScreen = ({ navigation }) => {
 
         const onChangePasswordRequest = () => {
             setLoading(true);
+            setError('');
             (async () => {
                 try {
                     await serverContext.axios.post('/users/change-password', {
@@ -63,13 +64,14 @@ const SettingScreen = ({ navigation }) => {
                         routes: [{ name: 'login', params: { changedPassword: true } }],
                     });
                 } catch (e) {
+                    setError('Đổi mật khẩu không thành công');
                     setLoading(false);
                 }
             })();
         };
 
         return <Portal>
-            <Dialog visible={showChangePasswordModal} dismissable={false}>
+            <Dialog visible={showChangePasswordModal} dismissable={!loading} onDismiss={() => setShowChangePasswordModal(false)}>
                 <Dialog.Title>Đổi mật khẩu đăng nhập</Dialog.Title>
                 <Dialog.Content>
                     <CustomInput
@@ -112,19 +114,26 @@ const SettingScreen = ({ navigation }) => {
                         error={confirmError}
                     />
 
+                    {!!error && <HelperText type='error'>
+                        {error}
+                    </HelperText>}
+
                 </Dialog.Content>
                 <Dialog.Actions>
-                    <Button style={{ minWidth: 70 }} labelStyle={{ color: colors.primaryText }} onPress={() => setShowChangePasswordModal(false)}>Hủy</Button>
+                    <Button style={{ minWidth: 70 }} labelStyle={{ color: colors.primaryText }} disabled={loading} onPress={() => setShowChangePasswordModal(false)}>Hủy</Button>
                     <Button style={{ marginStart: 10, minWidth: 70, backgroundColor: colors.PHILIPPINE_ORANGE }} onPress={onChangePasswordRequest} disabled={!canChange || loading} loading={loading} mode='contained'>Đổi</Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>;
-    }, [showChangePasswordModal, password, passwordConfirm, loading, oldPassword, navigation, serverContext]);
+    }, [showChangePasswordModal, password, passwordConfirm, loading, oldPassword, navigation, serverContext, error]);
 
     return <ScrollView>
         <View style={{ marginTop: 10, backgroundColor: 'white' }}>
             <List.AccordionGroup>
-                <List.Accordion title='Ngôn ngữ' id='1' titleStyle={{ fontSize: 15, color: colors.primaryText }}>
+                <List.Accordion title='Ngôn ngữ' id='1' titleStyle={{ fontSize: 15, color: colors.primaryText }} right={({ isExpanded }) => <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ fontSize: 14, color: colors.secondaryText }}>{LANGUAGE[0].title}</Text>
+                    <MaterialCommunityIcons name={!isExpanded ? 'chevron-down' : 'chevron-up'} size={24} color={colors.primaryText} style={{ marginStart: 10 }}/>
+                </View>}>
                     {LANGUAGE.map((lang, index) => <List.Item
                         key={index}
                         title={lang.title}
@@ -138,7 +147,7 @@ const SettingScreen = ({ navigation }) => {
             </List.AccordionGroup>
         </View>
         <View style={{ marginTop: 10, backgroundColor: 'white' }}>
-            {appSetting.map((setting, index) => <FlatNavButton
+            {appSetting.map((setting, index) => <FlatButton
                 key={index}
                 title={setting.title}
                 style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER }}
@@ -158,4 +167,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SettingScreen;
+export default HomeSettingScreen;

@@ -10,9 +10,10 @@ import SiteScreen from './siteScreen';
 import DeviceScreen from './deviceScreen';
 import mainAppBar from '../component/mainAppBar';
 import RegisterScreen from './registerScreen';
-import SettingScreen from './settingScreen';
-import AboutScreen from './setting/aboutScreen';
-import PolicyScreen from './setting/policy';
+import HomeSettingScreen from './homeSetting/homeSettingScreen';
+import AboutScreen from './homeSetting/aboutScreen';
+import PolicyScreen from './homeSetting/policyScreen';
+import SiteSettingScreen from './siteSetting/siteSettingScreen';
 
 const Stack = createStackNavigator();
 
@@ -57,9 +58,11 @@ const MainScreen = () => {
 
                 <Stack.Screen name={'home'} options={GetOptionsHomeScreen} component={HomeScreen}/>
                 <Stack.Screen name={'site'} options={{ title: '', showSiteMenu: true }} component={SiteScreen}/>
+                <Stack.Screen name={'siteSetting'} options={{ title: 'Cài đặt trạm' }} component={SiteSettingScreen}/>
+
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
 
-                <Stack.Screen name={'setting'} options={{ title: 'Cài đặt' }} component={SettingScreen}/>
+                <Stack.Screen name={'setting'} options={{ title: 'Cài đặt' }} component={HomeSettingScreen}/>
                 <Stack.Screen name={'about'} options={{ title: 'Thông tin ứng dụng' }} component={AboutScreen}/>
                 <Stack.Screen name={'policy'} options={{ title: 'Chính sách' }} component={PolicyScreen}/>
             </Stack.Navigator>

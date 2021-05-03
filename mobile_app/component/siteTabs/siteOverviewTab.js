@@ -11,7 +11,8 @@ import {
     ShineOverlay
 } from 'rn-placeholder';
 import SimpleChar from '../chart/simpleChart';
-import { SiteContext } from '../../screen/siteScreen';
+import SiteContext from '../../context/siteContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 const OverviewInfo = ({ info }) => {
     return <View style={{ backgroundColor: 'white', width: '100%', marginTop: 5, paddingTop: 10, paddingBottom: 5, paddingStart: 15, paddingEnd: 15 }}>
@@ -51,26 +52,28 @@ const OverviewInfo = ({ info }) => {
     </View>;
 };
 
-const SiteOverviewTab = ({ route }) => {
+const SiteOverviewTab = () => {
     const serviceContext = useContext(ServerContext);
     const siteContext = useContext(SiteContext);
 
     const site = useMemo(() => siteContext?.site, [siteContext]);
+    const siteId = useMemo(() => site?.id, [site]);
 
     const [overviewData, setOverviewData] = useState();
 
-    useEffect(() => {
-        if (site?.id) {
+    useFocusEffect(React.useCallback(() => {
+        if (siteId) {
             const uid = serviceContext.dataControl.registerSiteData({
-                url: 'site/overview?id=' + encodeURIComponent(site.id),
+                url: 'site/overview?id=' + encodeURIComponent(siteId),
                 handler: setOverviewData,
                 duration: 10000
             });
 
-            return () => serviceContext.dataControl.unRegisterSiteData(uid);
+            return () => {
+                serviceContext.dataControl.unRegisterSiteData(uid);
+            };
         }
-    }, [site, serviceContext]);
-
+    }, [siteId, serviceContext]));
 
     const siteStatus = useMemo(() => {
         const statusId = site?.status;
