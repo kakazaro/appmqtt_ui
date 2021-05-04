@@ -73,12 +73,12 @@ const LoginScreen = ({ navigation, route }) => {
                 await AsyncStorage.setItem(RememberPasswordKey, rememberPassword ? password : '');
                 setLoading(false);
                 userContext.updateToken(response.data.token, navigation);
-            } catch (e) {
+            } catch (err) {
+                console.error(err);
                 setError('Đã có lỗi xảy ra, vui lòng thử lại');
                 setLoading(false);
             }
         })();
-
     };
 
     return <AppBarLayout title={'Đăng Nhập'}>

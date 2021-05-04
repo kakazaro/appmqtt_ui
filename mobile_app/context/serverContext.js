@@ -4,8 +4,9 @@ import axiosModule from 'axios';
 import 'react-native-get-random-values';
 import { v4 as uidv4 } from 'uuid';
 
-// const REACT_APP_BASE_URL='http://113.161.79.146:5001'
-const REACT_APP_BASE_URL = 'https://isolar-dummy.herokuapp.com';
+const REACT_APP_BASE_URL = 'http://113.161.79.146:5001';
+
+// const REACT_APP_BASE_URL = 'https://isolar-dummy.herokuapp.com';
 
 function DataControl(axios) {
     const start = {};
@@ -54,7 +55,7 @@ function DataControl(axios) {
 }
 
 const defaultValue = {
-    axios: axiosModule.create({ baseURL: REACT_APP_BASE_URL }),
+    axios: axiosModule.create({ baseURL: '' }),
     dataControl: new DataControl(undefined)
 };
 const ServerContext = createContext(defaultValue);
@@ -66,7 +67,7 @@ export const ServerProvider = ({ children }) => {
         const axios = axiosModule.create({
             baseURL: REACT_APP_BASE_URL,
             timeout: 30000,
-            headers: { 'Authorizer': userContext.token || '' }
+            headers: { 'Authorization': 'Bearer ' + (userContext.token || '') }
         });
 
         return {

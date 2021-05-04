@@ -51,6 +51,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
                 nextPageToken: (response.data.nextPageToken || '') + ''
             };
         } catch (e) {
+            console.log(e);
             return {
                 error: true
             };
@@ -107,10 +108,10 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
         return () => {
             discard = true;
         };
-    }, [loadingMore]);
+    }, [loadingMore, pageToken, loading]);
 
     const onLoadMore = () => {
-        setLoadingMore(true);
+        setTimeout(() => setLoadingMore(true), 10);
     };
 
     useEffect(() => {
@@ -119,9 +120,9 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
 
     const footer = useMemo(() => {
         if (loading && showPlaceholder) {
-            return <>{Array(15).fill('').map((i, index) => <Component key={index}/>)}</>;
+            return <>{Array(loadingMore ? 1 : 15).fill('').map((i, index) => <Component key={index}/>)}</>;
         }
-    }, [showPlaceholder, loading, Component]);
+    }, [showPlaceholder, loading, loadingMore, Component]);
 
     const listDom = useMemo(() => <VirtualizedList
         data={data || []}

@@ -48,10 +48,10 @@ const SiteSettingScreen = () => {
         };
     }, [site, serverContext]);
 
-
     const [showEditName, setShowEditName] = useState(false);
     const [editName, setEditName] = useState('');
     const [errorEditName, setErrorEditName] = useState('');
+
     useEffect(() => {
         setEditName(site?.name || '');
     }, [site]);
@@ -62,7 +62,8 @@ const SiteSettingScreen = () => {
     const [errorEditPrice, setErrorEditPrice] = useState('');
 
     useEffect(() => {
-        setEditName(site?.name || '');
+        setEditPrice((siteOverview?.price || '') + '');
+        setEditCurrency(siteOverview?.currency || '');
     }, [siteOverview]);
 
     const appSetting = useMemo(() => {
