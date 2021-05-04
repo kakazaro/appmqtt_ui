@@ -37,7 +37,7 @@ const DeviceBadge = ({ item }) => {
 
     const onPress = () => {
         if (item) {
-            // navigation.navigate('site', { site: item });
+            navigation.navigate('device', { device: item });
         }
     };
 

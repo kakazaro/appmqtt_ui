@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { View, VirtualizedList } from 'react-native';
 import ServerContext from '../context/serverContext';
-import { Button, Text } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text } from 'react-native-paper';
 import { colors } from '../common/themes';
 import eventCenter from '../common/eventCenter';
 
@@ -136,9 +135,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
         ListFooterComponent={footer}
         ListEmptyComponent={<>
             {!loading && data && <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
-                <MaterialCommunityIcons name={!error ? 'help-network-outline' : 'weather-cloudy-alert'} size={100} color={colors.DARK_SOULS}/>
-                <Text style={{ color: colors.DARK_SOULS, marginTop: 20 }}>{!error ? 'Hiện chưa có Data để hiển thị' : 'Đã có lỗi xả ra khi tải dữ liệu'}</Text>
-                <Button labelStyle={{ color: colors.FADING_NIGHT, fontSize: 13, textTransform: 'none' }} onPress={onReload}>Thử lại</Button>
+                <Text style={{ color: colors.DARK_SOULS }}>{!error ? 'Chưa có dữ liệu' : 'Đã có lỗi xả ra khi tải dữ liệu'}</Text>
             </View>}
         </>}
     />, [data, Component, loading, footer, error]);

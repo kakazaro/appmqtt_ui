@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { Divider, Text } from 'react-native-paper';
 import utility from '../../common/utility';
 import { colors } from '../../common/themes';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ServerContext from '../../context/serverContext';
 import {
     Placeholder,
@@ -14,6 +13,7 @@ import SimpleChar from '../chart/simpleChart';
 import SiteContext from '../../context/siteContext';
 import { useFocusEffect } from '@react-navigation/native';
 import eventCenter from '../../common/eventCenter';
+import StatusBanner from '../statusBanner';
 
 const OverviewInfo = ({ info }) => {
     return <View style={{ backgroundColor: 'white', width: '100%', marginTop: 5, paddingTop: 10, paddingBottom: 5, paddingStart: 15, paddingEnd: 15 }}>
@@ -99,26 +99,6 @@ const SiteOverviewTab = () => {
         }
     }, [siteId, serviceContext]));
 
-    const siteStatus = useMemo(() => {
-        const statusId = site?.status;
-        const key = Object.keys(utility.STATUS).find(key => utility.STATUS[key].id === statusId);
-        const status = key ? utility.STATUS[key] : undefined;
-
-        return <View style={{ flexDirection: 'row', width: '100%', backgroundColor: 'white', paddingTop: 8, paddingBottom: 8 }}>
-            <View style={styles.statusView}>
-                <Text style={styles.statusText}>
-                    Trạng thái trạm điện
-                </Text>
-            </View>
-            <View style={styles.statusView}>
-                {status && <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <MaterialCommunityIcons name={'checkbox-blank-circle'} size={14} color={colors[status.id] || colors.offline}/>
-                    <Text style={[styles.statusText, { paddingStart: 5 }]}>{status.label}</Text>
-                </View>}
-            </View>
-        </View>;
-    }, [site]);
-
     const infoDom = useMemo(() => {
         const data = overviewData?.site;
 
@@ -188,7 +168,7 @@ const SiteOverviewTab = () => {
 
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>
-            {siteStatus}
+            <StatusBanner statusId={site?.status} title={'Trạng thái'}/>
             {infoDom}
             {incomeDom}
             {chartDom}
@@ -202,15 +182,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '100%'
-    },
-    statusView: {
-        flex: 1,
-        alignItems: 'center'
-    },
-    statusText: {
-        fontSize: 13,
-        color: colors.secondaryText
-    },
+    }
 });
 
 export default SiteOverviewTab;

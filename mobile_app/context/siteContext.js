@@ -1,12 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import eventCenter from '../common/eventCenter';
 
-const SiteContext = React.createContext({ site: undefined, updateSite: () => undefined });
+const SiteContext = React.createContext({
+    site: undefined,
+    device: undefined,
+    updateSite: () => undefined,
+    updateDevice: () => undefined
+});
 
 export default SiteContext;
 
 export const SiteProvider = ({ children }) => {
     const [site, setSite] = useState();
+    const [device, setDevice] = useState();
 
     useEffect(() => {
         const handler = (data) => {
@@ -31,9 +37,14 @@ export const SiteProvider = ({ children }) => {
     const value = useMemo(() => {
         return {
             site,
-            updateSite: site => setSite(site)
+            device,
+            updateSite: site => {
+                setSite(site);
+                setDevice(undefined);
+            },
+            updateDevice: device => setDevice(device)
         };
-    }, [site]);
+    }, [site, device]);
 
     return <SiteContext.Provider value={value}>
         {children}

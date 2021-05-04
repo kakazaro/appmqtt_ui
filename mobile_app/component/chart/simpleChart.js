@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Dialog, IconButton, Portal, Text, TouchableRipple } from 'react-native-paper';
+import { Button, DataTable, Dialog, IconButton, Portal, Text, TouchableRipple } from 'react-native-paper';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import moment from 'moment';
 import { colors } from '../../common/themes';
@@ -22,6 +22,7 @@ const timeTypes = [
         start: 'd',
         space: 'h',
         timeFormatChart: 'H',
+        timeFormatTable: 'HH[:]mm',
         type: 'power',
         chartType: LineChart,
         legend: 'Công xuất',
@@ -38,6 +39,7 @@ const timeTypes = [
         start: 'M',
         space: 'd',
         timeFormatChart: 'D',
+        timeFormatTable: 'D[/]MM',
         type: 'energy',
         chartType: BarChart,
         legend: 'Sản lương',
@@ -54,6 +56,7 @@ const timeTypes = [
         start: 'y',
         space: 'M',
         timeFormatChart: 'M',
+        timeFormatTable: 'MM[/]YYYY',
         type: 'energy',
         chartType: BarChart,
         legend: 'Sản lương',
@@ -62,7 +65,7 @@ const timeTypes = [
     },
 ];
 
-const SimpleChar = ({ url }) => {
+const SimpleChar = ({ url, showTable }) => {
     const serverContext = useContext(ServerContext);
 
     const [timeType, setTimeType] = useState(timeTypes[0]);
@@ -105,10 +108,10 @@ const SimpleChar = ({ url }) => {
     }, [url, time, timeType, serverContext]);
 
     const dateTypeDom = useMemo(() => {
-        return <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', marginTop: 10, marginBottom: 5 }}>
+        return <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', marginTop: 5, marginBottom: 5 }}>
             {timeTypes.map(type => <TouchableRipple style={{ flex: 1, alignItems: 'center' }} key={type.id} onPress={() => setTimeType(type)}>
                 <>
-                    <Text style={{ color: timeType.id === type.id ? colors.PHILIPPINE_ORANGE : colors.primaryText, paddingBottom: 3 }}>{type.label}</Text>
+                    <Text style={{ color: timeType.id === type.id ? colors.PHILIPPINE_ORANGE : colors.primaryText, paddingBottom: 5, paddingTop: 5 }}>{type.label}</Text>
                     <View style={{ width: '60%', height: 3, backgroundColor: timeType.id === type.id ? colors.PHILIPPINE_ORANGE : 'transparent' }}/>
                 </>
             </TouchableRipple>)}
@@ -170,11 +173,12 @@ const SimpleChar = ({ url }) => {
         </>;
     }, [timeType, time, showPicker, dateTimeButtonDom]);
 
-    const chartDom = useMemo(() => {
-        let dataSeries = [0, 0], dataLabels = ['', ''];
+    const processedData = useMemo(() => {
+        let dataSeries = [0, 0], dataLabels = ['', ''], tableLabels = ['', ''];
         let { series, timeType, time } = (data || {});
         if (series?.length) {
             dataLabels = [];
+            tableLabels = [];
             let start = moment(time).startOf(timeType.start);
             let end = moment(time).startOf(timeType.start).add(1, timeType.start);
 
@@ -183,6 +187,7 @@ const SimpleChar = ({ url }) => {
 
             for (let i = 0; i < series.length; i++) {
                 // dataLabels.push(start.toDate().getTime());
+                tableLabels.push(start.format(timeType.timeFormatTable));
                 dataLabels.push(start.format(timeType.timeFormatChart));
                 start = start.add(space, 'ms');
             }
@@ -216,7 +221,11 @@ const SimpleChar = ({ url }) => {
         const { div, unit } = findUnitDiv(dataSeries);
         dataSeries = dataSeries.map(s => s / div);
 
-        let marginHorizontal = 0;
+        return { dataSeries, Component, svg, tableLabels, showLabels, legend, unit };
+    }, [data]);
+
+    const chartDom = useMemo(() => {
+        const { dataSeries, Component, svg, showLabels, legend, unit } = processedData;
 
         return <View style={{ opacity: (loading || error) ? 0.5 : 1 }}>
             <View style={{ marginHorizontal: 15, flexDirection: 'row', alignItems: 'center' }}>
@@ -252,7 +261,7 @@ const SimpleChar = ({ url }) => {
                         </View>}
                     </Component>
                     <XAxis
-                        style={{ marginHorizontal: marginHorizontal, height: 30 }}
+                        style={{ height: 30 }}
                         data={dataSeries}
                         formatLabel={(value, index) => showLabels[index]}
                         contentInset={{ left: 5, right: 5 }}
@@ -261,13 +270,56 @@ const SimpleChar = ({ url }) => {
                 </View>
             </View>
         </View>;
-    }, [data, loading]);
+    }, [processedData, loading]);
+
+    const [page, setPage] = useState(0);
+    useEffect(() => {
+        setPage(0);
+    }, [data]);
+
+    const tableDom = useMemo(() => {
+        const { dataSeries, tableLabels, legend, unit } = processedData;
+
+        if (!showTable || loading || dataSeries.length !== tableLabels.length) {
+            return;
+        }
+
+        const pageLimit = 35;
+
+        const from = page * pageLimit;
+        const to = (page + 1) * pageLimit;
+
+        const slidedSeries = dataSeries.slice(pageLimit * page, pageLimit * (page + 1));
+        const slidedSLabel = tableLabels.slice(pageLimit * page, pageLimit * (page + 1));
+
+        return <DataTable>
+            <DataTable.Header>
+                <DataTable.Title><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>Thời gian</Text></DataTable.Title>
+                <DataTable.Title><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{legend + ` (${unit})`}</Text></DataTable.Title>
+            </DataTable.Header>
+            {slidedSeries.map((value, index) => <DataTable.Row key={index}>
+                <DataTable.Cell>
+                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{slidedSLabel[index]}</Text>
+                </DataTable.Cell>
+                <DataTable.Cell>
+                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{slidedSeries[index]}</Text>
+                </DataTable.Cell>
+            </DataTable.Row>)}
+            {dataSeries.length > pageLimit && <DataTable.Pagination
+                page={page}
+                numberOfPages={Math.floor(dataSeries.length / pageLimit) + 1}
+                onPageChange={page => setPage(page)}
+                label={`${from + 1}-${to} of ${dataSeries.length}`}
+            />}
+        </DataTable>;
+    }, [processedData, showTable, loading, page]);
 
     return <View style={{ width: '100%', backgroundColor: 'white', marginTop: 5 }}>
         {dateTypeDom}
         {dateTimeButtonDom}
         {dateTimePickerDom}
         {chartDom}
+        {tableDom}
     </View>;
 };
 

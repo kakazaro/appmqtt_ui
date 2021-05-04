@@ -32,11 +32,11 @@ const SiteScreen = ({ route }) => {
             </View>
             <View style={{ flex: 1, width: '100%' }}>
                 <Tab.Navigator tabBarOptions={{
-                    labelStyle: { fontSize: 14, textTransform: 'none' },
+                    labelStyle: { fontSize: 15, textTransform: 'none' },
                     tabStyle: { padding: 0 },
                     activeTintColor: colors.PHILIPPINE_ORANGE,
                     inactiveTintColor: colors.secondaryText,
-                    indicatorStyle: { backgroundColor: colors.PHILIPPINE_ORANGE, width: (100 / 3 - 10) + '%', marginStart: '5%' },
+                    indicatorStyle: { backgroundColor: colors.PHILIPPINE_ORANGE, width: (100 / 3 - 5 * 3) + '%', marginStart: '5%' },
                     style: { elevation: 0, borderBottomColor: colors.UNICORN_SILVER, borderBottomStyle: 'solid', borderBottomWidth: 1 }
                 }}>
                     <Tab.Screen name='siteOverview' options={{ title: 'Thông tin chung' }} component={SiteOverviewTab}/>
