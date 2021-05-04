@@ -148,7 +148,7 @@ const SiteSettingScreen = () => {
 
     const modalEditPriceDom = useMemo(() => {
         const price = parseFloat(editPrice);
-        const errorPrice = !editPrice || (!(/[^\d.]/i.test(editPrice)) && price && isFinite(price) && !isNaN(price) && price > 0) ? '' : 'Số phải lớn hơn 0';
+        const errorPrice = !editPrice || (!(/[^\d.]/i.test(editPrice)) && price && isFinite(price) && !isNaN(price) && price > 0) ? '' : 'Phải là số hợp lệ và lớn hơn 0';
         const errorCurrency = editCurrency && editCurrency.length < 1 && editCurrency.length > 8 ? 'Mệnh giá phải từ 1 đến 8 ký tự' : '';
         const canChange = editPrice && !errorPrice && editCurrency && !errorCurrency;
 
@@ -190,6 +190,7 @@ const SiteSettingScreen = () => {
                         onSubmitEditing={() => currencyRef?.current?.focus()}
                         returnKeyType={'next'}
                         error={errorPrice}
+                        keyboardType={'numeric'}
                     />
                     <CustomInput
                         ref={currencyRef}
