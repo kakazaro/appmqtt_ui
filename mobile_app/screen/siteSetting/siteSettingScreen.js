@@ -150,7 +150,7 @@ const SiteSettingScreen = () => {
         const price = parseFloat(editPrice);
         const errorPrice = !editPrice || (!(/[^\d.]/i.test(editPrice)) && price && isFinite(price) && !isNaN(price) && price > 0) ? '' : 'Số phải lớn hơn 0';
         const errorCurrency = editCurrency && editCurrency.length < 1 && editCurrency.length > 8 ? 'Mệnh giá phải từ 1 đến 8 ký tự' : '';
-        const canChange = !errorPrice && editCurrency && !errorCurrency;
+        const canChange = editPrice && !errorPrice && editCurrency && !errorCurrency;
 
         const onChangePrice = () => {
             setLoading(true);
