@@ -190,6 +190,10 @@ const SimpleChar = ({ url, showTable }) => {
                 tableLabels.push(start.format(timeType.timeFormatTable));
                 dataLabels.push(start.format(timeType.timeFormatChart));
                 start = start.add(space, 'ms');
+
+                if (timeType.id === 'year') {
+                    start = start.add(1, 'd');
+                }
             }
 
             dataSeries = series;
