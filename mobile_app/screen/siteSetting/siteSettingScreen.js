@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Dialog, HelperText, Portal } from 'react-native-paper';
+import { ActivityIndicator, Button, Dialog, HelperText, Portal, Text } from 'react-native-paper';
 import { colors } from '../../common/themes';
 import FlatButton from '../../component/flatButton';
 import CustomInput from '../../component/customInput';
 import ServerContext from '../../context/serverContext';
 import SiteContext from '../../context/siteContext';
-import { currency } from 'expo-localization';
+import AppBarLayout from '../../component/appBarLayout';
+import eventCenter from '../../common/eventCenter';
 
 const SiteSettingScreen = () => {
     const serverContext = useContext(ServerContext);
@@ -23,6 +24,8 @@ const SiteSettingScreen = () => {
 
         if (site?.id) {
             setLoading(true);
+            setLoadError('');
+
             (async () => {
                 try {
                     const response = await serverContext.axios.get('/site/overview?id=' + encodeURIComponent(site.id));
@@ -34,7 +37,7 @@ const SiteSettingScreen = () => {
                     if (discard) {
                         return;
                     }
-                    setLoadError('Error during load overview');
+                    setLoadError('Đã có lỗi xảy ra.');
                 }
                 setLoading(false);
             })();
@@ -63,7 +66,7 @@ const SiteSettingScreen = () => {
     }, [siteOverview]);
 
     const appSetting = useMemo(() => {
-        const disabled = !site || !siteOverview || loading || loadError;
+        const disabled = loading || loadError;
         return [
             {
                 title: 'Tên',
@@ -76,7 +79,7 @@ const SiteSettingScreen = () => {
                 title: 'Biểu giá',
                 description: 'Giá tiền cho mỗi kWh',
                 disabled,
-                currentValue: loading ? 'đang tải...' : loadError ? 'Đã xảy ra lỗi!' : !siteOverview ? '' : (!siteOverview.price || !siteOverview.currency) ? 'chưa cài đặt' : `${siteOverview.price} ${siteOverview.currency}`,
+                currentValue: !siteOverview ? '' : (!siteOverview.price || !siteOverview.currency) ? 'chưa cài đặt' : `${siteOverview.price} ${siteOverview.currency}`,
                 iconName: 'pencil',
                 onPress: () => setShowEditPrice(true)
             }
@@ -102,17 +105,16 @@ const SiteSettingScreen = () => {
             (async () => {
                 try {
                     await updateSite(site.id, editName, siteOverview?.price, siteOverview?.currency);
-                    siteContext.updateSite({
-                        ...site,
+                    setShowEditName(false);
+                    eventCenter.push(eventCenter.eventNames.updateSiteName, {
+                        id: site.id,
                         name: editName
                     });
-                    setShowEditName(false);
                 } catch (e) {
                     setErrorEditName('Đã có lỗi xảy ra');
                 }
                 setLoading(false);
             })();
-
         };
 
         return <Portal>
@@ -162,6 +164,11 @@ const SiteSettingScreen = () => {
                         currency: editCurrency
                     });
                     setShowEditPrice(false);
+                    eventCenter.push(eventCenter.eventNames.updateSitePrice, {
+                        id: site.id,
+                        price,
+                        currency: editCurrency
+                    });
                 } catch (e) {
                     setErrorEditPrice('Đã có lỗi xảy ra');
                 }
@@ -207,17 +214,33 @@ const SiteSettingScreen = () => {
         </Portal>;
     }, [showEditPrice, editPrice, editCurrency, loading, serverContext, site, siteOverview, errorEditPrice]);
 
-    return <ScrollView>
-        <View style={{ marginTop: 10, backgroundColor: 'white' }}>
-            {appSetting.map((setting, index) => <FlatButton
-                key={index}
-                {...setting}
-                style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER }}
-            />)}
-        </View>
-        {modalEditNameDom}
-        {modalEditPriceDom}
-    </ScrollView>;
+    const dom = useMemo(() => {
+        if (site && siteOverview && !loading && !loadError) {
+            return <ScrollView>
+                <View style={{ marginTop: 10, backgroundColor: 'white' }}>
+                    {appSetting.map((setting, index) => <FlatButton
+                        key={index}
+                        {...setting}
+                        style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER }}
+                    />)}
+                </View>
+                {modalEditNameDom}
+                {modalEditPriceDom}
+            </ScrollView>;
+        } else if (loading && !loadError) {
+            return <ActivityIndicator style={{ marginTop: 20 }} animating={true} color={colors.PHILIPPINE_ORANGE}/>;
+        } else if (loadError) {
+            return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text>{loadError}</Text>
+            </View>;
+        }
+
+
+    }, [site, siteOverview, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom]);
+
+    return <AppBarLayout title={'Cài đặt trạm'}>
+        {dom}
+    </AppBarLayout>;
 };
 
 const styles = StyleSheet.create({

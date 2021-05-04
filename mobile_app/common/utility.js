@@ -71,7 +71,7 @@ export default {
 
         return { unit: unit + baseUnit, div: div / multiple };
     },
-    makeupMoney(value, currency = 'đ') {
+    makeupMoney(value) {
         let even = Math.floor(value);
         // const odd = value - even;
         let unit = '';
@@ -89,7 +89,7 @@ export default {
         even = even.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         // return even + '.' + Math.floor(odd * 100);
 
-        return { value: even, unit: unit + currency };
+        return { value: even, unit: unit };
     },
     makeupPower(value, postfix = '') {
         let { unit, div } = this.findUnit([value], 'W', 1);

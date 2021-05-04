@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import UserContext from '../context/userContext';
 import LoginScreen from './loginScreen';
 import HomeScreen from './homeScreen';
 import SiteScreen from './siteScreen';
 import DeviceScreen from './deviceScreen';
-import mainAppBar from '../component/mainAppBar';
 import RegisterScreen from './registerScreen';
 import HomeSettingScreen from './homeSetting/homeSettingScreen';
 import AboutScreen from './homeSetting/aboutScreen';
@@ -19,26 +18,6 @@ const Stack = createStackNavigator();
 
 const MainScreen = () => {
     const userContext = useContext(UserContext);
-
-    const GetOptionsHomeScreen = ({ route }) => {
-        const name = getFocusedRouteNameFromRoute(route) ?? 'sites';
-        const options = { showMenu: true };
-        switch (name) {
-            case 'alarms':
-                options.title = 'Cảnh Báo';
-                break;
-            case 'users':
-                options.title = 'Quản Lý Người Dùng';
-                break;
-            case 'sites':
-            default:
-                options.title = 'N.T.V SOLAR';
-                options.brand = true;
-                break;
-        }
-
-        return options;
-    };
 
     const myTransition = {
         gestureDirection: 'horizontal',
@@ -52,19 +31,20 @@ const MainScreen = () => {
     return <SafeAreaView style={styles.container}>
         <StatusBar style='auto'/>
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={!userContext.token ? 'login' : 'home'} headerMode='screen' screenOptions={{ header: mainAppBar, ...myTransition }}>
-                <Stack.Screen name={'login'} options={{ title: 'Đăng Nhập' }} component={LoginScreen}/>
-                <Stack.Screen name={'register'} options={{ title: 'Đăng ký tài khoản' }} component={RegisterScreen}/>
+            <Stack.Navigator initialRouteName={!userContext.token ? 'login' : 'home'} headerMode='none' screenOptions={{ ...myTransition }}>
+                <Stack.Screen name={'login'} component={LoginScreen}/>
+                <Stack.Screen name={'register'} component={RegisterScreen}/>
 
-                <Stack.Screen name={'home'} options={GetOptionsHomeScreen} component={HomeScreen}/>
-                <Stack.Screen name={'site'} options={{ title: '', showSiteMenu: true }} component={SiteScreen}/>
-                <Stack.Screen name={'siteSetting'} options={{ title: 'Cài đặt trạm' }} component={SiteSettingScreen}/>
+                <Stack.Screen name={'home'} component={HomeScreen}/>
+
+                <Stack.Screen name={'setting'} component={HomeSettingScreen}/>
+                <Stack.Screen name={'about'} component={AboutScreen}/>
+                <Stack.Screen name={'policy'} component={PolicyScreen}/>
+
+                <Stack.Screen name={'site'} component={SiteScreen}/>
+                <Stack.Screen name={'siteSetting'} component={SiteSettingScreen}/>
 
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
-
-                <Stack.Screen name={'setting'} options={{ title: 'Cài đặt' }} component={HomeSettingScreen}/>
-                <Stack.Screen name={'about'} options={{ title: 'Thông tin ứng dụng' }} component={AboutScreen}/>
-                <Stack.Screen name={'policy'} options={{ title: 'Chính sách' }} component={PolicyScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>;

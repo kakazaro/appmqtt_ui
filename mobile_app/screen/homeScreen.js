@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { BackHandler, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from '../common/themes';
@@ -7,13 +7,34 @@ import AlarmsTab from '../component/homeTabs/alarmsTab';
 import UsersTab from '../component/homeTabs/usersTab';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-root-toast';
+import AppBarLayout from '../component/appBarLayout';
 
 const Tab = createBottomTabNavigator();
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
     const [requestBack, setRequestBack] = useState(false);
+
+    const appBarOptions = useMemo(()=> {
+        const name = getFocusedRouteNameFromRoute(route) ?? 'sites';
+        const options = { showMainMenu: true };
+        switch (name) {
+            case 'alarms':
+                options.title = 'Cảnh Báo';
+                break;
+            case 'users':
+                options.title = 'Quản Lý Người Dùng';
+                break;
+            case 'sites':
+            default:
+                options.title = 'N.T.V SOLAR';
+                options.brand = true;
+                break;
+        }
+
+        return options;
+    }, [route])
 
     useFocusEffect(
         React.useCallback(() => {
@@ -42,7 +63,7 @@ const HomeScreen = () => {
         }, [requestBack])
     );
 
-    return (
+    return <AppBarLayout {...appBarOptions}>
         <Tab.Navigator backBehavior='none'>
             <Tab.Screen name='sites' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Trạm điện</Text>,
@@ -57,7 +78,7 @@ const HomeScreen = () => {
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'account-circle' : 'account-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={UsersTab}/>
         </Tab.Navigator>
-    );
+    </AppBarLayout>;
 };
 
 const styles = StyleSheet.create({

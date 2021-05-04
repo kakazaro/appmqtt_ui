@@ -13,6 +13,7 @@ import {
 import SimpleChar from '../chart/simpleChart';
 import SiteContext from '../../context/siteContext';
 import { useFocusEffect } from '@react-navigation/native';
+import eventCenter from '../../common/eventCenter';
 
 const OverviewInfo = ({ info }) => {
     return <View style={{ backgroundColor: 'white', width: '100%', marginTop: 5, paddingTop: 10, paddingBottom: 5, paddingStart: 15, paddingEnd: 15 }}>
@@ -25,10 +26,10 @@ const OverviewInfo = ({ info }) => {
                     <PlaceholderLine width={30} height={30} noMargin={true} style={{ marginStart: '70%' }}/>
                 </Placeholder>
                 :
-                <Text style={{ textAlign: 'right', color: colors.primaryText }}>
-                    <Text style={{ fontSize: 22 }}>{info.main.value}</Text>
-                    <Text style={{ fontSize: 15, marginStart: 5 }}>{info.main.unit}</Text>
-                </Text>}
+                <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
+                    <Text style={{ fontSize: 22, color: colors.primaryText }}>{info.main.value}</Text>
+                    <Text style={{ fontSize: 15, color: colors.primaryText, marginStart: 3 }}>{info.main.unit}</Text>
+                </View>}
         </View>
         <Divider/>
         <View style={{ flexDirection: 'row', marginTop: 8 }}>
@@ -43,10 +44,10 @@ const OverviewInfo = ({ info }) => {
                         <PlaceholderLine width={20} height={15} noMargin={true} style={{ marginStart: '80%' }}/>
                     </Placeholder>
                     :
-                    <Text style={{ textAlign: 'right', fontSize: 13, color: colors.secondaryText }}>
+                    <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
                         <Text style={{ color: colors.secondaryText }}>{info.sub.value}</Text>
-                        <Text style={{ color: colors.secondaryText }}>{info.sub.unit}</Text>
-                    </Text>}
+                        <Text style={{ color: colors.secondaryText, paddingStart: 3 }}>{info.sub.unit}</Text>
+                    </View>}
             </View>
         </View>
     </View>;
@@ -60,6 +61,29 @@ const SiteOverviewTab = () => {
     const siteId = useMemo(() => site?.id, [site]);
 
     const [overviewData, setOverviewData] = useState();
+
+    useEffect(() => {
+        const handler = (data) => {
+            setOverviewData(overviewData => {
+                if (overviewData?.site && siteId === data.id) {
+                    return {
+                        ...overviewData,
+                        site: {
+                            ...overviewData.site,
+                            price: data.price,
+                            currency: data.currency
+                        }
+                    };
+                }
+                return overviewData;
+            });
+        };
+        eventCenter.register(eventCenter.eventNames.updateSitePrice, handler);
+
+        return () => {
+            eventCenter.unRegister(eventCenter.eventNames.updateSitePrice, handler);
+        };
+    }, [siteId]);
 
     useFocusEffect(React.useCallback(() => {
         if (siteId) {
@@ -119,17 +143,45 @@ const SiteOverviewTab = () => {
                     ...(data ? utility.makeupProduct(data.allSumEnergy) : undefined)
                 }
             }}/>
-            <OverviewInfo info={{
-                main: {
-                    text: 'Lợi nhuận trong ngày',
-                    ...(data ? utility.makeupMoney(data.todaySumEnergy * 1720) : undefined)
-                },
-                sub: {
-                    text: 'Tổng doanh thu',
-                    ...(data ? utility.makeupMoney(data.allSumEnergy * 1720) : undefined)
-                }
-            }}/>
         </>;
+    }, [overviewData]);
+
+    const incomeDom = useMemo(() => {
+        const data = overviewData?.site;
+        let price = data?.price;
+        const currency = data?.currency;
+
+        price = price ? parseInt(price) : 0;
+        price = isFinite(price) && !isNaN(price) && price > 0 ? price : 0;
+
+        let value, unit, totalValue, totalUnit;
+        if (data && price && currency) {
+            let makeup = utility.makeupMoney(data.todaySumEnergy * price);
+            value = makeup.value + makeup.unit;
+
+            makeup = utility.makeupMoney(data.allSumEnergy * price);
+            totalValue = makeup.value + makeup.unit;
+
+            unit = currency;
+            totalUnit = currency;
+        }
+
+        return <OverviewInfo info={{
+            main: {
+                text: 'Lợi nhuận trong ngày',
+                ...(data ? {
+                    value: value ? value : '',
+                    unit: unit ? unit : 'chưa cài đặt'
+                } : undefined)
+            },
+            sub: {
+                text: 'Tổng doanh thu',
+                ...(data ? {
+                    value: totalValue ? totalValue : '--',
+                    unit: totalUnit ? totalUnit : ''
+                } : undefined)
+            }
+        }}/>;
     }, [overviewData]);
 
     const chartDom = useMemo(() => site ? <SimpleChar url={'/site/trend?id=' + encodeURIComponent(site.id)}/> : <></>, [site]);
@@ -138,6 +190,7 @@ const SiteOverviewTab = () => {
         <ScrollView style={{ width: '100%' }}>
             {siteStatus}
             {infoDom}
+            {incomeDom}
             {chartDom}
         </ScrollView>
     </View>;
