@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "isolarcloud-32d36"
+  },
+  "targets": {
+    "isolarcloud-32d36": {
+      "hosting": {
+        "ntvsolar": [
+          "ntvsolar"
+        ]
+      }
+    }
   }
 }

@@ -17,7 +17,7 @@ const AboutScreen = ({ navigation }) => {
                 </View>
                 <View style={{ padding: 15 }}>
                     <Text style={{ color: colors.primaryText, fontSize: 16, fontWeight: 'bold' }}>Phiên bản ứng dụng:</Text>
-                    <Text style={{ color: colors.secondaryText, marginTop: 5, fontSize: 14 }}>{`V${Constants.nativeAppVersion} (build: ${Constants.nativeBuildVersion})`}</Text>
+                    <Text style={{ color: colors.secondaryText, marginTop: 5, fontSize: 14 }}>{Constants.manifest?.version ? `V${Constants.manifest.version}` : '-.-.-'}</Text>
                 </View>
                 <FlatButton
                     title={'Chính sách sử dụng'}
