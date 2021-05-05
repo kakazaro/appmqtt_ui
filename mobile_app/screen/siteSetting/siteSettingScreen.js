@@ -8,6 +8,7 @@ import ServerContext from '../../context/serverContext';
 import SiteContext from '../../context/siteContext';
 import AppBarLayout from '../../component/appBarLayout';
 import eventCenter from '../../common/eventCenter';
+import serverError from '../../common/serverError';
 
 const SiteSettingScreen = () => {
     const serverContext = useContext(ServerContext);
@@ -37,7 +38,7 @@ const SiteSettingScreen = () => {
                     if (discard) {
                         return;
                     }
-                    setLoadError('Đã có lỗi xảy ra.');
+                    setLoadError(serverError.getError(e));
                 }
                 setLoading(false);
             })();
@@ -112,7 +113,7 @@ const SiteSettingScreen = () => {
                         name: editName
                     });
                 } catch (e) {
-                    setErrorEditName('Đã có lỗi xảy ra');
+                    setErrorEditName(serverError.getError(e));
                 }
                 setLoading(false);
             })();
@@ -171,7 +172,7 @@ const SiteSettingScreen = () => {
                         currency: editCurrency
                     });
                 } catch (e) {
-                    setErrorEditPrice('Đã có lỗi xảy ra');
+                    setErrorEditPrice(serverError.getError(e));
                 }
                 setLoading(false);
             })();

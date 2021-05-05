@@ -7,6 +7,7 @@ import FlatButton from '../../component/flatButton';
 import CustomInput from '../../component/customInput';
 import ServerContext from '../../context/serverContext';
 import AppBarLayout from '../../component/appBarLayout';
+import serverError from '../../common/serverError';
 
 const LANGUAGE = [
     {
@@ -65,7 +66,7 @@ const HomeSettingScreen = ({ navigation }) => {
                         routes: [{ name: 'login', params: { changedPassword: true } }],
                     });
                 } catch (e) {
-                    setError('Đổi mật khẩu không thành công');
+                    setError(serverError.getError(e));
                     setLoading(false);
                 }
             })();

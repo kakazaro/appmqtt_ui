@@ -1,11 +1,12 @@
 import React, { useState, useContext, useMemo, useRef } from 'react';
-import { ScrollView, StyleSheet, View, } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View, } from 'react-native';
 import { Avatar, Button, HelperText } from 'react-native-paper';
 import { colors } from '../common/themes';
 import constant from '../common/constant';
 import ServerContext from '../context/serverContext';
 import CustomInput from '../component/customInput';
 import AppBarLayout from '../component/appBarLayout';
+import serverError from '../common/serverError';
 
 const RegisterScreen = ({ navigation }) => {
     const passwordRef = useRef(null);
@@ -43,19 +44,21 @@ const RegisterScreen = ({ navigation }) => {
                     index: 0,
                     routes: [{ name: 'login', params: { created: true, email: email.toLowerCase(), password } }],
                 });
-            } catch (e) {
-                setError('Đã có lỗi xảy ra, vui lòng thử lại');
+            } catch (err) {
+                setError(serverError.getError(err));
                 setLoading(false);
             }
         })();
     };
 
+    const width = Dimensions.get('window').width;
+
     return <AppBarLayout title={'Đăng Ký Tài Khoản'}>
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center' }}>
             <View style={{ alignItems: 'center', width: '100%', marginTop: 10 }}>
-                <Avatar.Image size={240} source={require('../assets/picture/solar.jpg')} style={{ backgroundColor: 'white' }}/>
+                <Avatar.Image size={width > 500 ? 340 : 240} source={require('../assets/picture/solar.jpg')} style={{ backgroundColor: 'white' }}/>
             </View>
-            <View>
+            <View style={{ width: width > 500 ? 370 : 270 }}>
                 <CustomInput
                     style={styles.textInput}
                     value={email}
