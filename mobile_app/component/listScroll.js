@@ -4,6 +4,8 @@ import ServerContext from '../context/serverContext';
 import { Text } from 'react-native-paper';
 import { colors } from '../common/themes';
 import eventCenter from '../common/eventCenter';
+import serverError from '../common/serverError';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ListScroll = ({ Component, url, path, showPlaceholder }) => {
     const serverContext = useContext(ServerContext);
@@ -14,7 +16,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
 
     const [pageToken, setPageToken] = useState('');
     const [data, setData] = useState();
-    const [error, setError] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const handler = (data) => {
@@ -50,9 +52,8 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
                 nextPageToken: (response.data.nextPageToken || '') + ''
             };
         } catch (e) {
-            console.log(e);
             return {
-                error: true
+                error: serverError.getError(e)
             };
         }
     };
@@ -68,7 +69,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
                     if (!discard) {
                         setData(!result.error ? result.data : []);
                         setPageToken(!result.error ? result.nextPageToken : '');
-                        setError(!!result.error);
+                        setError(result.error);
 
                         setLoading(false);
                         setRefreshing(false);
@@ -135,7 +136,8 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
         ListFooterComponent={footer}
         ListEmptyComponent={<>
             {!loading && data && <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
-                <Text style={{ color: colors.DARK_SOULS }}>{!error ? 'Chưa có dữ liệu' : 'Đã có lỗi xả ra khi tải dữ liệu'}</Text>
+                <MaterialCommunityIcons name={!error ? 'briefcase-search-outline' : 'alert-octagon-outline'} size={38} color={colors.DARK_SOULS}/>
+                <Text style={{ color: colors.DARK_SOULS }}>{!error ? 'Chưa có dữ liệu' : (error || 'Đã có lỗi xả ra khi tải dữ liệu')}</Text>
             </View>}
         </>}
     />, [data, Component, loading, footer, error]);

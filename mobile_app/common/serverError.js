@@ -8,6 +8,11 @@ export default {
             }
         }
 
+        let message = err?.response?.data?.message || err?.response?.data?.error;
+        if (message) {
+            return message;
+        }
+
         return 'Đã có lỗi xảy ra, vui lòng thử lại';
     }
 };
