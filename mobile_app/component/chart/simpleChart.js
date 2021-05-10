@@ -1,22 +1,22 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, DataTable, Dialog, IconButton, Portal, Text, TouchableRipple } from 'react-native-paper';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Button, Dialog, IconButton, Portal, Text, TouchableRipple } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import { colors } from '../../common/themes';
 import ServerContext from '../../context/serverContext';
 import MonthSelectorCalendar from 'react-native-month-selector';
 import * as Localization from 'expo-localization';
-import { LineChart, Grid, YAxis, XAxis, BarChart } from 'react-native-svg-charts';
 import utility from '../../common/utility';
 import WebChart from './webChart';
+import serverError from '../../common/serverError';
+import TableChart from './tableChart';
 
 const timeTypes = [
     {
         id: 'day',
         label: 'Ngày',
-        views: ['year', 'month', 'date'],
         format: 'YYYY-MM-DD',
         openTo: 'date',
         basedTime: 'day',
@@ -25,15 +25,14 @@ const timeTypes = [
         timeFormatChart: 'H',
         timeFormatTable: 'HH[:]mm',
         type: 'power',
-        chartType: LineChart,
+        chartType: 'line',
         legend: 'Công xuất',
-        svg: { stroke: colors.PHILIPPINE_ORANGE },
+        stroke: { width: 2 },
         findUnitDiv: (series) => utility.findUnit(series, 'W', 1)
     },
     {
         id: 'month',
         label: 'Tháng',
-        views: ['year', 'month'],
         format: 'YYYY-MM',
         openTo: 'month',
         basedTime: 'month',
@@ -42,15 +41,14 @@ const timeTypes = [
         timeFormatChart: 'D',
         timeFormatTable: 'D[/]MM',
         type: 'energy',
-        chartType: BarChart,
+        chartType: 'bar',
         legend: 'Sản lương',
-        svg: { fill: colors.PHILIPPINE_ORANGE },
+        stroke: { width: 0 },
         findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1000)
     },
     {
         id: 'year',
         label: 'Năm',
-        views: ['year'],
         format: 'YYYY',
         openTo: 'year',
         basedTime: 'year',
@@ -59,9 +57,9 @@ const timeTypes = [
         timeFormatChart: 'M',
         timeFormatTable: 'MM[/]YYYY',
         type: 'energy',
-        chartType: BarChart,
+        chartType: 'bar',
         legend: 'Sản lương',
-        svg: { fill: colors.PHILIPPINE_ORANGE },
+        stroke: { width: 0 },
         findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1000)
     },
 ];
@@ -75,12 +73,12 @@ const SimpleChar = ({ url, showTable }) => {
 
     const [data, setData] = useState();
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         let discard = false;
         setLoading(true);
-        setError(false);
+        setError('');
 
         (async () => {
             const type = { ...timeType };
@@ -98,7 +96,7 @@ const SimpleChar = ({ url, showTable }) => {
                 }
             } catch (e) {
                 // ignore
-                setError(true);
+                setError(serverError.getError(e));
             }
             setLoading(false);
         })();
@@ -175,10 +173,10 @@ const SimpleChar = ({ url, showTable }) => {
     }, [timeType, time, showPicker, dateTimeButtonDom]);
 
     const processedData = useMemo(() => {
-        let dataSeries = [0, 0], dataLabels = ['', ''], tableLabels = ['', ''];
+        let dataSeries = [0, 0], times = [0, 1], tableLabels = ['', ''];
         let { series, timeType, time } = (data || {});
         if (series?.length) {
-            dataLabels = [];
+            times = [];
             tableLabels = [];
             let start = moment(time).startOf(timeType.start);
             let end = moment(time).startOf(timeType.start).add(1, timeType.start);
@@ -189,7 +187,7 @@ const SimpleChar = ({ url, showTable }) => {
             for (let i = 0; i < series.length; i++) {
                 // dataLabels.push(start.toDate().getTime());
                 tableLabels.push(start.format(timeType.timeFormatTable));
-                dataLabels.push(start.format(timeType.timeFormatChart));
+                times.push(start.toDate().getTime());
                 start = start.add(space, 'ms');
 
                 if (timeType.id === 'year') {
@@ -200,139 +198,36 @@ const SimpleChar = ({ url, showTable }) => {
             dataSeries = series;
         }
 
-        const maxXLabels = 4;
-        let showLabels = [];
-        let amount = 0;
-        if (dataLabels.length > maxXLabels) {
-            const space = dataLabels.length / maxXLabels;
-            for (let i = 0; i < dataLabels.length; i++) {
-                if ((i + 1) >= amount) {
-                    showLabels.push(dataLabels[i]);
-                    amount += space;
-                } else {
-                    showLabels.push('');
-                }
-            }
-        } else {
-            showLabels = dataLabels;
-        }
-
         const Component = timeType ? timeType.chartType : timeTypes[0].chartType;
-        const svg = timeType?.svg || timeTypes[0].svg;
         const legend = timeType?.legend || timeTypes[0].legend;
         const findUnitDiv = timeType?.findUnitDiv || timeTypes[0].findUnitDiv;
-        // const id = timeType?.id || timeTypes[0].id;
 
         const { div, unit } = findUnitDiv(dataSeries);
         dataSeries = dataSeries.map(s => s / div);
 
-        return { dataSeries, Component, svg, dataLabels, tableLabels, showLabels, legend, unit, div, timeType };
-    }, [data]);
-
-    const chartDom = useMemo(() => {
-        const { dataSeries, Component, svg, showLabels, legend, unit } = processedData;
-
-        return <View style={{ opacity: (loading || error) ? 0.5 : 1 }}>
-            <View style={{ marginHorizontal: 15, flexDirection: 'row', alignItems: 'center' }}>
-                <MaterialCommunityIcons name={'checkbox-blank-circle'} size={12} color={colors.PHILIPPINE_ORANGE}/>
-                <Text style={{ fontSize: 13, color: colors.primaryText, marginLeft: 10 }}>{legend + ` (${unit})`}</Text>
-            </View>
-            <View style={{ height: 250, flexDirection: 'row', paddingStart: 10, paddingEnd: 10 }}>
-                <YAxis
-                    style={{ height: 220 }}
-                    data={dataSeries}
-                    contentInset={{ top: 20, bottom: 10 }}
-                    svg={{
-                        fill: colors.DARK_SOULS,
-                        fontSize: 10,
-                    }}
-                    numberOfTicks={4}
-                    min={0}
-                    formatLabel={(value) => `${value}`}
-                />
-                <View style={{ flex: 1, marginLeft: 5 }}>
-                    <Component
-                        style={{ height: 220 }}
-                        data={dataSeries}
-                        svg={svg}
-                        contentInset={{ top: 20, bottom: 10, left: 0, right: 0 }}
-                        yMin={0}
-                    >
-                        <Grid
-                            svg={{ stroke: colors.UNICORN_SILVER }}
-                        />
-                        {(loading || error) && <View style={{ width: '100%', alignItems: 'center', height: '100%', justifyContent: 'center' }}>
-                            <Text style={{ backgroundColor: colors.UNICORN_SILVER, padding: 5, borderRadius: 10 }}>{loading ? 'Đang tải...' : 'Đã xảy ra lỗi'}</Text>
-                        </View>}
-                    </Component>
-                    <XAxis
-                        style={{ height: 30 }}
-                        data={dataSeries}
-                        formatLabel={(value, index) => showLabels[index]}
-                        contentInset={{ left: 5, right: 5 }}
-                        svg={{ fontSize: 10, fill: colors.DARK_SOULS, textAnchor: 'middle' }}
-                    />
-                </View>
-            </View>
-        </View>;
-    }, [processedData, loading]);
-
-    const [page, setPage] = useState(0);
-    useEffect(() => {
-        setPage(0);
+        return { dataSeries, Component, times, tableLabels, legend, unit, div, timeType };
     }, [data]);
 
     const tableDom = useMemo(() => {
-        const { dataSeries, tableLabels, legend, unit } = processedData;
-
-        if (!showTable || loading || dataSeries.length !== tableLabels.length) {
+        if (!showTable || loading) {
             return;
         }
 
-        const pageLimit = 35;
-
-        const from = page * pageLimit;
-        const to = (page + 1) * pageLimit;
-
-        const slidedSeries = dataSeries.slice(pageLimit * page, pageLimit * (page + 1));
-        const slidedSLabel = tableLabels.slice(pageLimit * page, pageLimit * (page + 1));
-
-        return <DataTable>
-            <DataTable.Header>
-                <DataTable.Title><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>Thời gian</Text></DataTable.Title>
-                <DataTable.Title><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{legend + ` (${unit})`}</Text></DataTable.Title>
-            </DataTable.Header>
-            {slidedSeries.map((value, index) => <DataTable.Row key={index}>
-                <DataTable.Cell>
-                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{slidedSLabel[index]}</Text>
-                </DataTable.Cell>
-                <DataTable.Cell>
-                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{slidedSeries[index]}</Text>
-                </DataTable.Cell>
-            </DataTable.Row>)}
-            {dataSeries.length > pageLimit && <DataTable.Pagination
-                page={page}
-                numberOfPages={Math.floor(dataSeries.length / pageLimit) + 1}
-                onPageChange={page => setPage(page)}
-                label={`${from + 1}-${to} of ${dataSeries.length}`}
-            />}
-        </DataTable>;
-    }, [processedData, showTable, loading, page]);
+        return <TableChart data={processedData}/>
+    }, [processedData, showTable, loading]);
 
     const webChartDom = useMemo(() => {
-        const { dataSeries, dataLabels, timeType, legend, unit, div } = processedData;
+        const { dataSeries, times, timeType, legend, unit, div } = processedData;
 
-        const data = { dataSeries, dataLabels, name: legend, divNumber: { unit, div }, timeType };
-        // console.log(JSON.stringify(data));
+        const data = { dataSeries: dataSeries, times: times, name: legend, divNumber: { unit, div }, timeType };
 
-        return <WebChart data={data}/>;
-    }, [processedData]);
+        return <WebChart data={data} error={error}/>;
+    }, [processedData, error]);
 
     return <View style={{ width: '100%', backgroundColor: 'white', marginTop: 5 }}>
         {dateTypeDom}
         {dateTimeButtonDom}
         {dateTimePickerDom}
-        {chartDom}
         {webChartDom}
         {tableDom}
     </View>;
