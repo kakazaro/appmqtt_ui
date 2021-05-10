@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="../favicon.png"/>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+
+</head>
+<body style='margin: 0'>
+<div class='container'>
+    <div id='chart' class='chartDoc'></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script>
+    window.loadChart = ({ dataSeries, dataLabels, name, divNumber, timeType }) => {
+        const options = {
+            series: [
+                {
+                    name: `${name} ${divNumber.unit}`,
+                    data: dataSeries || []
+                },
+            ],
+            chart: {
+                type: timeType.type || 'line',
+                toolbar: {
+                    show: false,
+                    offsetY: 10,
+                    offsetX: -10,
+                    tools: {
+                        download: false,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false,
+                        customIcons: [{
+                            icon: '<i class="fas fa-expand-alt"/>',
+                            index: 0,
+                            title: 'tooltip of the icon',
+                            class: 'custom-icon'
+                        }]
+                    }
+                },
+                selection: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            labels: dataLabels || [],
+            colors: ['#ff7300'],
+            fill: {
+                type: 'solid',
+                colors: ['#ff7300']
+            },
+            stroke: {
+                show: true,
+                ...((timeType && timeType.stroke) || { width: 0 })
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    borderRadius: 3,
+                    columnWidth: '70%',
+                    distributed: false,
+                    rangeBarOverlap: true,
+                    rangeBarGroupRows: false,
+                }
+            },
+            grid: {
+                show: true,
+                position: 'back',
+                borderColor: 'rgba(154,154,154,0.28)',
+                xaxis: {
+                    lines: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    lines: {
+                        show: true
+                    }
+                },
+            },
+            xaxis: {
+                show: true,
+                // type: 'number',
+                tickAmount: 4,
+                axisTicks: {
+                    show: false,
+                },
+                axisBorder: {
+                    show: false,
+                },
+                labels: {
+                    show: true,
+                    rotate: 0,
+                    style: {
+                        colors: 'rgba(154,154,154,0.57)',
+                        fontSize: '11px',
+                    },
+                    // rotate: 0,
+                    formatter: (value) => {
+                        return moment(new Date(value)).format((timeType && timeType.timeFormatChart) ? timeType.timeFormatChart : 'D/M');
+                    },
+                },
+            },
+            yaxis: {
+                show: true,
+                tickAmount: 3,
+                labels: {
+                    show: true,
+                    style: {
+                        colors: 'rgba(154,154,154,0.57)',
+                        fontSize: '11px',
+                    },
+                    formatter: (value) => {
+                        return Math.floor(value / (divNumber.div || 1));
+                    },
+                },
+            },
+            tooltip: {
+                enabled: true,
+                custom: function ({ series, seriesIndex, dataPointIndex }) {
+                    // const makeup = utility.makeupPower(series[seriesIndex][dataPointIndex]);
+                    return '<div class="arrow_box">' +
+                        // '<span>' + makeup.value + ' ' + makeup.unit + '</span>' +
+                        '<span>' + series[seriesIndex][dataPointIndex] + '</span>' +
+                        '</div>';
+                }
+            },
+            legend: {
+                show: true,
+                showForSingleSeries: true,
+                position: 'top',
+                horizontalAlign: 'left',
+                fontSize: '12px',
+                offsetX: 0,
+                markers: {
+                    width: 7,
+                    height: 7
+                },
+                onItemClick: {
+                    toggleDataSeries: false
+                },
+                onItemHover: {
+                    highlightDataSeries: false
+                }
+            }
+        };
+
+        if (window.chart) {
+            window.chart.updateOptions(options);
+        }
+    };
+
+    function onLoad() {
+        const options = {
+            chart: {
+                type: 'line'
+            },
+            series: [{
+                name: 'sales',
+                data: [30, 40, 35, 50, 49, 60, 70, 91, 1000]
+            }],
+            xaxis: {
+                categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+            }
+        };
+
+        const chart = new ApexCharts(document.querySelector('#chart'), options);
+        window.chart = chart;
+        chart.render();
+    }
+
+    document.addEventListener('DOMContentLoaded', function (event) {
+        onLoad();
+    });
+</script>
+</body>
+</html>

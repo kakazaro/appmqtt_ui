@@ -10,6 +10,7 @@ import MonthSelectorCalendar from 'react-native-month-selector';
 import * as Localization from 'expo-localization';
 import { LineChart, Grid, YAxis, XAxis, BarChart } from 'react-native-svg-charts';
 import utility from '../../common/utility';
+import WebChart from './webChart';
 
 const timeTypes = [
     {
@@ -225,7 +226,7 @@ const SimpleChar = ({ url, showTable }) => {
         const { div, unit } = findUnitDiv(dataSeries);
         dataSeries = dataSeries.map(s => s / div);
 
-        return { dataSeries, Component, svg, tableLabels, showLabels, legend, unit };
+        return { dataSeries, Component, svg, dataLabels, tableLabels, showLabels, legend, unit, div, timeType };
     }, [data]);
 
     const chartDom = useMemo(() => {
@@ -318,11 +319,21 @@ const SimpleChar = ({ url, showTable }) => {
         </DataTable>;
     }, [processedData, showTable, loading, page]);
 
+    const webChartDom = useMemo(() => {
+        const { dataSeries, dataLabels, timeType, legend, unit, div } = processedData;
+
+        const data = { dataSeries, dataLabels, name: legend, divNumber: { unit, div }, timeType };
+        // console.log(JSON.stringify(data));
+
+        return <WebChart data={data}/>;
+    }, [processedData]);
+
     return <View style={{ width: '100%', backgroundColor: 'white', marginTop: 5 }}>
         {dateTypeDom}
         {dateTimeButtonDom}
         {dateTimePickerDom}
         {chartDom}
+        {webChartDom}
         {tableDom}
     </View>;
 };
