@@ -64,7 +64,7 @@ const timeTypes = [
     },
 ];
 
-const SimpleChar = ({ url, showTable }) => {
+const SimpleChar = ({ url, showTable, hideExpand }) => {
     const serverContext = useContext(ServerContext);
 
     const [timeType, setTimeType] = useState(timeTypes[0]);
@@ -201,11 +201,12 @@ const SimpleChar = ({ url, showTable }) => {
         const Component = timeType ? timeType.chartType : timeTypes[0].chartType;
         const legend = timeType?.legend || timeTypes[0].legend;
         const findUnitDiv = timeType?.findUnitDiv || timeTypes[0].findUnitDiv;
+        const date = timeType ? moment(time).format(timeType.format) : '';
 
         const { div, unit } = findUnitDiv(dataSeries);
         dataSeries = dataSeries.map(s => s / div);
 
-        return { dataSeries, Component, times, tableLabels, legend, unit, div, timeType };
+        return { dataSeries, Component, times, tableLabels, legend, unit, div, timeType, date };
     }, [data]);
 
     const tableDom = useMemo(() => {
@@ -213,16 +214,16 @@ const SimpleChar = ({ url, showTable }) => {
             return;
         }
 
-        return <TableChart data={processedData}/>
+        return <TableChart data={processedData}/>;
     }, [processedData, showTable, loading]);
 
     const webChartDom = useMemo(() => {
-        const { dataSeries, times, timeType, legend, unit, div } = processedData;
+        const { legend, unit, div } = processedData;
 
-        const data = { dataSeries: dataSeries, times: times, name: legend, divNumber: { unit, div }, timeType };
+        const data = { ...processedData, name: legend, divNumber: { unit, div } };
 
-        return <WebChart data={data} error={error}/>;
-    }, [processedData, error]);
+        return <WebChart data={data} error={error} loading={loading} hideExpand={hideExpand}/>;
+    }, [processedData, error, loading, hideExpand]);
 
     return <View style={{ width: '100%', backgroundColor: 'white', marginTop: 5 }}>
         {dateTypeDom}

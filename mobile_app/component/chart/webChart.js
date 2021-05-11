@@ -2,11 +2,13 @@ import 'react-native-get-random-values';
 import React, { useEffect, useRef } from 'react';
 import { WebView } from 'react-native-webview';
 import { Dimensions, View } from 'react-native';
-import { Button, Text, TouchableRipple } from 'react-native-paper';
+import { Text, TouchableRipple } from 'react-native-paper';
 import { colors } from '../../common/themes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-const WebChart = ({ data, error }) => {
+const WebChart = ({ data, error, loading, hideExpand }) => {
+    const navigation = useNavigation();
     const webRef = useRef(null);
 
     useEffect(() => {
@@ -23,7 +25,7 @@ const WebChart = ({ data, error }) => {
     return <View>
         <View>
         </View>
-        <View style={{ height: Dimensions.get('window').width / 1.57, width: '100%' }}>
+        <View style={{ height: Dimensions.get('window').width / 1.57, width: '100%', opacity: (loading ? 0.5 : 1) }}>
             {error ?
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ color: colors.REDDISH }}>{error}</Text>
@@ -38,8 +40,9 @@ const WebChart = ({ data, error }) => {
                         source={{ html: HTML }}
                         androidHardwareAccelerationDisabled={true}
                     />
-                    {data && <TouchableRipple style={{ position: 'absolute', top: 0, right: 5, borderRadius: 4, padding: 6, backgroundColor: colors.UNICORN_SILVER }} onPress={() => {
-                    }}>
+                    {data && !hideExpand && <TouchableRipple
+                        style={{ position: 'absolute', top: 0, right: 10, borderRadius: 4, padding: 6, backgroundColor: colors.UNICORN_SILVER }}
+                        onPress={() => navigation.navigate('chart', { chartData: { data } })}>
                         <MaterialCommunityIcons name={'arrow-expand'} size={20} color={colors.PHILIPPINE_ORANGE}/>
                     </TouchableRipple>}
                 </>}
