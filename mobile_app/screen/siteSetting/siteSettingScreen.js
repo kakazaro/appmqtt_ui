@@ -33,7 +33,11 @@ const SiteSettingScreen = () => {
                     if (discard) {
                         return;
                     }
-                    setSiteOverview(response.data.site);
+                    setEditName(site.name || '');
+                    const siteOverview = response.data.site;
+                    setSiteOverview(siteOverview);
+                    setEditPrice((siteOverview?.price || '') + '');
+                    setEditCurrency(siteOverview?.currency || '');
                 } catch (e) {
                     if (discard) {
                         return;
@@ -53,19 +57,10 @@ const SiteSettingScreen = () => {
     const [editName, setEditName] = useState('');
     const [errorEditName, setErrorEditName] = useState('');
 
-    useEffect(() => {
-        setEditName(site?.name || '');
-    }, [site]);
-
     const [showEditPrice, setShowEditPrice] = useState(false);
     const [editPrice, setEditPrice] = useState('');
     const [editCurrency, setEditCurrency] = useState('');
     const [errorEditPrice, setErrorEditPrice] = useState('');
-
-    useEffect(() => {
-        setEditPrice((siteOverview?.price || '') + '');
-        setEditCurrency(siteOverview?.currency || '');
-    }, [siteOverview]);
 
     const appSetting = useMemo(() => {
         const disabled = loading || loadError;
