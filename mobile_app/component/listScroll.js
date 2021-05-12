@@ -52,6 +52,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
                 nextPageToken: (response.data.nextPageToken || '') + ''
             };
         } catch (e) {
+            console.log(e?.response)
             return {
                 error: serverError.getError(e)
             };

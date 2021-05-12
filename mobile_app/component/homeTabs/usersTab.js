@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../common/themes';
+import { StyleSheet, View } from 'react-native';
+import ListScroll from '../listScroll';
+import UserBadge from '../listBadge/userBadge';
 
 const UsersTab = () => {
     return <View style={styles.container}>
-        <Text style={{ color: colors.DARK_SOULS, marginTop: 100 }}>Chưa có dữ liệu</Text>
+        <ListScroll Component={UserBadge} showPlaceholder={true} path={'users'} url={'/users/list?role=US'}/>
     </View>;
 };
 
