@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 
-const AppBarLayout = ({ title, children, showMainMenu, showSiteMenu, brand }) => {
+const AppBarLayout = ({ title, subtitle, children, showMainMenu, showSiteMenu, brand }) => {
     const userContext = useContext(UserContext);
 
     const navigation = useNavigation();
@@ -35,7 +35,7 @@ const AppBarLayout = ({ title, children, showMainMenu, showSiteMenu, brand }) =>
         <View>
             <Appbar.Header style={styles.bar}>
                 {isCanBack && <Appbar.BackAction onPress={() => navigation.goBack()}/>}
-                <Appbar.Content titleStyle={[styles.title, { color: brand ? colors.PHILIPPINE_ORANGE : colors.primaryText }, fontTitle]} title={title || ''}/>
+                <Appbar.Content titleStyle={[styles.title, { color: brand ? colors.PHILIPPINE_ORANGE : colors.primaryText }, fontTitle]} title={title || ''} subtitle={subtitle || ''}/>
                 {showMainMenu && <Menu
                     visible={visibleMenu}
                     onDismiss={() => setVisibleMenu(false)}

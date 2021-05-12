@@ -48,15 +48,15 @@ export default {
     USER_ROLES: {
         US: {
             label: 'Người dùng thường',
-            icon: 'account-outline'
+            icon: 'account'
         },
         AD: {
             label: 'Nhân viên vận hành',
-            icon:'account-cog-outline'
+            icon:'account-hard-hat'
         },
         SA: {
             label: 'Quản trị viên',
-            icon: 'account-key-outline'
+            icon: 'account-tie'
         }
     },
     findUnit(values, baseUnit = 'W', multiple = 1) {

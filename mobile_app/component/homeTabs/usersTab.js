@@ -5,7 +5,7 @@ import UserBadge from '../listBadge/userBadge';
 
 const UsersTab = () => {
     return <View style={styles.container}>
-        <ListScroll Component={UserBadge} showPlaceholder={true} path={'users'} url={'/users/list?role=US'}/>
+        <ListScroll Component={UserBadge} showPlaceholder={true} path={'users'} url={'/users/list'}/>
     </View>;
 };
 

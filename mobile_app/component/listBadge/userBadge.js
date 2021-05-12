@@ -13,68 +13,53 @@ import {
 } from 'rn-placeholder';
 
 const UserBadge = ({ item }) => {
-    // const navigation = useNavigation();
+    const navigation = useNavigation();
 
-    const roleUser = useMemo(() => utility.USER_ROLES[Object.keys(utility.USER_ROLES).find(k => k === item?.role)], [item]);
+    const user = useMemo(() => item, [item]);
+    const roleUser = useMemo(() => utility.USER_ROLES[Object.keys(utility.USER_ROLES).find(k => k === user?.role)], [user]);
 
     const infoDom = useMemo(() => {
-        const user = item;
         if (!user) {
             return <Placeholder Animation={ShineOverlay}>
+                <PlaceholderLine width={(Math.random() * 40 + 40)} height={18} noMargin={true} style={{ marginBottom: 5 }}/>
                 <PlaceholderLine width={(Math.random() * 50 + 50)} height={14} noMargin={true} style={{ marginBottom: 3 }}/>
-                <PlaceholderLine width={(Math.random() * 50 + 50)} height={12} noMargin={true} style={{ marginBottom: 3 }}/>
+                <PlaceholderLine width={(Math.random() * 50 + 50)} height={11} noMargin={true} style={{ marginBottom: 3 }}/>
             </Placeholder>;
         }
 
         const { name } = user;
 
         return <>
-            <Text style={{ fontSize: 15, color: colors.primaryText, marginBottom: 3 }}>{name}</Text>
-            <Text style={styles.subText}>{roleUser?.label}</Text>
+            <Text style={{ fontSize: 16, color: colors.PHILIPPINE_ORANGE, fontWeight: 'bold', marginBottom: 0 }}>{user?.email}</Text>
+            <Text style={{ fontSize: 15, color: colors.primaryText, marginBottom: 0 }}>{name}</Text>
+            <Text style={{ fontSize: 11, color: colors.secondaryText, marginBottom: 5 }}>{roleUser?.label}</Text>
         </>;
 
-    }, [item, roleUser]);
+    }, [user, roleUser]);
 
     const onPress = () => {
-        if (item) {
-            // navigation.navigate('site', { site: item });
+        if (user) {
+            navigation.navigate('user', { user });
         }
     };
 
     return <TouchableRipple onPress={onPress}>
-        <View>
-            <View style={{ width: '100%', justifyContent: 'flex-start', alignItems: 'flex-start', paddingStart: 15, paddingEnd: 15, paddingTop: 10, marginBottom: 1, backgroundColor: 'white' }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ minWidth: 40 }}>
-                        {roleUser ?
-                            <MaterialCommunityIcons name={roleUser.icon} size={32} color={colors.PHILIPPINE_ORANGE}/>
-                            :
-                            <Placeholder Animation={ShineOverlay}>
-                                <PlaceholderMedia size={34}/>
-                            </Placeholder>
-                        }
-                    </View>
-                    {item?.email ?
-                        <Text style={{ fontSize: 18, color: colors.PHILIPPINE_ORANGE, fontWeight: 'bold', marginBottom: 2 }}>{item?.email}</Text>
-                        :
-                        <Placeholder Animation={ShineOverlay}>
-                            <PlaceholderLine width={(Math.random() * 40 + 40)} height={18} noMargin={true} style={{ marginBottom: 5 }}/>
-                        </Placeholder>
-                    }
-                </View>
-                <View style={{ flex: 1, flexDirection: 'column' }}>
-                    {infoDom}
-                </View>
-                <Divider/>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', paddingStart: 5, paddingEnd: 15, paddingTop: 5, marginBottom: 1, backgroundColor: 'white' }}>
+            <View style={{ minWidth: 55, justifyContent: 'center', alignItems: 'center' }}>
+                {roleUser ?
+                    <MaterialCommunityIcons name={roleUser.icon} size={50} color={colors.PHILIPPINE_ORANGE}/>
+                    :
+                    <Placeholder Animation={ShineOverlay}>
+                        <PlaceholderMedia size={50}/>
+                    </Placeholder>
+                }
             </View>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+                {infoDom}
+            </View>
+            <Divider/>
         </View>
     </TouchableRipple>;
 };
-
-const styles = StyleSheet.create({
-    subText: {
-        fontSize: 13, color: colors.secondaryText
-    }
-});
 
 export default UserBadge;
