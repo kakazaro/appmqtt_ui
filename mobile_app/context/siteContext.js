@@ -15,7 +15,7 @@ export const SiteProvider = ({ children }) => {
     const [device, setDevice] = useState();
 
     useEffect(() => {
-        const handler = (data) => {
+        const handler = (eventName, data) => {
             setSite(lastSite => {
                 if (lastSite?.id === data.id) {
                     return {

@@ -14,7 +14,8 @@ import AboutScreen from './homeSetting/aboutScreen';
 import PolicyScreen from './homeSetting/policyScreen';
 import SiteSettingScreen from './siteSetting/siteSettingScreen';
 import ChartScreen from './chartScreen';
-import UserScreen from './userScreen';
+import UserScreen from './userSetting/userScreen';
+import UserAddSiteScreen from './userSetting/userAddSiteScreen';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,7 @@ const MainScreen = () => {
                 <Stack.Screen name={'chart'} component={ChartScreen}/>
 
                 <Stack.Screen name={'user'} component={UserScreen}/>
+                <Stack.Screen name={'userAddSite'} component={UserAddSiteScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>;

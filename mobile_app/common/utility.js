@@ -47,14 +47,17 @@ export default {
     },
     USER_ROLES: {
         US: {
+            id: 'US',
             label: 'Người dùng thường',
             icon: 'account'
         },
         AD: {
+            id: 'AD',
             label: 'Nhân viên vận hành',
-            icon:'account-hard-hat'
+            icon: 'account-hard-hat'
         },
         SA: {
+            id: 'SA',
             label: 'Quản trị viên',
             icon: 'account-tie'
         }

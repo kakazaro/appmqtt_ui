@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Divider, Text, TouchableRipple } from 'react-native-paper';
 import utility from '../../common/utility';
 import { colors } from '../../common/themes';

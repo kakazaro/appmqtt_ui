@@ -4,6 +4,10 @@ class EventCenter {
         this.eventNames = {
             updateSitePrice: 'updateSitePrice',
             updateSiteName: 'updateSiteName',
+            updateUserRole: 'updateUserRole',
+
+            updateDeleteUserSite: 'updateDeleteUserSite',
+            updateAddUserSite: 'updateAddUserSite',
         };
     }
 
@@ -25,7 +29,7 @@ class EventCenter {
 
     push(eventName, data) {
         if (this.events[eventName]) {
-            this.events[eventName].forEach(h => h(data));
+            this.events[eventName].forEach(h => h(eventName, data));
         }
     }
 }
