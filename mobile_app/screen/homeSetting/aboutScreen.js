@@ -20,6 +20,7 @@ const AboutScreen = ({ navigation }) => {
                     <Text style={{ color: colors.secondaryText, marginTop: 5, fontSize: 14 }}>{Constants.manifest?.version ? `V${Constants.manifest.version}` : '-.-.-'}</Text>
                 </View>
                 <FlatButton
+                    iconName={'chevron-right'}
                     title={'Chính sách sử dụng'}
                     style={{ borderTopStyle: 'solid', borderTopWidth: 1, borderTopColor: colors.UNICORN_SILVER, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: colors.UNICORN_SILVER }}
                     onPress={() => navigation.navigate('policy')}

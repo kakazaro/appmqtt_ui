@@ -1,14 +1,10 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
+import { Divider, HelperText, Text } from 'react-native-paper';
 import utility from '../../common/utility';
 import { colors } from '../../common/themes';
 import ServerContext from '../../context/serverContext';
-import {
-    Placeholder,
-    PlaceholderLine,
-    ShineOverlay
-} from 'rn-placeholder';
+import { Placeholder, PlaceholderLine, ShineOverlay } from 'rn-placeholder';
 import SimpleChar from '../chart/simpleChart';
 import SiteContext from '../../context/siteContext';
 import { useFocusEffect } from '@react-navigation/native';
@@ -61,9 +57,10 @@ const SiteOverviewTab = () => {
     const siteId = useMemo(() => site?.id, [site]);
 
     const [overviewData, setOverviewData] = useState();
+    const [overviewDataError, setOverviewDataError] = useState();
 
     useEffect(() => {
-        const handler = (data) => {
+        const handler = (eventName, data) => {
             setOverviewData(overviewData => {
                 if (overviewData?.site && siteId === data.id) {
                     return {
@@ -90,6 +87,7 @@ const SiteOverviewTab = () => {
             const uid = serviceContext.dataControl.registerSiteData({
                 url: 'site/overview?id=' + encodeURIComponent(siteId),
                 handler: setOverviewData,
+                handlerError: setOverviewDataError,
                 duration: 10000
             });
 
@@ -169,6 +167,7 @@ const SiteOverviewTab = () => {
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>
             <StatusBanner statusId={site?.status} title={'Trạng thái'}/>
+            {!!overviewDataError && <HelperText style={{ marginStart: 5 }} type={'error'} visible={true}>Lỗi: {overviewDataError}</HelperText>}
             {infoDom}
             {incomeDom}
             {chartDom}

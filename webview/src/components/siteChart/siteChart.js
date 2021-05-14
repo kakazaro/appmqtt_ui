@@ -137,10 +137,7 @@ const SiteChart = ({ siteId }) => {
                             icon: '<i class="fas fa-expand-alt"/>',
                             index: 0,
                             title: 'tooltip of the icon',
-                            class: 'custom-icon',
-                            // click: function (chart, options, e) {
-                            //     console.log('clicked custom-icon');
-                            // }
+                            class: 'custom-icon'
                         }]
                     }
                 },

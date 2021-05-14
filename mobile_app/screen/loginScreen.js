@@ -19,7 +19,6 @@ const RememberPasswordKey = 'RememberPasswordKey';
 const LoginScreen = ({ navigation, route }) => {
     const passwordRef = useRef(null);
 
-    const [showModal, setShowModal] = useState(route?.params?.created || route?.params?.changedPassword);
 
     const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
@@ -73,13 +72,24 @@ const LoginScreen = ({ navigation, route }) => {
                 await AsyncStorage.setItem(RememberIdKey, rememberPassword ? email : '');
                 await AsyncStorage.setItem(RememberPasswordKey, rememberPassword ? password : '');
                 setLoading(false);
-                userContext.updateToken(response.data.token, navigation);
+                if (await userContext.login(response.data)) {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'home' }],
+                    });
+                } else {
+                    setError('Dữ liệu đăng nhập không hợp lệ');
+                    setLoading(false);
+                }
             } catch (err) {
                 setError(serverError.getError(err));
                 setLoading(false);
             }
         })();
     };
+
+    const [showInfoModal, setShowInfoModal] = useState(false);
+
 
     const width = Dimensions.get('window').width;
 
@@ -143,19 +153,24 @@ const LoginScreen = ({ navigation, route }) => {
                     style={{ width: '100%', marginTop: 10 }}
                     labelStyle={{ fontSize: 13, textTransform: 'none' }}
                     disabled={loading}
-                    onPress={() => navigation.push('register')}
+                    onPress={() => setShowInfoModal(true)}
                 >
-                    Đăng ký tài khoản
+                    Chưa có tài khoản?
                 </Button>
             </View>
             <Portal>
-                <Dialog visible={showModal} onDismiss={() => setShowModal(false)}>
-                    <Dialog.Title>Thông báo</Dialog.Title>
+                <Dialog visible={showInfoModal} onDismiss={() => setShowInfoModal(false)}>
+                    <Dialog.Title>Yêu cầu lập tài khoản</Dialog.Title>
                     <Dialog.Content>
-                        <Text>{route?.params?.created ? 'Bạn đã đăng ký tài khoản thành công' : route?.params?.changedPassword ? 'Đổi mật thành công, vui lòng đăng nhập lại' : ''}</Text>
+                        <Text>Vui lòng liên hệ chúng tôi để được cấp tài khoản đăng nhập:</Text>
+                        <View style={{ marginTop: 5, marginBottom: 5 }}>
+                            <Text style={styles.labelText}>Địa chỉ: <Text style={styles.infoText}>{constant.CONTACT_INFO.address}</Text></Text>
+                            <Text style={styles.labelText}>Điện thoại: <Text style={styles.infoText}>{constant.CONTACT_INFO.phone}</Text></Text>
+                            <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text></Text>
+                        </View>
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={() => setShowModal(false)}>OK</Button>
+                        <Button onPress={() => setShowInfoModal(false)}>OK</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
@@ -175,6 +190,13 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'white',
         marginTop: 10
+    },
+    labelText: {
+        color: colors.secondaryText,
+        fontSize: 12
+    },
+    infoText: {
+        color: colors.primaryText,
     }
 });
 
