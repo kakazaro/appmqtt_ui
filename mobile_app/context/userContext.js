@@ -6,6 +6,7 @@ import constant from '../common/constant';
 
 const defaultUser = {
     id: '',
+    user: {},
     isLogin: false,
     token: '',
     login: () => undefined,
@@ -79,6 +80,7 @@ export const UserProvider = ({ children }) => {
     const value = useMemo(() => {
         return {
             ...defaultUser,
+            user: loginData?.user || {},
             id: loginData?.user?._id,
             isLogin: !!loginData,
             token: loginData?.token,
