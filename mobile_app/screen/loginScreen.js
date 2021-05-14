@@ -73,7 +73,15 @@ const LoginScreen = ({ navigation, route }) => {
                 await AsyncStorage.setItem(RememberIdKey, rememberPassword ? email : '');
                 await AsyncStorage.setItem(RememberPasswordKey, rememberPassword ? password : '');
                 setLoading(false);
-                userContext.updateToken(response.data.token, navigation);
+                if (await userContext.login(response.data)) {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'home' }],
+                    });
+                } else {
+                    setError('Dữ liệu đăng nhập không hợp lệ');
+                    setLoading(false);
+                }
             } catch (err) {
                 setError(serverError.getError(err));
                 setLoading(false);

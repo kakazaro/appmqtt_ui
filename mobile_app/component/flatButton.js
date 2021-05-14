@@ -13,7 +13,7 @@ const FlatButton = ({ title, style, description, currentValue, onPress, iconName
                     {description && <Text style={{ color: colors.secondaryText, fontSize: 11 }}>{description}</Text>}
                 </View>
                 {currentValue && <Text style={{ color: colors.secondaryText, fontSize: 13, marginEnd: 10 }}>{currentValue}</Text>}
-                <MaterialCommunityIcons name={iconName || 'chevron-right'} size={24} color={disabled ? colors.DARK_SOULS : colors.primaryText}/>
+                {!!iconName && <MaterialCommunityIcons name={iconName} size={24} color={disabled ? colors.DARK_SOULS : colors.primaryText}/>}
             </View>
         </TouchableRipple>
     </View>;

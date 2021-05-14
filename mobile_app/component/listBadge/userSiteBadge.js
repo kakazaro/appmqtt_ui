@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-import { Divider, RadioButton, Text } from 'react-native-paper';
+import { Divider, RadioButton, Text, TouchableRipple } from 'react-native-paper';
 import { colors } from '../../common/themes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
@@ -12,7 +12,7 @@ import {
 const UserSiteBadge = ({ item, onPress, isAddSite }) => {
     const site = useMemo(() => item, [item]);
 
-    return <View onPress={() => {
+    return <TouchableRipple onPress={() => {
         if (typeof isAddSite === 'boolean') {
             onPress();
         }
@@ -29,11 +29,11 @@ const UserSiteBadge = ({ item, onPress, isAddSite }) => {
             </View>
             <View style={{ justifyContent: 'center' }}>
                 {site && typeof isAddSite !== 'boolean' && <MaterialCommunityIcons onPress={onPress} name={'trash-can-outline'} size={24} color={colors.REDDISH}/>}
-                {site && typeof isAddSite === 'boolean' && <RadioButton value={site._id} color={colors.PHILIPPINE_ORANGE} status={isAddSite ? 'checked' : 'unchecked'}/>}
+                {site && typeof isAddSite === 'boolean' && <RadioButton value={site._id} color={colors.PHILIPPINE_ORANGE} onPress={onPress} status={isAddSite ? 'checked' : 'unchecked'}/>}
             </View>
             <Divider/>
         </View>
-    </View>;
+    </TouchableRipple>;
 };
 
 export default UserSiteBadge;

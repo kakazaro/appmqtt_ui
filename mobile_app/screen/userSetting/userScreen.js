@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import AppBarLayout from '../../component/appBarLayout';
 import { View } from 'react-native';
 import FlatButton from '../../component/flatButton';
@@ -11,8 +11,10 @@ import serverError from '../../common/serverError';
 import eventCenter from '../../common/eventCenter';
 import ListScroll from '../../component/listScroll';
 import UserSiteBadge from '../../component/listBadge/userSiteBadge';
+import UserContext from '../../context/userContext';
 
 const UserScreen = ({ navigation, route }) => {
+    const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
 
     const [updatedUser, setUpdatedUser] = useState({});
@@ -143,12 +145,25 @@ const UserScreen = ({ navigation, route }) => {
             path={'sites'}
             url={`/users/get-sites?id=${encodeURIComponent(user._id)}&access=true`}
             emptyMessage={'Chưa có quyền truy cập trạm nào'}
-            listEvents={[eventCenter.eventNames.updateDeleteUserSite]}
+            listEvents={[eventCenter.eventNames.updateDeleteUserSite, eventCenter.eventNames.updateAddUserSite]}
             onEventDataChange={(eventName, data, setData) => {
                 if (eventName === eventCenter.eventNames.updateDeleteUserSite) {
                     setData(lastData => {
                         if (lastData?.length) {
                             return lastData.filter(d => d._id !== data.id);
+                        }
+                        return lastData;
+                    });
+                } else if (eventName === eventCenter.eventNames.updateAddUserSite) {
+                    setData(lastData => {
+                        if (data?.sites?.length) {
+                            let newData = lastData ? [...lastData] : [];
+                            data.sites.reverse().forEach(s => {
+                                if (newData.every(d => d._id !== s._id)) {
+                                    newData = [s, ...newData];
+                                }
+                            });
+                            return newData;
                         }
                         return lastData;
                     });
@@ -162,8 +177,8 @@ const UserScreen = ({ navigation, route }) => {
             <View style={{ backgroundColor: 'white', marginTop: 3 }}>
                 <FlatButton
                     title={'Quyền'}
-                    iconName={'pencil'}
-                    onPress={onOpenChangeRole}
+                    iconName={user && userContext && user._id !== userContext.id ? 'pencil' : ''}
+                    onPress={user && userContext && user._id !== userContext.id ? onOpenChangeRole : undefined}
                     currentValue={<>
                         <MaterialCommunityIcons name={roleUser?.icon || 'account'} size={18} color={colors.primaryText}/>
                         <Text style={{ color: colors.primaryText, paddingStart: 10 }}>{roleUser?.label}</Text>

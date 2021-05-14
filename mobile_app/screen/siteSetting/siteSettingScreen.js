@@ -217,6 +217,7 @@ const SiteSettingScreen = () => {
             return <ScrollView>
                 <View style={{ marginTop: 10, backgroundColor: 'white' }}>
                     {appSetting.map((setting, index) => <FlatButton
+                        iconName={'chevron-right'}
                         key={index}
                         {...setting}
                         style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER }}

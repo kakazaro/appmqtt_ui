@@ -34,7 +34,7 @@ const MainScreen = () => {
     return <SafeAreaView style={styles.container}>
         <StatusBar style='auto'/>
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={!userContext.token ? 'login' : 'home'} headerMode='none' screenOptions={{ ...myTransition }}>
+            <Stack.Navigator initialRouteName={!userContext.isLogin ? 'login' : 'home'} headerMode='none' screenOptions={{ ...myTransition }}>
                 <Stack.Screen name={'login'} component={LoginScreen}/>
                 <Stack.Screen name={'register'} component={RegisterScreen}/>
 
