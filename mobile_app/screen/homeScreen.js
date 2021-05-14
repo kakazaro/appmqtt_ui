@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { BackHandler, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from '../common/themes';
@@ -10,13 +10,17 @@ import { Text } from 'react-native-paper';
 import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-root-toast';
 import AppBarLayout from '../component/appBarLayout';
+import UserContext from '../context/userContext';
+import utility from '../common/utility';
+import InfoTab from '../component/homeTabs/InfoTab';
 
 const Tab = createBottomTabNavigator();
 
 const HomeScreen = ({ route }) => {
+    const userContext = useContext(UserContext);
     const [requestBack, setRequestBack] = useState(false);
 
-    const appBarOptions = useMemo(()=> {
+    const appBarOptions = useMemo(() => {
         const name = getFocusedRouteNameFromRoute(route) ?? 'sites';
         const options = { showMainMenu: true };
         switch (name) {
@@ -26,6 +30,9 @@ const HomeScreen = ({ route }) => {
             case 'users':
                 options.title = 'Quản Lý Người Dùng';
                 break;
+            case 'info':
+                options.title = 'Thông tin và Trợ giúp';
+                break;
             case 'sites':
             default:
                 options.title = 'N.T.V SOLAR';
@@ -34,7 +41,7 @@ const HomeScreen = ({ route }) => {
         }
 
         return options;
-    }, [route])
+    }, [route]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -73,10 +80,14 @@ const HomeScreen = ({ route }) => {
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Cảnh báo lỗi</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'alert' : 'alert-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={AlarmsTab}/>
-            <Tab.Screen name='users' options={{
+            {userContext?.user && userContext.user.role === utility.USER_ROLES.SA.id && <Tab.Screen name='users' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Quản lý</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'account-circle' : 'account-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
-            }} component={UsersTab}/>
+            }} component={UsersTab}/>}
+            {userContext?.user?.role !== utility.USER_ROLES.SA.id && <Tab.Screen name='info' options={{
+                tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Trợ giúp</Text>,
+                tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'help-circle' : 'help-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
+            }} component={InfoTab}/>}
         </Tab.Navigator>
     </AppBarLayout>;
 };

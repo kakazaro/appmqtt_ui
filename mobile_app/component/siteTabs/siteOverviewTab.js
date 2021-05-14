@@ -63,7 +63,7 @@ const SiteOverviewTab = () => {
     const [overviewData, setOverviewData] = useState();
 
     useEffect(() => {
-        const handler = (data) => {
+        const handler = (eventName, data) => {
             setOverviewData(overviewData => {
                 if (overviewData?.site && siteId === data.id) {
                     return {

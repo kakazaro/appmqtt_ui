@@ -45,6 +45,23 @@ export default {
             label: 'Không xác định'
         }
     },
+    USER_ROLES: {
+        US: {
+            id: 'US',
+            label: 'Người dùng thường',
+            icon: 'account'
+        },
+        AD: {
+            id: 'AD',
+            label: 'Nhân viên vận hành',
+            icon: 'account-hard-hat'
+        },
+        SA: {
+            id: 'SA',
+            label: 'Quản trị viên',
+            icon: 'account-tie'
+        }
+    },
     findUnit(values, baseUnit = 'W', multiple = 1) {
         let unit = baseUnit;
         let div = 1;

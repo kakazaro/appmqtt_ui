@@ -3,9 +3,9 @@ import UserContext from './userContext';
 import axiosModule from 'axios';
 import 'react-native-get-random-values';
 import { v4 as uidv4 } from 'uuid';
+import constant from '../common/constant';
 
-// const REACT_APP_BASE_URL = 'http://113.161.79.146:5001';
-const REACT_APP_BASE_URL = 'https://ntvsolar.indedg.com:5005';
+const REACT_APP_BASE_URL = constant.REACT_APP_BASE_URL;
 
 function DataControl(axios) {
     const start = {};

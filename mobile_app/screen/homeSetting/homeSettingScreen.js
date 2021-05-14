@@ -151,6 +151,7 @@ const HomeSettingScreen = ({ navigation }) => {
             </View>
             <View style={{ marginTop: 10, backgroundColor: 'white' }}>
                 {appSetting.map((setting, index) => <FlatButton
+                    iconName={'chevron-right'}
                     key={index}
                     title={setting.title}
                     style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER }}

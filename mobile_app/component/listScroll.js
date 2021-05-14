@@ -7,7 +7,7 @@ import eventCenter from '../common/eventCenter';
 import serverError from '../common/serverError';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const ListScroll = ({ Component, url, path, showPlaceholder }) => {
+const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEventDataChange, emptyMessage, onRefreshCallback }) => {
     const serverContext = useContext(ServerContext);
     const [loading, setLoading] = useState(false);
 
@@ -19,30 +19,25 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const handler = (data) => {
-            if (path === 'sites' && url === '/site/list') {
-                setData(lastData => {
-                    if (lastData?.length) {
-                        const newData = lastData.map(d => {
-                            if (d.id === data.id) {
-                                d.newId = d.id + (Math.floor(Math.random() * 10000000) + '');
-                                d.name = data.name;
-                            }
-                            return d;
-                        });
-                        return [...newData];
-                    }
-                    return lastData;
+        const handler = (eventName, data) => {
+            onEventDataChange(eventName, data, setData);
+        };
+
+
+        if (listEvents?.length && onEventDataChange) {
+            listEvents.forEach(eventName => {
+                eventCenter.register(eventName, handler);
+            });
+        }
+
+        return () => {
+            if (listEvents?.length && onEventDataChange) {
+                listEvents.forEach(eventName => {
+                    eventCenter.unRegister(eventName, handler);
                 });
             }
         };
-
-        eventCenter.register(eventCenter.eventNames.updateSiteName, handler);
-
-        return () => {
-            eventCenter.unRegister(eventCenter.eventNames.updateSiteName, handler);
-        };
-    }, [url, path]);
+    }, [listEvents, onEventDataChange]);
 
     const loadData = async (nextPageToken = '', limit = 15) => {
         try {
@@ -52,6 +47,7 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
                 nextPageToken: (response.data.nextPageToken || '') + ''
             };
         } catch (e) {
+            console.log(e?.response);
             return {
                 error: serverError.getError(e)
             };
@@ -61,6 +57,10 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
     useEffect(() => {
         let discard = false;
         if (refreshing) {
+            if (onRefreshCallback) {
+                onRefreshCallback();
+            }
+
             if (!loading) {
                 setLoading(true);
                 setError(false);
@@ -120,13 +120,13 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
 
     const footer = useMemo(() => {
         if (loading && showPlaceholder) {
-            return <>{Array(loadingMore ? 1 : 15).fill('').map((i, index) => <Component key={index}/>)}</>;
+            return <>{Array(loadingMore ? 1 : 15).fill('').map((i, index) => <React.Fragment key={index}>{renderItem()}</React.Fragment>)}</>;
         }
-    }, [showPlaceholder, loading, loadingMore, Component]);
+    }, [showPlaceholder, loading, loadingMore, renderItem]);
 
     const listDom = useMemo(() => <VirtualizedList
         data={data || []}
-        renderItem={({ item }) => <Component item={item}/>}
+        renderItem={({ item }) => renderItem(item)}
         keyExtractor={(item, index) => item?.newId || item?.id || item?._id || (index + '')}
         getItem={(data, index) => data[index]}
         getItemCount={(data) => data?.length || 0}
@@ -137,10 +137,10 @@ const ListScroll = ({ Component, url, path, showPlaceholder }) => {
         ListEmptyComponent={<>
             {!loading && data && <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
                 <MaterialCommunityIcons name={!error ? 'briefcase-search-outline' : 'alert-octagon-outline'} size={38} color={colors.DARK_SOULS}/>
-                <Text style={{ color: colors.DARK_SOULS }}>{!error ? 'Chưa có dữ liệu' : (error || 'Đã có lỗi xả ra khi tải dữ liệu')}</Text>
+                <Text style={{ color: colors.DARK_SOULS }}>{!error ? (emptyMessage || 'Chưa có dữ liệu') : (error || 'Đã có lỗi xả ra khi tải dữ liệu')}</Text>
             </View>}
         </>}
-    />, [data, Component, loading, footer, error]);
+    />, [data, renderItem, loading, footer, error]);
 
     return <View style={{ flex: 1, width: '100%' }}>
         {listDom}

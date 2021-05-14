@@ -9,7 +9,7 @@ const SiteDevicesTab = () => {
     const site = useMemo(() => siteContext?.site, [siteContext]);
 
     return <View style={styles.container}>
-        <ListScroll Component={DeviceBadge} showPlaceholder={true} path={'devices'} url={'/site/devices?id=' + encodeURIComponent(site.id)}/>
+        <ListScroll renderItem={(item) => <DeviceBadge item={item}/>} showPlaceholder={true} path={'devices'} url={'/site/devices?id=' + encodeURIComponent(site.id)}/>
     </View>;
 };
 
