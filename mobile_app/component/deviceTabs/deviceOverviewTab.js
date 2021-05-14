@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import ServerContext from '../../context/serverContext';
 import SiteContext from '../../context/siteContext';
 import { useFocusEffect } from '@react-navigation/native';
-import { DataTable, Text } from 'react-native-paper';
+import { DataTable, HelperText, Text } from 'react-native-paper';
 import StatusBanner from '../statusBanner';
 import { colors } from '../../common/themes';
 import { Placeholder, PlaceholderLine, ShineOverlay } from 'rn-placeholder';
@@ -16,12 +16,14 @@ const DeviceOverviewTab = () => {
     const deviceId = useMemo(() => device?.id, [device]);
 
     const [deviceDetail, setDeviceDetail] = useState();
+    const [deviceDetailError, setDeviceDetailError] = useState();
 
     useFocusEffect(React.useCallback(() => {
         if (deviceId) {
             const uid = serviceContext.dataControl.registerSiteData({
                 url: '/site/device/details?id=' + encodeURIComponent(deviceId),
                 handler: setDeviceDetail,
+                handlerError: setDeviceDetailError,
                 duration: 30000
             });
 
@@ -56,9 +58,10 @@ const DeviceOverviewTab = () => {
 
         return <View style={{ marginTop: 3, backgroundColor: 'white' }}>
             <Text style={{ marginStart: 15, fontWeight: 'bold', paddingTop: 5, fontSize: 18, color: colors.primaryText }}>Thông số đo</Text>
+            {!!deviceDetailError && <HelperText style={{ marginStart: 5 }} type={'error'} visible={true}>Lỗi: {deviceDetailError}</HelperText>}
             {table}
         </View>;
-    }, [deviceDetail]);
+    }, [deviceDetail, deviceDetailError]);
 
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>

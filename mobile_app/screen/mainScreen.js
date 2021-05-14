@@ -16,6 +16,7 @@ import SiteSettingScreen from './siteSetting/siteSettingScreen';
 import ChartScreen from './chartScreen';
 import UserScreen from './userSetting/userScreen';
 import UserAddSiteScreen from './userSetting/userAddSiteScreen';
+import ShareScreen from './shareScreen';
 
 const Stack = createStackNavigator();
 
@@ -36,7 +37,7 @@ const MainScreen = () => {
         <NavigationContainer>
             <Stack.Navigator initialRouteName={!userContext.isLogin ? 'login' : 'home'} headerMode='none' screenOptions={{ ...myTransition }}>
                 <Stack.Screen name={'login'} component={LoginScreen}/>
-                <Stack.Screen name={'register'} component={RegisterScreen}/>
+                {/*<Stack.Screen name={'register'} component={RegisterScreen}/>*/}
 
                 <Stack.Screen name={'home'} component={HomeScreen}/>
 
@@ -53,6 +54,8 @@ const MainScreen = () => {
 
                 <Stack.Screen name={'user'} component={UserScreen}/>
                 <Stack.Screen name={'userAddSite'} component={UserAddSiteScreen}/>
+
+                <Stack.Screen name={'share'} component={ShareScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>;
