@@ -4,7 +4,7 @@ export default {
     REACT_APP_BASE_URL: 'https://ntvsolar.indedg.com:5005',
     CONTACT_INFO: {
         address: '49/13 Hoàng Dư Khương, P.12, Q.10, TP. Hồ Chí Minh',
-        phone: '(+84) 903 127 777',
+        phone: '(+84) 902 586 121',
         email: 'ntvsolar@gmail.com'
     }
 };

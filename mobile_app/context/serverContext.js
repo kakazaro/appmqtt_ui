@@ -4,13 +4,14 @@ import axiosModule from 'axios';
 import 'react-native-get-random-values';
 import { v4 as uidv4 } from 'uuid';
 import constant from '../common/constant';
+import serverError from '../common/serverError';
 
 const REACT_APP_BASE_URL = constant.REACT_APP_BASE_URL;
 
 function DataControl(axios) {
     const start = {};
 
-    const loopGetSiteData = (url, handler, query, uid, duration = 5000) => {
+    const loopGetSiteData = (url, handler, handlerError, query, uid, duration = 5000) => {
         (async () => {
             if (start[uid]) {
                 try {
@@ -21,10 +22,16 @@ function DataControl(axios) {
                     }
                     const response = await axios.get(url);
                     if (start[uid]) {
+                        if (handlerError) {
+                            handlerError(undefined);
+                        }
                         handler(response.data);
                     }
                 } catch (err) {
                     // console.log(err);
+                    if (handlerError) {
+                        handlerError(serverError.getError(err));
+                    }
                 }
             }
 
@@ -32,17 +39,17 @@ function DataControl(axios) {
                 start[uid] = 0;
             } else {
                 start[uid] = setTimeout(() => {
-                    loopGetSiteData(url, handler, query, uid, duration);
+                    loopGetSiteData(url, handler, handlerError, query, uid, duration);
                 }, duration);
             }
         })();
     };
 
     return {
-        registerSiteData({ url, handler, query, duration }) {
+        registerSiteData({ url, handler, query, duration, handlerError }) {
             const uid = uidv4();
             start[uid] = true;
-            loopGetSiteData(url, handler, query, uid, duration);
+            loopGetSiteData(url, handler, handlerError, query, uid, duration);
             return uid;
         },
 

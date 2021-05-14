@@ -37,7 +37,7 @@ const MainScreen = () => {
         <NavigationContainer>
             <Stack.Navigator initialRouteName={!userContext.isLogin ? 'login' : 'home'} headerMode='none' screenOptions={{ ...myTransition }}>
                 <Stack.Screen name={'login'} component={LoginScreen}/>
-                <Stack.Screen name={'register'} component={RegisterScreen}/>
+                {/*<Stack.Screen name={'register'} component={RegisterScreen}/>*/}
 
                 <Stack.Screen name={'home'} component={HomeScreen}/>
 
