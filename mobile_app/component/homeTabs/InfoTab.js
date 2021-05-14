@@ -1,12 +1,12 @@
 import React, { useContext, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
+import { Button, Divider, Text } from 'react-native-paper';
 import constant from '../../common/constant';
 import { colors } from '../../common/themes';
 import UserContext from '../../context/userContext';
 import utility from '../../common/utility';
 
-const InfoTab = () => {
+const InfoTab = ({ navigation }) => {
     const userContext = useContext(UserContext);
 
     const roleUser = useMemo(() => utility.USER_ROLES[Object.keys(utility.USER_ROLES).find(k => k === userContext?.user?.role)], [userContext]);
@@ -30,6 +30,16 @@ const InfoTab = () => {
                     <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text></Text>
                 </View>
                 <Divider/>
+            </View>
+            <View style={{ marginTop: 20, alignItems: 'center' }}>
+                <Button
+                    mode={'contained'}
+                    style={{ backgroundColor: colors.PHILIPPINE_ORANGE }}
+                    labelStyle={{ textTransform: 'none' }}
+                    onPress={() => navigation.navigate('share')}
+                >
+                    Chia Sẻ Ứng Dụng
+                </Button>
             </View>
         </ScrollView>
     </View>;
