@@ -2,7 +2,7 @@ export default {
     getError: (err) => {
         let code = err?.response?.data?.code;
         if (code) {
-            const key = Object.keys(errors).find(e => (e.code + '') === (code + ''));
+            const key = Object.keys(errors).find(k => (errors[k].code + '') === (code + ''));
             if (key) {
                 return errors[key].error;
             }
@@ -26,6 +26,6 @@ const errors = {
     E40013: { code: 40013, message: 'Device id is incorrect', error: 'ID của thiết bị không chính xác' },
     E40014: { code: 40014, message: 'Can not find user. Maybe user id is incorrect', error: 'ID của người dùng không chính xác' },
     E40015: { code: 40015, message: 'Param \'access\' is incorrect. Please use in [true or false]', error: 'Lỗi giá trị đầu vào chưa đúng' },
-    E40020: { code: 40020, message: 'Email is incorrect', error: 'Email không hợp lệ' },
-    E40021: { code: 40021, message: 'Password is incorrect', error: 'Sai mật khẩu' },
+    E40020: { code: 40020, message: 'Email is incorrect', error: 'Email đăng nhập không đúng' },
+    E40021: { code: 40021, message: 'Password is incorrect', error: 'Sai mật khẩu, vui lòng thử lại' },
 };

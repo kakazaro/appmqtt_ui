@@ -35,7 +35,7 @@ const DeviceOverviewTab = () => {
 
     const paramDom = useMemo(() => {
         let params = deviceDetail?.device?.paras || deviceDetail?.device?.params || deviceDetail?.device?.param;
-        params = (!params?.length) ? Array(20).fill('') : params;
+        params = (!params?.length) ? Array(!!deviceDetailError ? 0 : 20).fill('') : params;
         const table = <DataTable>
             {params.map((param, index) => param ?
                 <DataTable.Row key={index}>
