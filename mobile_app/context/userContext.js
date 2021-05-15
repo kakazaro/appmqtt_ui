@@ -61,7 +61,8 @@ export const UserProvider = ({ children }) => {
                         setLoginData(data);
                     }
                 } catch (e) {
-                    // Ignore
+                    // Ignore, use last data
+                    setLoginData(data);
                 }
             }
 
