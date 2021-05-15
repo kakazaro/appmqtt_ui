@@ -2,7 +2,7 @@
   "expo": {
     "name": "NTV solar",
     "slug": "ntv_solar",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,12 +20,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ntvorg.ntvisolar",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "1.1.1",
+      "buildNumber": "1.1.2",
       "requireFullScreen": true
     },
     "android": {
       "package": "com.ntvorg.ntvisolar",
-      "versionCode": 1001001,
+      "versionCode": 1001002,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
