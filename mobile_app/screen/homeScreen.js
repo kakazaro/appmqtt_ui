@@ -93,7 +93,7 @@ const HomeScreen = ({ navigation, route }) => {
     </Menu>, [visibleMenu, navigation, userContext]);
 
     return <AppBarLayout {...appBarOptions} menu={menu}>
-        <Tab.Navigator backBehavior='none'>
+        <Tab.Navigator backBehavior='none' tabBarOptions={{ adaptive: false }}>
             <Tab.Screen name='sites' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Trạm điện</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
