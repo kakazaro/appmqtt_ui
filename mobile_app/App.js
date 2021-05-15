@@ -1,6 +1,8 @@
 import React from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { Provider } from 'react-native-paper';
 import MainScreen from './screen/mainScreen';
+import UpdateWrap from './component/updateWrap';
 import { UserProvider } from './context/userContext';
 import { ServerProvider } from './context/serverContext';
 import { SiteProvider } from './context/siteContext';
@@ -16,7 +18,11 @@ export default function App() {
             <SiteProvider>
                 <Provider>
                     <RootSiblingParent>
-                        <MainScreen/>
+                        <SafeAreaView style={styles.container}>
+                            <UpdateWrap>
+                                <MainScreen/>
+                            </UpdateWrap>
+                        </SafeAreaView>
                     </RootSiblingParent>
                 </Provider>
             </SiteProvider>
@@ -24,3 +30,9 @@ export default function App() {
     </UserProvider>;
 }
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
+});

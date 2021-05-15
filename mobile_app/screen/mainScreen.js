@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
@@ -8,7 +7,6 @@ import LoginScreen from './loginScreen';
 import HomeScreen from './homeScreen';
 import SiteScreen from './siteScreen';
 import DeviceScreen from './deviceScreen';
-import RegisterScreen from './registerScreen';
 import HomeSettingScreen from './homeSetting/homeSettingScreen';
 import AboutScreen from './homeSetting/aboutScreen';
 import PolicyScreen from './homeSetting/policyScreen';
@@ -32,7 +30,7 @@ const MainScreen = () => {
         headerStyleInterpolator: HeaderStyleInterpolators.forFade,
     };
 
-    return <SafeAreaView style={styles.container}>
+    return <>
         <StatusBar style='auto'/>
         <NavigationContainer>
             <Stack.Navigator initialRouteName={!userContext.isLogin ? 'login' : 'home'} headerMode='none' screenOptions={{ ...myTransition }}>
@@ -58,14 +56,7 @@ const MainScreen = () => {
                 <Stack.Screen name={'share'} component={ShareScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
-    </SafeAreaView>;
+    </>;
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white'
-    },
-});
 
 export default MainScreen;
