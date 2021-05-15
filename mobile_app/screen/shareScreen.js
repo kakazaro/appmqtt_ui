@@ -1,19 +1,36 @@
 import React from 'react';
 import AppBarLayout from '../component/appBarLayout';
-import { Dimensions, Image, ScrollView, Share, View } from 'react-native';
-import { Text, TouchableRipple } from 'react-native-paper';
+import { Dimensions, Image, Linking, ScrollView, Share, TouchableOpacity, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import { colors } from '../common/themes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+const shares = [
+    {
+        icon: 'android',
+        qrCode: require('../assets/android-qr-code.png'),
+        badge: require('../assets/google-play-badge.png'),
+        badgeStyle: { width: 155, height: 60 },
+        url: 'https://play.google.com/store/apps/details?id=com.ntvorg.ntvisolar'
+    },
+    {
+        icon: 'apple',
+        qrCode: require('../assets/ios-qr-code.png'),
+        badge: require('../assets/app_store_badge.png'),
+        badgeStyle: { width: 120, height: 40, marginTop: 10, marginBottom: 10 },
+        url: 'https://apps.apple.com/vn/app/ntv-solar/id1566321133'
+    }
+];
 
 // https://www.qrcode-monkey.com/#
 const ShareScreen = () => {
     const imgWidth = Dimensions.get('window').width * 0.5;
 
-    const onShareClick = () => {
+    const onShareClick = (url) => {
         (async () => {
             try {
                 await Share.share({
-                    message: 'https://play.google.com/store/apps/details?id=com.ntvorg.ntvisolar'
+                    message: url
                 });
             } catch (e) {
                 // ignore
@@ -23,22 +40,19 @@ const ShareScreen = () => {
 
     return <AppBarLayout title={'Chia sẻ ứng dụng'}>
         <ScrollView>
-            <View style={{ margin: 15, padding: 20, borderColor: colors.PHILIPPINE_ORANGE, borderWidth: 2, borderRadius: 10, backgroundColor: 'white' }}>
+            {shares.map((share, index) => <View key={index} style={{ margin: 15, padding: 20, borderColor: colors.PHILIPPINE_ORANGE, borderWidth: 2, borderRadius: 10, backgroundColor: 'white' }}>
                 <View style={{ alignItems: 'center' }}>
-                    <MaterialCommunityIcons name={'android'} size={24} color={colors.secondaryText}/>
-                    <Image style={{ width: 155, height: 60 }} source={require('../assets/google-play-badge.png')}/>
-                    <TouchableRipple onPress={onShareClick}>
-                        <Image style={{ width: imgWidth, height: imgWidth }} source={require('../assets/android-qr-code.png')}/>
-                    </TouchableRipple>
+                    <MaterialCommunityIcons name={share.icon} size={24} color={colors.secondaryText}/>
+                    <TouchableOpacity onPress={() => Linking.openURL(share.url)}>
+                        <Image style={share.badgeStyle} source={share.badge}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => onShareClick(share.url)}>
+                        <Image style={{ width: imgWidth, height: imgWidth }} source={share.qrCode}/>
+                    </TouchableOpacity>
                     <Text style={{ color: colors.secondaryText, fontSize: 12, marginTop: 10 }}>nhấn vào mã QR trên để gửi chia sẻ</Text>
                 </View>
-            </View>
-            <View style={{ margin: 15, padding: 20, borderColor: colors.PHILIPPINE_ORANGE, borderWidth: 2, borderRadius: 10, backgroundColor: 'white' }}>
-                <View style={{ alignItems: 'center' }}>
-                    <MaterialCommunityIcons name={'apple'} size={24} color={colors.secondaryText}/>
-                    <Text style={{ color: colors.secondaryText, fontSize: 12, marginTop: 10 }}>Sẽ sớm có mặt ở Apple Store trong thời gian tới</Text>
-                </View>
-            </View>
+            </View>)}
+
         </ScrollView>
     </AppBarLayout>;
 };

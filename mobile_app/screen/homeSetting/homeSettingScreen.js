@@ -86,6 +86,7 @@ const HomeSettingScreen = ({ navigation }) => {
                         disabled={loading}
                         onSubmitEditing={() => passwordRef.current.focus()}
                         returnKeyType={'next'}
+                        isDialog={true}
                     />
 
                     <CustomInput
@@ -100,6 +101,7 @@ const HomeSettingScreen = ({ navigation }) => {
                         onSubmitEditing={() => passwordConfirmRef.current.focus()}
                         returnKeyType={'next'}
                         error={passwordError}
+                        isDialog={true}
                     />
 
                     <CustomInput
@@ -114,6 +116,7 @@ const HomeSettingScreen = ({ navigation }) => {
                         onSubmitEditing={onChangePasswordRequest}
                         returnKeyType={'done'}
                         error={confirmError}
+                        isDialog={true}
                     />
 
                     {!!error && <HelperText type='error'>

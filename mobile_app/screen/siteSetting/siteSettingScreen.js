@@ -127,6 +127,7 @@ const SiteSettingScreen = () => {
                         onSubmitEditing={onChangeName}
                         returnKeyType={'done'}
                         error={errorName}
+                        isDialog={true}
                     />
                     {!!errorEditName && <HelperText type='error'>
                         {errorEditName}
@@ -187,6 +188,7 @@ const SiteSettingScreen = () => {
                         returnKeyType={'next'}
                         error={errorPrice}
                         keyboardType={'numeric'}
+                        isDialog={true}
                     />
                     <CustomInput
                         ref={currencyRef}
@@ -199,6 +201,7 @@ const SiteSettingScreen = () => {
                         onSubmitEditing={onChangePrice}
                         returnKeyType={'done'}
                         error={errorCurrency}
+                        isDialog={true}
                     />
                     {!!errorEditPrice && <HelperText type='error'>
                         {errorEditPrice}
