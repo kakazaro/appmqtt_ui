@@ -14,7 +14,7 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
     useEffect(() => {
         if (data && webRef && webRef.current) {
             try {
-                // console.log(JSON.stringify(data, null, 2));
+                console.log(JSON.stringify(data.dataSeries, null, 2));
                 webRef.current.injectJavaScript(`window.loadChart(${JSON.stringify(data)});true;`);
             } catch (e) {
                 console.log(e);
@@ -186,8 +186,8 @@ const HTML = '<!DOCTYPE html>\n' +
     '                    },\n' +
     '                },\n' +
     '                y: {\n' +
-    '                    formatter: (index) => {\n' +
-    '                        return dataSeries[index] + \' \' + (divNumber && divNumber.unit);\n' +
+    '                    formatter: (value) => {\n' +
+    '                        return value + \' \' + (divNumber && divNumber.unit);\n' +
     '                    },\n' +
     '                    title: {\n' +
     '                        formatter: () => \'\',\n' +

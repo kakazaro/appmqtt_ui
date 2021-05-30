@@ -122,7 +122,7 @@ export default {
         const tags = Object.keys(constant.DEVICE_TAG_NAME);
         const tag = tags.find(t => t.trim().toLowerCase() === (value || '').trim().toLowerCase());
         if (tag) {
-            return tags[tag];
+            return constant.DEVICE_TAG_NAME[tag];
         }
 
         return value;
