@@ -1,3 +1,5 @@
+import constant from './constant';
+
 export default {
     STATUS: {
         FAULT: {
@@ -116,4 +118,13 @@ export default {
         let { unit, div } = this.findUnit([value], 'Wh', 1000);
         return { value: Math.floor((value / div) * 10) / 10, unit };
     },
+    getDeviceTagName(value) {
+        const tags = Object.keys(constant.DEVICE_TAG_NAME);
+        const tag = tags.find(t => t.trim().toLowerCase() === (value || '').trim().toLowerCase());
+        if (tag) {
+            return tags[tag];
+        }
+
+        return value;
+    }
 };

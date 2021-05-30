@@ -7,6 +7,7 @@ import { DataTable, HelperText, Text } from 'react-native-paper';
 import StatusBanner from '../statusBanner';
 import { colors } from '../../common/themes';
 import { Placeholder, PlaceholderLine, ShineOverlay } from 'rn-placeholder';
+import utility from '../../common/utility';
 
 const DeviceOverviewTab = () => {
     const serviceContext = useContext(ServerContext);
@@ -40,7 +41,7 @@ const DeviceOverviewTab = () => {
             {params.map((param, index) => param ?
                 <DataTable.Row key={index}>
                     <DataTable.Cell>
-                        <Text style={{ color: colors.primaryText }}>{param.name}</Text>
+                        <Text style={{ color: colors.primaryText }}>{utility.getDeviceTagName(param.name)}</Text>
                     </DataTable.Cell>
                     <DataTable.Cell numeric>
                         <Text style={{ color: colors.secondaryText }}>{param.value}</Text>
