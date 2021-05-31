@@ -204,7 +204,18 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
         const date = timeType ? moment(time).format(timeType.format) : '';
 
         const { div, unit } = findUnitDiv(dataSeries);
-        dataSeries = dataSeries.map(s => s / div);
+        dataSeries = dataSeries.map(s => s / div).map(s => Math.floor(s * 100) / 100);
+
+        // Remove data in future
+        for (let i = dataSeries.length - 1; i >= 0; i--) {
+            const t = times[i];
+            const d = dataSeries[i];
+            if (!t || t <= (Date.now() - 5 * 60 * 1000) || (typeof d === 'number' && d !== 0)) {
+                break;
+            }
+
+            dataSeries[i] = undefined;
+        }
 
         return { dataSeries, Component, times, tableLabels, legend, unit, div, timeType, date };
     }, [data]);

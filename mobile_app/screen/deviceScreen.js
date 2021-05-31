@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import AppBarLayout from '../component/appBarLayout';
 import { Headline } from 'react-native-paper';
@@ -14,9 +14,11 @@ const Tab = createMaterialTopTabNavigator();
 const DeviceScreen = ({ route }) => {
     const siteContext = useContext(SiteContext);
     const deviceRoute = useMemo(() => route?.params?.device, [route]);
+    const [isDone, setIsDone] = useState(false);
 
     useEffect(() => {
         siteContext.updateDevice(deviceRoute);
+        setIsDone(true);
     }, [deviceRoute]);
 
     return <AppBarLayout>
@@ -24,7 +26,7 @@ const DeviceScreen = ({ route }) => {
             <View style={{ backgroundColor: 'white', width: '100%' }}>
                 <Headline style={{ margin: 0, paddingStart: 15, paddingEnd: 15 }}>{deviceRoute?.name}</Headline>
             </View>
-            <View style={{ flex: 1, width: '100%' }}>
+            {isDone && <View style={{ flex: 1, width: '100%' }}>
                 <Tab.Navigator tabBarOptions={{
                     labelStyle: { fontSize: 14, textTransform: 'none' },
                     tabStyle: { padding: 0 },
@@ -37,7 +39,7 @@ const DeviceScreen = ({ route }) => {
                     <Tab.Screen name='deviceAlarms' options={{ title: 'Sự cố' }} component={DeviceAlarmsTab}/>
                     <Tab.Screen name='deviceChart' options={{ title: 'Thông tin phát điện' }} component={DeviceChartTab}/>
                 </Tab.Navigator>
-            </View>
+            </View>}
         </View>
     </AppBarLayout>;
 };

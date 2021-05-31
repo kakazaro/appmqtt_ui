@@ -4,10 +4,10 @@ import ServerContext from '../context/serverContext';
 import { Text } from 'react-native-paper';
 import { colors } from '../common/themes';
 import eventCenter from '../common/eventCenter';
-import serverError from '../common/serverError';
+import serverError, { errors } from '../common/serverError';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEventDataChange, emptyMessage, onRefreshCallback }) => {
+const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEventDataChange, emptyMessage, onRefreshCallback, onFailAuth }) => {
     const serverContext = useContext(ServerContext);
     const [loading, setLoading] = useState(false);
 
@@ -47,7 +47,11 @@ const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEven
                 nextPageToken: (response.data.nextPageToken || '') + ''
             };
         } catch (e) {
-            console.log(e?.response);
+            // console.log(e?.response);
+            if (e?.response?.data?.code === errors.E40019.code && onFailAuth) {
+                onFailAuth();
+            }
+
             return {
                 error: serverError.getError(e)
             };
@@ -136,8 +140,10 @@ const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEven
         ListFooterComponent={footer}
         ListEmptyComponent={<>
             {!loading && data && <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>
-                <MaterialCommunityIcons name={!error ? 'briefcase-search-outline' : 'alert-octagon-outline'} size={38} color={colors.DARK_SOULS}/>
-                <Text style={{ color: colors.DARK_SOULS }}>{!error ? (emptyMessage || 'Chưa có dữ liệu') : (error || 'Đã có lỗi xả ra khi tải dữ liệu')}</Text>
+                <View style={{ maxWidth: '75%', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name={!error ? 'briefcase-search-outline' : 'alert-octagon-outline'} size={38} color={colors.DARK_SOULS}/>
+                    <Text style={{ color: colors.DARK_SOULS, textAlign: 'center' }}>{!error ? (emptyMessage || 'Chưa có dữ liệu') : (error || 'Đã có lỗi xả ra khi tải dữ liệu')}</Text>
+                </View>
             </View>}
         </>}
     />, [data, renderItem, loading, footer, error]);

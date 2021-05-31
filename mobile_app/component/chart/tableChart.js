@@ -8,7 +8,7 @@ const TableChart = ({ data }) => {
         setPage(0);
     }, [data]);
 
-    const tableDom = useMemo(() => {
+    return useMemo(() => {
         if (!data) {
             return;
         }
@@ -37,7 +37,7 @@ const TableChart = ({ data }) => {
                     <Text style={{ color: colors.primaryText, fontSize: 13 }}>{slidedSLabel[index]}</Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{slidedSeries[index]}</Text>
+                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{typeof slidedSeries[index] === 'undefined' ? '--' : slidedSeries[index]}</Text>
                 </DataTable.Cell>
             </DataTable.Row>)}
             {dataSeries.length > pageLimit && <DataTable.Pagination
@@ -48,8 +48,6 @@ const TableChart = ({ data }) => {
             />}
         </DataTable>;
     }, [data, page]);
-
-    return tableDom;
 };
 
 export default TableChart;

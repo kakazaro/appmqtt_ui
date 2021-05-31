@@ -13,7 +13,7 @@ export default {
             return message;
         }
 
-        return 'Đã có lỗi xảy ra, vui lòng thử lại';
+        return 'Đã có lỗi xảy ra, vui lòng thử lại\nHoặc kiểm tra kết nối mạng';
     }
 };
 
@@ -30,8 +30,10 @@ const errors = {
     E40016: { code: 40016, message: 'There are no sites assigned for your user. Please contact with your admin', error: 'Bạn không có trạm điện nào được cấp quyền' },
     E40017: { code: 40017, message: 'Email is duplicated. Please change other email', error: 'Email bị trùng, vui lòng dùng 1 email khác' },
     E40018: { code: 40018, message: 'Password is must at list 3 characters', error: 'Mật khẩu phải ít nhất 3 chữ cái' },
-    E40019: { code: 40019, message: 'Not authorized to access this resource. Please login again', error: 'Bạn không có quyền truy cập dữ liệu, thử đăng xuất và đăng nhập lại' },
+    E40019: { code: 40019, message: 'Not authorized to access this resource. Please login again', error: 'Bạn không có quyền truy cập dữ liệu\nThử đăng xuất và đăng nhập lại' },
 
     E40020: { code: 40020, message: 'Email is incorrect', error: 'Email đăng nhập không đúng' },
     E40021: { code: 40021, message: 'Password is incorrect', error: 'Sai mật khẩu, vui lòng thử lại' },
 };
+
+export { errors };

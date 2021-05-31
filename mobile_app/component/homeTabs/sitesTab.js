@@ -6,7 +6,7 @@ import eventCenter from '../../common/eventCenter';
 import UserContext from '../../context/userContext';
 import utility from '../../common/utility';
 
-const SitesTab = () => {
+const SitesTab = ({ navigation }) => {
     const userContext = useContext(UserContext);
 
     return <View style={styles.container}>
@@ -33,6 +33,9 @@ const SitesTab = () => {
                         return lastData;
                     });
                 }
+            }}
+            onFailAuth={() => {
+                userContext.logout(navigation);
             }}
         />
     </View>;

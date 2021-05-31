@@ -40,9 +40,9 @@ const DeviceOverviewTab = () => {
         const table = <DataTable>
             {params.map((param, index) => param ?
                 <DataTable.Row key={index}>
-                    <DataTable.Cell>
-                        <Text style={{ color: colors.primaryText }}>{utility.getDeviceTagName(param.name)}</Text>
-                    </DataTable.Cell>
+                    <View style={{ flexDirection: 'row', minWidth: '40%', alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{ color: colors.primaryText, flex: 1, flexWrap: 'nowrap' }}>{utility.getDeviceTagName(param.name)}</Text>
+                    </View>
                     <DataTable.Cell numeric>
                         <Text style={{ color: colors.secondaryText }}>{param.value}</Text>
                     </DataTable.Cell>
