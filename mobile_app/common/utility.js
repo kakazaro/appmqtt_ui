@@ -118,13 +118,19 @@ export default {
         let { unit, div } = this.findUnit([value], 'Wh', 1000);
         return { value: Math.floor((value / div) * 10) / 10, unit };
     },
-    getDeviceTagName(value) {
-        const tags = Object.keys(constant.DEVICE_TAG_NAME);
+    getMappingName(value, mapping) {
+        const tags = Object.keys(mapping);
         const tag = tags.find(t => t.trim().toLowerCase() === (value || '').trim().toLowerCase());
         if (tag) {
             return constant.DEVICE_TAG_NAME[tag];
         }
 
         return value;
-    }
+    },
+    getDeviceTagName(value) {
+        return this.getMappingName(value, constant.DEVICE_TAG_NAME);
+    },
+    getEventErrorName(value) {
+        return this.getMappingName(value, constant.EVENT_ERROR_NAME);
+    },
 };

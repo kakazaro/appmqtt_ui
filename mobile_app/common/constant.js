@@ -33,5 +33,23 @@ export default {
         WattsMax: 'Giới hạn công suất',
         VoltRef: 'Điện áp tham chiếu',
         nameplateWatts: 'Công suất danh định',
+    },
+    EVENT_ERROR_NAME: {
+        GROUND_FAULT: 'Sự cố chạm đất',
+        DC_OVER_VOLT: 'Quá áp DC đầu vào',
+        AC_DISCONNECT: 'Mất pha AC',
+        DC_DISCONNECT: 'Mất pha DC đầu vào',
+        GRID_DISCONNECT: 'Mất kết nối lưới',
+        CABINET_OPEN: 'Nắp biến tần mở',
+        MANUAL_SHUTDOWN: 'Tắt inverter bằng tay',
+        OVER_TEMP: 'Nhiệt độ inverter vượt cao',
+        OVER_FREQUENCY: 'Tần số vượt trên ngưỡng',
+        UNDER_FREQUENCY: 'Tần số thấp dưới ngưỡng',
+        AC_OVER_VOLT: 'Quá áp AC',
+        AC_UNDER_VOLT: 'Dưới áp AC',
+        BLOWN_STRING_FUSE: 'Cháy cầu chì String',
+        UNDER_TEMP: 'Nhiệt độ inverter dưới ngưỡng',
+        MEMORY_LOSS: 'Lỗi bộ nhớ hoặc Lỗi truyền thông',
+        HW_TEST_FAILURE: 'Lỗi kiểm tra thiết bị'
     }
 };
