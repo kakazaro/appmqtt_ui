@@ -15,15 +15,7 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
         if (data && webRef && webRef.current) {
             try {
                 // console.log(JSON.stringify(data.dataSeries, null, 2));
-                let d = JSON.parse(JSON.stringify(data));
-                d.dataSeries = d.dataSeries.map((s, index) => {
-                    if (index > d.dataSeries.length/2) {
-                        return undefined;
-                    }
-                    return s;
-                });
-
-                webRef.current.injectJavaScript(`window.loadChart(${JSON.stringify(d)});true;`);
+                webRef.current.injectJavaScript(`window.loadChart(${JSON.stringify(data)});true;`);
             } catch (e) {
                 console.log(e);
             }
