@@ -16,7 +16,7 @@ const SitesTab = ({ navigation }) => {
             path={'sites'}
             url={'/site/list'}
             emptyMessage={userContext?.user?.role !== utility.USER_ROLES.SA.id ? 'Bạn chưa có quyền truy cập trạm điện nào' : ''}
-            listEvents={[eventCenter.eventNames.updateSiteName]}
+            listEvents={[eventCenter.eventNames.updateSiteName, eventCenter.eventNames.addNewSite]}
             onEventDataChange={(eventName, data, setData) => {
                 if (eventName === eventCenter.eventNames.updateSiteName) {
                     setData(lastData => {
@@ -29,6 +29,13 @@ const SitesTab = ({ navigation }) => {
                                 return d;
                             });
                             return [...newData];
+                        }
+                        return lastData;
+                    });
+                } else if (eventName === eventCenter.eventNames.addNewSite) {
+                    setData(lastData => {
+                        if (lastData?.length) {
+                            return [data, ...lastData];
                         }
                         return lastData;
                     });

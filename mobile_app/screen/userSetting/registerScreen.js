@@ -1,12 +1,14 @@
 import React, { useState, useContext, useMemo, useRef } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View, } from 'react-native';
+import { ScrollView, StyleSheet, View, } from 'react-native';
 import { Avatar, Button, HelperText } from 'react-native-paper';
-import { colors } from '../common/themes';
-import constant from '../common/constant';
-import ServerContext from '../context/serverContext';
-import CustomInput from '../component/customInput';
-import AppBarLayout from '../component/appBarLayout';
-import serverError from '../common/serverError';
+import { colors } from '../../common/themes';
+import constant from '../../common/constant';
+import ServerContext from '../../context/serverContext';
+import CustomInput from '../../component/customInput';
+import AppBarLayout from '../../component/appBarLayout';
+import serverError from '../../common/serverError';
+import eventCenter from '../../common/eventCenter';
+import utility from '../../common/utility';
 
 const RegisterScreen = ({ navigation }) => {
     const passwordRef = useRef(null);
@@ -39,26 +41,33 @@ const RegisterScreen = ({ navigation }) => {
         setError('');
         (async () => {
             try {
-                await serverContext.axios.post('/users/create', { email: email.toLowerCase(), password, name });
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'login', params: { created: true, email: email.toLowerCase(), password } }],
-                });
+                const response = await serverContext.axios.post('/users/create', { email: email.toLowerCase(), password, name });
+                if (response.data?.user) {
+                    const user = {
+                        _id: response.data.user.id || 'newId_' + Math.floor(Math.random() * 10000000),
+                        email: email.toLowerCase(),
+                        role: utility.USER_ROLES.US.id,
+                        name,
+                        ...response.data.user
+                    };
+                    eventCenter.push(eventCenter.eventNames.addNewUser, user);
+                    navigation.replace('user', { user });
+                }
+
             } catch (err) {
+                console.log(err);
                 setError(serverError.getError(err));
                 setLoading(false);
             }
         })();
     };
 
-    const width = Dimensions.get('window').width;
-
-    return <AppBarLayout title={'Đăng Ký Tài Khoản'}>
+    return <AppBarLayout title={'Tạo Người Dùng Mới'}>
         <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center' }}>
             <View style={{ alignItems: 'center', width: '100%', marginTop: 10 }}>
-                <Avatar.Image size={width > 500 ? 340 : 240} source={require('../assets/picture/solar.jpg')} style={{ backgroundColor: 'white' }}/>
+                <Avatar.Icon size={75} icon='account-plus' color={'white'} style={{ backgroundColor: colors.PHILIPPINE_ORANGE }}/>
             </View>
-            <View style={{ width: width > 500 ? 370 : 270 }}>
+            <View style={{ width: '90%' }}>
                 <CustomInput
                     style={styles.textInput}
                     value={email}
@@ -124,7 +133,7 @@ const RegisterScreen = ({ navigation }) => {
                     onPress={onRegisterClick}
                     loading={loading}
                 >
-                    Đăng Ký
+                    Tạo Tài Khoản
                 </Button>
                 <Button
                     color={colors.PHILIPPINE_ORANGE}
@@ -133,7 +142,7 @@ const RegisterScreen = ({ navigation }) => {
                     disabled={loading}
                     onPress={() => navigation.goBack()}
                 >
-                    Trờ về đăng nhập
+                    Hủy
                 </Button>
             </View>
         </ScrollView>

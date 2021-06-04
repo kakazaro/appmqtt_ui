@@ -34,6 +34,9 @@ const UserScreen = ({ navigation, route }) => {
     const [showChangeRole, setShowChangeRole] = useState(false);
     const [showDeleteSite, setShowDeleteSite] = useState(undefined);
 
+    const [showDeleteUser, setShowDeleteUser] = useState(false);
+
+
     const changeRoleModal = useMemo(() => {
         const onChangeRole = () => {
             setLoading(true);
@@ -82,7 +85,7 @@ const UserScreen = ({ navigation, route }) => {
         </Portal>;
     }, [showChangeRole, loading, selectRole, error, user]);
 
-    const deleteModalDom = useMemo(() => {
+    const deleteSiteModalDom = useMemo(() => {
         const onDelete = () => {
             setError('');
             setLoading(true);
@@ -119,6 +122,44 @@ const UserScreen = ({ navigation, route }) => {
             </Dialog>
         </Portal>;
     }, [showDeleteSite, loading, error, user]);
+
+    const deleteUserModalDom = useMemo(() => {
+        const onDelete = () => {
+            setError('');
+            setLoading(true);
+
+            (async () => {
+                try {
+                    await serverContext.axios.delete('/users', {
+                        data: {
+                            user_id: user._id
+                        }
+                    });
+                    eventCenter.push(eventCenter.eventNames.deleteUser, { id: user._id });
+                    navigation.goBack();
+                } catch (e) {
+                    setError(serverError.getError(e));
+                }
+                setLoading(false);
+            })();
+        };
+
+        return <Portal>
+            <Dialog visible={!!showDeleteUser} dismissable={!loading} onDismiss={() => setShowDeleteUser(false)}>
+                <Dialog.Title>Xóa người dùng</Dialog.Title>
+                <Dialog.Content>
+                    <Text>Bạn có chắc chắn xóa người này không?</Text>
+                    {!!error && <HelperText type='error' visible={!!error}>
+                        {error}
+                    </HelperText>}
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button disabled={loading} onPress={() => setShowDeleteUser(false)} style={{ marginEnd: 15 }} labelStyle={{ color: colors.primaryText }}>Không</Button>
+                    <Button disabled={loading} mode={'contained'} loading={loading} onPress={onDelete} style={{ backgroundColor: colors.seekerColor }}>Có</Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>;
+    }, [showDeleteUser, loading, error, user]);
 
     const onOpenChangeRole = () => {
         if (roleUser) {
@@ -184,6 +225,12 @@ const UserScreen = ({ navigation, route }) => {
                         <Text style={{ color: colors.primaryText, paddingStart: 10 }}>{roleUser?.label}</Text>
                     </>}/>
             </View>
+            {user && userContext && user._id !== userContext.id && <View style={{ backgroundColor: 'white', marginTop: 3 }}>
+                <FlatButton
+                    title={'Xóa người dùng'}
+                    iconName={'trash-can-outline'}
+                    onPress={() => setShowDeleteUser(true)}/>
+            </View>}
             <View style={{ flex: 1, marginTop: 10 }}>
                 <View style={{ marginStart: 15, marginBottom: 15, flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ fontSize: 15, color: colors.secondaryText, flex: 1 }}>Danh sách trạm được cấp quyền</Text>
@@ -197,7 +244,8 @@ const UserScreen = ({ navigation, route }) => {
             </View>
         </View>
         {changeRoleModal}
-        {deleteModalDom}
+        {deleteSiteModalDom}
+        {deleteUserModalDom}
     </AppBarLayout>;
 };
 

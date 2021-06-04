@@ -2,12 +2,17 @@ class EventCenter {
     constructor() {
         this.events = {};
         this.eventNames = {
+            addNewUser: 'addNewUser',
+            deleteUser: 'deleteUser',
+
             updateSitePrice: 'updateSitePrice',
             updateSiteName: 'updateSiteName',
             updateUserRole: 'updateUserRole',
 
             updateDeleteUserSite: 'updateDeleteUserSite',
             updateAddUserSite: 'updateAddUserSite',
+
+            addNewSite: 'addNewSite',
         };
     }
 

@@ -11,7 +11,7 @@ const UsersTab = () => {
             showPlaceholder={true}
             path={'users'}
             url={'/users/list'}
-            listEvents={[eventCenter.eventNames.updateUserRole]}
+            listEvents={[eventCenter.eventNames.updateUserRole, eventCenter.eventNames.addNewUser, eventCenter.eventNames.deleteUser]}
             onEventDataChange={(eventName, data, setData) => {
                 if (eventName === eventCenter.eventNames.updateUserRole) {
                     setData(lastData => {
@@ -24,6 +24,20 @@ const UsersTab = () => {
                                 return d;
                             });
                             return [...newData];
+                        }
+                        return lastData;
+                    });
+                } else if (eventName === eventCenter.eventNames.addNewUser) {
+                    setData(lastData => {
+                        if (lastData?.length) {
+                            return [data, ...lastData];
+                        }
+                        return lastData;
+                    });
+                } else if (eventName === eventCenter.eventNames.deleteUser) {
+                    setData(lastData => {
+                        if (lastData?.length) {
+                            return lastData.filter(d => d._id !== data.id);
                         }
                         return lastData;
                     });

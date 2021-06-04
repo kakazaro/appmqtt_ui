@@ -6,7 +6,7 @@ import SitesTab from '../component/homeTabs/sitesTab';
 import AlarmsTab from '../component/homeTabs/alarmsTab';
 import UsersTab from '../component/homeTabs/usersTab';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Divider, IconButton, Menu, Text } from 'react-native-paper';
+import { Divider, IconButton, Menu, Text, Appbar } from 'react-native-paper';
 import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-root-toast';
 import AppBarLayout from '../component/appBarLayout';
@@ -71,26 +71,34 @@ const HomeScreen = ({ navigation, route }) => {
         }, [requestBack])
     );
 
-    const menu = useMemo(() => <Menu
-        visible={visibleMenu}
-        onDismiss={() => setVisibleMenu(false)}
-        anchor={<IconButton icon={() => <MaterialCommunityIcons name='dots-vertical' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleMenu(!visibleMenu)}/>}
-    >
-        <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
-            setVisibleMenu(false);
-            navigation.navigate('setting');
-        }} title='Cài đặt'/>
+    const menu = useMemo(() => {
+        const name = getFocusedRouteNameFromRoute(route) ?? 'sites';
 
-        <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='share-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
-            setVisibleMenu(false);
-            navigation.navigate('share');
-        }} title='Chia sẻ'/>
-        <Divider/>
-        <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='power' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
-            setVisibleMenu(false);
-            userContext.logout(navigation);
-        }} title='Đăng xuất'/>
-    </Menu>, [visibleMenu, navigation, userContext]);
+        return <>
+            {name === 'sites' && userContext.user.role === utility.USER_ROLES.SA.id && <Appbar.Action icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} color={colors.PHILIPPINE_ORANGE} onPress={() => navigation.navigate('addSite')}/>}
+            {name === 'users' && <Appbar.Action icon={() => <MaterialCommunityIcons name='account-plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} color={colors.PHILIPPINE_ORANGE} onPress={() => navigation.navigate('register')}/>}
+            <Menu
+                visible={visibleMenu}
+                onDismiss={() => setVisibleMenu(false)}
+                anchor={<IconButton icon={() => <MaterialCommunityIcons name='dots-vertical' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleMenu(!visibleMenu)}/>}
+            >
+                <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                    setVisibleMenu(false);
+                    navigation.navigate('setting');
+                }} title='Cài đặt'/>
+
+                <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='share-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                    setVisibleMenu(false);
+                    navigation.navigate('share');
+                }} title='Chia sẻ'/>
+                <Divider/>
+                <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='power' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                    setVisibleMenu(false);
+                    userContext.logout(navigation);
+                }} title='Đăng xuất'/>
+            </Menu>
+        </>;
+    }, [visibleMenu, navigation, userContext, route]);
 
     return <AppBarLayout {...appBarOptions} menu={menu}>
         <Tab.Navigator backBehavior='none' tabBarOptions={{ adaptive: false }}>
