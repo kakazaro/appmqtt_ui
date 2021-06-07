@@ -115,7 +115,7 @@ export default {
         return { value: Math.floor((value / div) * 10) / 10, unit: unit + postfix };
     },
     makeupProduct(value) {
-        let { unit, div } = this.findUnit([value], 'Wh', 1000);
+        let { unit, div } = this.findUnit([value], 'Wh', 1);
         return { value: Math.floor((value / div) * 10) / 10, unit };
     },
     getMappingName(value, mapping) {

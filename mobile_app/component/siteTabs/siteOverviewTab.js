@@ -134,10 +134,10 @@ const SiteOverviewTab = () => {
 
         let value, unit, totalValue, totalUnit;
         if (data && price && currency) {
-            let makeup = utility.makeupMoney(data.todaySumEnergy * price);
+            let makeup = utility.makeupMoney(data.todaySumEnergy * price / 1000);
             value = makeup.value + makeup.unit;
 
-            makeup = utility.makeupMoney(data.allSumEnergy * price);
+            makeup = utility.makeupMoney(data.allSumEnergy * price / 1000);
             totalValue = makeup.value + makeup.unit;
 
             unit = currency;
