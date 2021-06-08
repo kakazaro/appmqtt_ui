@@ -15,12 +15,13 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
         if (data && webRef && webRef.current) {
             try {
                 // console.log(JSON.stringify(data.dataSeries, null, 2));
+                // console.log(JSON.stringify(data, null, 2));
                 webRef.current.injectJavaScript(`window.loadChart(${JSON.stringify(data)});true;`);
             } catch (e) {
                 console.log(e);
             }
         }
-    }, [data]);
+    }, [data, webRef, error, loading]);
 
     return <View>
         <View>
@@ -172,9 +173,7 @@ const HTML = '<!DOCTYPE html>\n' +
     '                        colors: \'rgba(154,154,154,0.57)\',\n' +
     '                        fontSize: \'11px\',\n' +
     '                    },\n' +
-    '                    formatter: (value) => {\n' +
-    '                        return Math.floor(value / ((divNumber && divNumber.div) || 1));\n' +
-    '                    },\n' +
+    '                    formatter: (value) => value,\n' +
     '                },\n' +
     '            },\n' +
     '            tooltip: {\n' +

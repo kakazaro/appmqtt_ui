@@ -204,7 +204,7 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
         const date = timeType ? moment(time).format(timeType.format) : '';
 
         const { div, unit } = findUnitDiv(dataSeries);
-        dataSeries = dataSeries.map(s => s / div).map(s => Math.floor(s * 100) / 100);
+        dataSeries = dataSeries.map(s => (s || 0) / div).map(s => Math.floor(s * 100) / 100);
 
         // Remove data in future
         for (let i = dataSeries.length - 1; i >= 0; i--) {

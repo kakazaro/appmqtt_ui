@@ -110,11 +110,11 @@ export default {
 
         return { value: even, unit: unit };
     },
-    makeupPower(value, postfix = '') {
+    makeupPower(value = 0, postfix = '') {
         let { unit, div } = this.findUnit([value], 'W', 1);
         return { value: Math.floor((value / div) * 10) / 10, unit: unit + postfix };
     },
-    makeupProduct(value) {
+    makeupProduct(value = 0) {
         let { unit, div } = this.findUnit([value], 'Wh', 1);
         return { value: Math.floor((value / div) * 10) / 10, unit };
     },

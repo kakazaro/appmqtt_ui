@@ -120,9 +120,7 @@
                         colors: 'rgba(154,154,154,0.57)',
                         fontSize: '11px',
                     },
-                    formatter: (value) => {
-                        return Math.floor(value / ((divNumber && divNumber.div) || 1));
-                    },
+                    formatter: (value) => value,
                 },
             },
             tooltip: {
@@ -134,8 +132,8 @@
                     },
                 },
                 y: {
-                    formatter: (index) => {
-                        return dataSeries[index] + ' ' + (divNumber && divNumber.unit);
+                    formatter: (value) => {
+                        return value + ' ' + (divNumber && divNumber.unit);
                     },
                     title: {
                         formatter: () => '',
