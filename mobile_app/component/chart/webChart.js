@@ -184,7 +184,7 @@ const HTML = '<!DOCTYPE html>\n' +
     '                x: {\n' +
     '                    show: false,\n' +
     '                    formatter: (index) => {\n' +
-    '                        return timeType ? moment(times[index]).format(timeType.timeFormatTable) : \'\';\n' +
+    '                        return timeType ? moment(times[index - 1]).format(timeType.timeFormatTable) : \'\';\n' +
     '                    },\n' +
     '                },\n' +
     '                y: {\n' +

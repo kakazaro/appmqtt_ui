@@ -128,7 +128,7 @@
                 x: {
                     show: false,
                     formatter: (index) => {
-                        return timeType ? moment(times[index]).format(timeType.timeFormatTable) : '';
+                        return timeType ? moment(times[index - 1]).format(timeType.timeFormatTable) : '';
                     },
                 },
                 y: {
