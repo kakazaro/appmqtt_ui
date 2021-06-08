@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import { Dimensions, View } from 'react-native';
 import { Text, TouchableRipple } from 'react-native-paper';
@@ -11,8 +11,10 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
     const navigation = useNavigation();
     const webRef = useRef(null);
 
+    const [loaded, setLoaded] = useState(false);
+
     useEffect(() => {
-        if (data && webRef && webRef.current) {
+        if (loaded && data && webRef && webRef.current) {
             try {
                 // console.log(JSON.stringify(data.dataSeries, null, 2));
                 // console.log(JSON.stringify(data, null, 2));
@@ -21,7 +23,7 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
                 console.log(e);
             }
         }
-    }, [data, webRef, error, loading]);
+    }, [data, webRef, error, loading, loaded]);
 
     return <View>
         <View>
@@ -40,6 +42,7 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
                         // source={{ uri: 'http://192.168.253.1:3000/chart' }}
                         source={{ html: HTML }}
                         androidHardwareAccelerationDisabled={true}
+                        onLoad={() => setLoaded(true)}
                     />
                     {data && !hideExpand && <TouchableRipple
                         style={{ position: 'absolute', top: 0, right: 10, borderRadius: 4, padding: 6, backgroundColor: colors.UNICORN_SILVER }}
