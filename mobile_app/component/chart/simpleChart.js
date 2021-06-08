@@ -44,7 +44,7 @@ const timeTypes = [
         chartType: 'bar',
         legend: 'Sản lương',
         stroke: { width: 0 },
-        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1000)
+        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1)
     },
     {
         id: 'year',
@@ -60,7 +60,7 @@ const timeTypes = [
         chartType: 'bar',
         legend: 'Sản lương',
         stroke: { width: 0 },
-        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1000)
+        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1)
     },
 ];
 
