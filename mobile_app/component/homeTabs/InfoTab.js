@@ -1,15 +1,12 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Divider, Text } from 'react-native-paper';
 import constant from '../../common/constant';
 import { colors } from '../../common/themes';
 import UserContext from '../../context/userContext';
-import utility from '../../common/utility';
 
 const InfoTab = ({ navigation }) => {
     const userContext = useContext(UserContext);
-
-    const roleUser = useMemo(() => utility.USER_ROLES[Object.keys(utility.USER_ROLES).find(k => k === userContext?.user?.role)], [userContext]);
 
     return <View style={styles.container}>
         <ScrollView>
@@ -18,7 +15,6 @@ const InfoTab = ({ navigation }) => {
                 <View style={{ marginStart: 15, marginTop: 5, marginBottom: 5 }}>
                     <Text style={styles.labelText}>Email đăng nhập: <Text style={styles.infoText}>{userContext?.user?.email}</Text></Text>
                     <Text style={styles.labelText}>Tên người dùng: <Text style={styles.infoText}>{userContext?.user?.name}</Text></Text>
-                    <Text style={styles.labelText}>Quyền hạn: <Text style={styles.infoText}>{roleUser?.label}</Text></Text>
                 </View>
                 <Divider/>
             </View>
