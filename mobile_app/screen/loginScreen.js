@@ -164,6 +164,7 @@ const LoginScreen = ({ navigation, route }) => {
                     <Dialog.Content>
                         <Text>Vui lòng liên hệ chúng tôi để được cấp tài khoản đăng nhập:</Text>
                         <View style={{ marginTop: 5, marginBottom: 5 }}>
+                            <Text style={styles.labelText}>{constant.CONTACT_INFO.corp}</Text>
                             <Text style={styles.labelText}>Địa chỉ: <Text style={styles.infoText}>{constant.CONTACT_INFO.address}</Text></Text>
                             <Text style={styles.labelText}>Điện thoại: <Text style={styles.infoText}>{constant.CONTACT_INFO.phone}</Text></Text>
                             <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text></Text>

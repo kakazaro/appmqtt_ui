@@ -3,8 +3,9 @@ export default {
     // REACT_APP_BASE_URL : 'http://113.161.79.146:5001',
     REACT_APP_BASE_URL: 'https://ntvsolar.indedg.com:5005',
     CONTACT_INFO: {
+        corp: 'CÔNG TY TNHH THƯƠNG MẠI N.T.V',
         address: '49/13 Hoàng Dư Khương, P.12, Q.10, TP. Hồ Chí Minh',
-        phone: '(+84) 902 586 121',
+        phone: '(+84) 903 013 604',
         email: 'ntvsolar@gmail.com'
     },
     DEVICE_TAG_NAME: {

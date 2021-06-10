@@ -1,12 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Divider, Text } from 'react-native-paper';
 import constant from '../../common/constant';
 import { colors } from '../../common/themes';
 import UserContext from '../../context/userContext';
+import utility from '../../common/utility';
 
 const InfoTab = ({ navigation }) => {
     const userContext = useContext(UserContext);
+
+    const roleUser = useMemo(() => utility.USER_ROLES[Object.keys(utility.USER_ROLES).find(k => k === userContext?.user?.role)], [userContext]);
 
     return <View style={styles.container}>
         <ScrollView>
@@ -15,12 +18,14 @@ const InfoTab = ({ navigation }) => {
                 <View style={{ marginStart: 15, marginTop: 5, marginBottom: 5 }}>
                     <Text style={styles.labelText}>Email đăng nhập: <Text style={styles.infoText}>{userContext?.user?.email}</Text></Text>
                     <Text style={styles.labelText}>Tên người dùng: <Text style={styles.infoText}>{userContext?.user?.name}</Text></Text>
+                    {roleUser && roleUser.id !== utility.USER_ROLES.US.id && <Text style={styles.labelText}>Loại tài khoản: <Text style={styles.infoText}>{roleUser.label}</Text></Text>}
                 </View>
                 <Divider/>
             </View>
             <View>
                 <Text style={styles.sectionText}>Liên hệ để yêu cầu cấp quyền truy cập:</Text>
                 <View style={{ marginStart: 15, marginTop: 5, marginBottom: 5 }}>
+                    <Text style={styles.labelText}>{constant.CONTACT_INFO.corp}</Text>
                     <Text style={styles.labelText}>Địa chỉ: <Text style={styles.infoText}>{constant.CONTACT_INFO.address}</Text></Text>
                     <Text style={styles.labelText}>Điện thoại: <Text style={styles.infoText}>{constant.CONTACT_INFO.phone}</Text></Text>
                     <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text></Text>

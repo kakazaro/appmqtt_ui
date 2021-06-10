@@ -55,12 +55,12 @@ export default {
         },
         AD: {
             id: 'AD',
-            label: 'Nhân viên vận hành',
+            label: 'Admin',
             icon: 'account-hard-hat'
         },
         SA: {
             id: 'SA',
-            label: 'Quản trị viên',
+            label: 'System Admin',
             icon: 'account-tie'
         }
     },
