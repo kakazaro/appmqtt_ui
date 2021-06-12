@@ -1,4 +1,5 @@
 import constant from './constant';
+import { colors } from './themes';
 
 export default {
     STATUS: {
@@ -22,29 +23,37 @@ export default {
     EVENT_TYPE: {
         FAULT: {
             id: 'fault',
-            label: 'Sự cố'
+            label: 'Lỗi thiệt hại',
+            icon: 'alert-decagram',
+            color: colors.fault
         },
         ALARM: {
             id: 'alarm',
-            label: 'Cảnh báo'
+            label: 'Cảnh báo',
+            icon: 'bell-alert',
+            color: colors.alarm
         }
     },
     EVENT_STATUS: {
         ACTIVE: {
             id: 'active',
-            label: 'Chưa xử lý'
+            label: 'Chưa xử lý',
+            color: colors.fault
         },
         PROCESSING: {
             id: 'processing',
-            label: 'Đang xử lý'
+            label: 'Đang xử lý',
+            color: colors.alarm
         },
         RESOLVED: {
             id: 'resolved',
-            label: 'Đã xử lý'
+            label: 'Đã xử lý',
+            color: colors.normal
         },
         UNCONFIRMED: {
             id: 'unconfirmed',
-            label: 'Không xác định'
+            label: 'Chưa xác nhận xử lý',
+            color: colors.offline
         }
     },
     USER_ROLES: {
@@ -122,7 +131,7 @@ export default {
         const tags = Object.keys(mapping);
         const tag = tags.find(t => t.trim().toLowerCase() === (value || '').trim().toLowerCase());
         if (tag) {
-            return constant.DEVICE_TAG_NAME[tag];
+            return mapping[tag];
         }
 
         return value;

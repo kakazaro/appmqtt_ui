@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../common/themes';
+import { StyleSheet, View } from 'react-native';
+import EventsList from '../eventsList';
 
 const AlarmsTab = () => {
     return <View style={styles.container}>
-        <Text style={{color: colors.DARK_SOULS, marginTop: 100}}>Chưa có dữ liệu</Text>
+        <EventsList/>
     </View>;
 };
 

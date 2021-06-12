@@ -17,6 +17,7 @@ import UserAddSiteScreen from './userSetting/userAddSiteScreen';
 import ShareScreen from './shareScreen';
 import RegisterScreen from './userSetting/registerScreen';
 import AddSiteScreen from './addSiteScreen';
+import EventScreen from './eventScreen';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,9 @@ const MainScreen = () => {
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
 
                 <Stack.Screen name={'chart'} component={ChartScreen}/>
+
+                <Stack.Screen name={'event'} component={EventScreen}/>
+
 
                 <Stack.Screen name={'user'} component={UserScreen}/>
                 <Stack.Screen name={'userAddSite'} component={UserAddSiteScreen}/>

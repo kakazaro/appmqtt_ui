@@ -67,6 +67,7 @@ const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEven
 
             if (!loading) {
                 setLoading(true);
+                setPageToken(undefined);
                 setError(false);
                 (async () => {
                     const result = await loadData();
@@ -101,10 +102,10 @@ const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEven
                     const result = await loadData(pageToken);
                     setData((preData) => !result.error ? preData.concat(result.data || []) : []);
                     setPageToken(!result.error ? result.nextPageToken : '');
-                    setError(!!result.error);
+                    setError(result.error);
 
-                    setLoading(false);
                     setLoadingMore(false);
+                    setLoading(false);
                 })();
             }
         }

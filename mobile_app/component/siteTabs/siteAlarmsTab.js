@@ -1,10 +1,14 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../common/themes';
+import React, { useContext, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+import EventsList from '../eventsList';
+import SiteContext from '../../context/siteContext';
 
 const SiteAlarmsTab = () => {
+    const siteContext = useContext(SiteContext);
+    const siteId = useMemo(() => siteContext?.site?.id, [siteContext]);
+
     return <View style={styles.container}>
-        <Text style={{ color: colors.DARK_SOULS, paddingTop: 100 }}>Chưa có dữ liệu</Text>
+        {siteId && <EventsList siteId={siteId}/>}
     </View>;
 };
 
