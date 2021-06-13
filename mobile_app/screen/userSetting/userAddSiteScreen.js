@@ -27,7 +27,7 @@ const UserAddSiteScreen = ({ navigation, route }) => {
 
             (async () => {
                 try {
-                    await serverContext.axios.post('/users/update-sites', {
+                    await serverContext.post('/users/update-sites', {
                         id: user._id,
                         action: 'add',
                         sites: selectSites.map(s => s._id)

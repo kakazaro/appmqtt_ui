@@ -1,30 +1,27 @@
-import React, { useState, useContext, useMemo, useRef } from 'react';
+import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View, } from 'react-native';
-import { Avatar, Button, Checkbox, Text, Portal, Dialog, HelperText } from 'react-native-paper';
+import { Avatar, Button, Checkbox, Text, Portal, Dialog, HelperText, Appbar } from 'react-native-paper';
 import { colors } from '../common/themes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../context/userContext';
 import constant from '../common/constant';
 import ServerContext from '../context/serverContext';
 import * as Analytics from 'expo-firebase-analytics';
-import { useFocusEffect } from '@react-navigation/native';
 import CustomInput from '../component/customInput';
-import AppBarLayout from '../component/appBarLayout';
 import serverError from '../common/serverError';
 
 const RememberKey = 'RememberKey';
 const RememberIdKey = 'RememberIdKey';
 const RememberPasswordKey = 'RememberPasswordKey';
 
-const LoginScreen = ({ navigation, route }) => {
+const LoginScreen = ({ route }) => {
     const passwordRef = useRef(null);
-
 
     const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
 
-    const [email, setEmail] = useState(route?.params?.email || '');
-    const [password, setPassword] = useState(route?.params?.password || '');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [rememberPassword, setRememberPassword] = useState(false);
 
     const [loading, setLoading] = useState(true);
@@ -33,7 +30,7 @@ const LoginScreen = ({ navigation, route }) => {
     const emailError = useMemo(() => email && !constant.emailRegex.test(email) ? 'Email không hợp lệ' : '', [email]);
     const canLogin = useMemo(() => email && !emailError && password, [emailError, email, password]);
 
-    useFocusEffect(React.useCallback(() => {
+    useEffect(() => {
         (async () => {
             const isRemember = !!(await AsyncStorage.getItem(RememberKey)) || false;
             setRememberPassword(isRemember);
@@ -51,7 +48,7 @@ const LoginScreen = ({ navigation, route }) => {
 
             setLoading(false);
         })();
-    }, []));
+    }, []);
 
     const onLoginClick = () => {
         if (loading || !canLogin) {
@@ -67,17 +64,12 @@ const LoginScreen = ({ navigation, route }) => {
                 //Ignore
             }
             try {
-                const response = await serverContext.axios.post('/users/login', { email: email.toLowerCase(), password });
+                const response = await serverContext.post('/users/login', { email: email.toLowerCase(), password });
                 await AsyncStorage.setItem(RememberKey, rememberPassword ? 'true' : '');
                 await AsyncStorage.setItem(RememberIdKey, rememberPassword ? email : '');
                 await AsyncStorage.setItem(RememberPasswordKey, rememberPassword ? password : '');
                 setLoading(false);
-                if (await userContext.login(response.data)) {
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'home' }],
-                    });
-                } else {
+                if (!await userContext.login(response.data)) {
                     setError('Dữ liệu đăng nhập không hợp lệ');
                     setLoading(false);
                 }
@@ -90,11 +82,15 @@ const LoginScreen = ({ navigation, route }) => {
 
     const [showInfoModal, setShowInfoModal] = useState(false);
 
-
     const width = Dimensions.get('window').width;
 
-    return <AppBarLayout title={'Đăng Nhập'}>
-        <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center' }}>
+    return <View style={styles.container}>
+        <View>
+            <Appbar.Header style={styles.bar}>
+                <Appbar.Content titleStyle={{ fontSize: 20, fontWeight: 'normal', color: colors.primaryText }} title={'Đăng Nhập'}/>
+            </Appbar.Header>
+        </View>
+        <ScrollView style={styles.scroll} contentContainerStyle={{ alignItems: 'center' }}>
             <View style={{ alignItems: 'center', marginTop: 20 }}>
                 <Avatar.Image size={width > 500 ? 340 : 240} source={require('../assets/picture/solar.jpg')} style={{ backgroundColor: 'white' }}/>
             </View>
@@ -175,12 +171,37 @@ const LoginScreen = ({ navigation, route }) => {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
+            <Portal>
+                <Dialog visible={userContext.isOutSession} onDismiss={userContext.resetOutSession}>
+                    <Dialog.Title>Hết hiệu lực đăng nhập</Dialog.Title>
+                    <Dialog.Content>
+                        <Text>Vui lòng đăng nhập lại</Text>
+                        <View style={{ marginTop: 5, marginBottom: 5 }}>
+                            <Text style={styles.labelText}>
+                                Chú thích: mỗi lần đăng nhập, bạn chỉ có thể sử dụng ứng dụng trong một khoản thời gian nhất định.
+                                Hết thời gian hiệu lực, yêu cầu bạn phải đăng nhập lại.
+                            </Text>
+                        </View>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={userContext.resetOutSession}>Đã hiểu</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
         </ScrollView>
-    </AppBarLayout>;
+    </View>;
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+    },
+    bar: {
+        backgroundColor: 'white',
+        elevation: 0,
+        width: '100%'
+    },
+    scroll: {
         flex: 1,
         paddingStart: 30,
         paddingEnd: 30,

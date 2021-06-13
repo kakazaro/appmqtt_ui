@@ -66,7 +66,7 @@ const DeviceOverviewTab = () => {
 
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>
-            <StatusBanner statusId={deviceDetail?.status || device?.status} title={'Trạng thái'}/>
+            <StatusBanner statusId={deviceDetail?.device?.status || device?.status} title={'Trạng thái'}/>
             {paramDom}
         </ScrollView>
     </View>;

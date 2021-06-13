@@ -29,7 +29,7 @@ const SiteSettingScreen = () => {
 
             (async () => {
                 try {
-                    const response = await serverContext.axios.get('/site/overview?id=' + encodeURIComponent(site.id));
+                    const response = await serverContext.get('/site/overview?id=' + encodeURIComponent(site.id));
                     if (discard) {
                         return;
                     }
@@ -84,7 +84,7 @@ const SiteSettingScreen = () => {
     }, [site, siteOverview, loading]);
 
     const updateSite = (id, name, price, currency) => {
-        return serverContext.axios.post('/site/update?id=' + encodeURIComponent(id), {
+        return serverContext.post('/site/update?id=' + encodeURIComponent(id), {
             name: name || 'Station name',
             price: price || 0,
             currency: currency || ''

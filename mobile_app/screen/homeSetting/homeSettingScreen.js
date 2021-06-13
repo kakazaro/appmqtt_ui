@@ -57,7 +57,7 @@ const HomeSettingScreen = ({ navigation }) => {
             setError('');
             (async () => {
                 try {
-                    await serverContext.axios.post('/users/change-password', {
+                    await serverContext.post('/users/change-password', {
                         'oldPassword': oldPassword,
                         'newPassword': password
                     });

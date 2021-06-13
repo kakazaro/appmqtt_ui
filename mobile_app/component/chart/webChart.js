@@ -25,32 +25,28 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
         }
     }, [data, webRef, error, loading, loaded]);
 
-    return <View>
-        <View>
-        </View>
-        <View style={{ height: Dimensions.get('window').width / 1.57, width: '100%', opacity: (loading ? 0.5 : 1) }}>
-            {error ?
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: colors.REDDISH }}>{error}</Text>
-                </View>
-                :
-                <>
-                    <WebView
-                        ref={webRef}
-                        // originWhitelist={['*']}
-                        // source={{ uri: 'http://10.40.50.61:3000/chart' }}
-                        // source={{ uri: 'http://192.168.253.1:3000/chart' }}
-                        source={{ html: HTML }}
-                        androidHardwareAccelerationDisabled={true}
-                        onLoad={() => setLoaded(true)}
-                    />
-                    {data && !hideExpand && <TouchableRipple
-                        style={{ position: 'absolute', top: 0, right: 10, borderRadius: 4, padding: 6, backgroundColor: colors.UNICORN_SILVER }}
-                        onPress={() => navigation.navigate('chart', { chartData: { data } })}>
-                        <MaterialCommunityIcons name={'arrow-expand'} size={20} color={colors.PHILIPPINE_ORANGE}/>
-                    </TouchableRipple>}
-                </>}
-        </View>
+    return <View style={{ height: Dimensions.get('window').width / 1.52, width: '100%', opacity: (loading ? 0.5 : 1) }}>
+        {error ?
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ color: colors.REDDISH }}>{error}</Text>
+            </View>
+            :
+            <>
+                <WebView
+                    ref={webRef}
+                    // originWhitelist={['*']}
+                    // source={{ uri: 'http://10.40.50.61:3000/chart' }}
+                    // source={{ uri: 'http://192.168.253.1:3000/chart' }}
+                    source={{ html: HTML }}
+                    androidHardwareAccelerationDisabled={true}
+                    onLoad={() => setLoaded(true)}
+                />
+                {data && !hideExpand && <TouchableRipple
+                    style={{ position: 'absolute', top: 0, right: 10, borderRadius: 4, padding: 6, backgroundColor: colors.UNICORN_SILVER }}
+                    onPress={() => navigation.navigate('chart', { chartData: { data } })}>
+                    <MaterialCommunityIcons name={'arrow-expand'} size={20} color={colors.PHILIPPINE_ORANGE}/>
+                </TouchableRipple>}
+            </>}
     </View>;
 };
 
@@ -64,9 +60,9 @@ const HTML = '<!DOCTYPE html>\n' +
     '    <title>Chart</title>\n' +
     '\n' +
     '</head>\n' +
-    '<body style=\'margin: 0\'>\n' +
+    '<body style=\'margin: 0; height: 100%; overflow: hidden\'>\n' +
     '<div class=\'container\'>\n' +
-    '    <div id=\'chart\' class=\'chartDoc\'></div>\n' +
+    '    <div id=\'chart\' class=\'chartDoc\' style=\'margin: 0; height: 100%; overflow: hidden\'></div>\n' +
     '</div>\n' +
     '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>\n' +
     '<script src="https://momentjs.com/downloads/moment.js"></script>\n' +

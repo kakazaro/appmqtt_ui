@@ -44,7 +44,7 @@ const EventBadge = ({ item, showSite, showDevice }) => {
                     <View style={{ marginTop: 0 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ paddingStart: 22 }}>{moment(item?.completed_at || item?.timestamp).format('HH:mm')}</Text>
-                            <Text style={{ color: colors.DARK_SOULS, fontSize: 12, paddingTop: 2 }}>{moment(item?.completed_at || item?.timestamp).format(':ss[.]SSS')}</Text>
+                            <Text style={{ color: colors.DARK_SOULS, fontSize: 12, paddingTop: 2 }}>{moment(item?.completed_at || item?.timestamp).format(':ss')}</Text>
                         </View>
                         <View style={{ paddingStart: 20, borderLeftWidth: 2, borderLeftColor: eventStatus.color, paddingTop: 5 }}>
                             <View style={{ flexDirection: 'row' }}>

@@ -35,10 +35,9 @@ const MainScreen = () => {
 
     return <>
         <StatusBar style='auto'/>
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName={!userContext.isLogin ? 'login' : 'home'} headerMode='none' screenOptions={{ ...myTransition }}>
-                <Stack.Screen name={'login'} component={LoginScreen}/>
-
+        {!userContext.isLogin && <LoginScreen/>}
+        {userContext.isLogin && <NavigationContainer>
+            <Stack.Navigator initialRouteName={'home'} headerMode='none' screenOptions={{ ...myTransition }}>
                 <Stack.Screen name={'home'} component={HomeScreen}/>
 
                 <Stack.Screen name={'setting'} component={HomeSettingScreen}/>
@@ -62,7 +61,7 @@ const MainScreen = () => {
 
                 <Stack.Screen name={'share'} component={ShareScreen}/>
             </Stack.Navigator>
-        </NavigationContainer>
+        </NavigationContainer>}
     </>;
 };
 

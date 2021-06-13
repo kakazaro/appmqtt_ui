@@ -28,9 +28,9 @@ const TableChart = ({ data }) => {
         const slidedSLabel = tableLabels.slice(pageLimit * page, pageLimit * (page + 1));
 
         return <DataTable>
-            <DataTable.Header>
-                <DataTable.Title><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>Thời gian</Text></DataTable.Title>
-                <DataTable.Title><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{legend + ` (${unit})`}</Text></DataTable.Title>
+            <DataTable.Header style={{ flex: 0, paddingVertical: 5, height: 35 }}>
+                <DataTable.Title style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>Thời gian</Text></DataTable.Title>
+                <DataTable.Title style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{legend + ` (${unit})`}</Text></DataTable.Title>
             </DataTable.Header>
             {slidedSeries.map((value, index) => <DataTable.Row key={index}>
                 <DataTable.Cell>

@@ -39,7 +39,7 @@ const AddSiteScreen = ({ navigation }) => {
         setError('');
         (async () => {
             try {
-                const response = await serverContext.axios.post('/site', { name: siteName, describe: siteDescription, price, currency });
+                const response = await serverContext.post('/site', { name: siteName, describe: siteDescription, price, currency });
                 if (response.data?.site) {
                     const site = {
                         id: 'new' + Math.floor(Math.random() * 10000000),

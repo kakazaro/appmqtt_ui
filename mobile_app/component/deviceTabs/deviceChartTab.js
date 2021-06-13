@@ -6,7 +6,7 @@ import SiteContext from '../../context/siteContext';
 const DeviceChartTab = () => {
     const siteContext = useContext(SiteContext);
 
-    const chartDom = useMemo(() => siteContext?.device ? <SimpleChar url={'/device/trend?id=' + encodeURIComponent(siteContext.device.id)} showTable={true}  hideExpand={true}/> : <></>, [siteContext]);
+    const chartDom = useMemo(() => siteContext?.device?.id ? <SimpleChar url={'/device/trend?id=' + encodeURIComponent(siteContext.device.id)} showTable={false} hideExpand={false}/> : <></>, [siteContext]);
 
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>

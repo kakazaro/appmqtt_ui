@@ -7,7 +7,7 @@ import { colors } from '../common/themes';
 
 const StatusBanner = ({ statusId, title }) => {
     const key = Object.keys(utility.STATUS).find(key => utility.STATUS[key].id === statusId);
-    const status = key ? utility.STATUS[key] : undefined;
+    const status = key ? utility.STATUS[key] : utility.STATUS.OFFLINE;
 
     return <View style={{ flexDirection: 'row', width: '100%', backgroundColor: 'white', paddingTop: 8, paddingBottom: 8 }}>
         <View style={styles.statusView}>

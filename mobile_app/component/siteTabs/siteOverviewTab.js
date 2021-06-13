@@ -123,11 +123,11 @@ const SiteOverviewTab = () => {
         }}/>;
     }, [overviewData]);
 
-    const chartDom = useMemo(() => site ? <SimpleChar url={'/site/trend?id=' + encodeURIComponent(site.id)}/> : <></>, [site]);
+    const chartDom = useMemo(() => siteId ? <SimpleChar url={'/site/trend?id=' + encodeURIComponent(siteId)}/> : <></>, [siteId]);
 
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>
-            <StatusBanner statusId={site?.status} title={'Trạng thái'}/>
+            <StatusBanner statusId={overviewData?.site?.status || site?.status} title={'Trạng thái'}/>
             {!!overviewDataError && <HelperText style={{ marginStart: 5 }} type={'error'} visible={true}>Lỗi: {overviewDataError}</HelperText>}
             {infoDom}
             {incomeDom}

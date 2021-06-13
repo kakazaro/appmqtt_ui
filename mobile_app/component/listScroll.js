@@ -4,10 +4,10 @@ import ServerContext from '../context/serverContext';
 import { Text } from 'react-native-paper';
 import { colors } from '../common/themes';
 import eventCenter from '../common/eventCenter';
-import serverError, { errors } from '../common/serverError';
+import serverError from '../common/serverError';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEventDataChange, emptyMessage, onRefreshCallback, onFailAuth }) => {
+const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEventDataChange, emptyMessage, onRefreshCallback }) => {
     const serverContext = useContext(ServerContext);
     const [loading, setLoading] = useState(false);
 
@@ -41,17 +41,12 @@ const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEven
 
     const loadData = async (nextPageToken = '', limit = 15) => {
         try {
-            const response = await serverContext.axios.get(url + (url.includes('?') ? '&' : '?') + `limit=${limit}&nextPageToken=${encodeURIComponent(nextPageToken)}`);
+            const response = await serverContext.get(url + (url.includes('?') ? '&' : '?') + `limit=${limit}&nextPageToken=${encodeURIComponent(nextPageToken)}`);
             return {
                 data: (response.data && response.data[path]) || [],
                 nextPageToken: (response.data.nextPageToken || '') + ''
             };
         } catch (e) {
-            // console.log(e?.response);
-            if (e?.response?.data?.code === errors.E40019.code && onFailAuth) {
-                onFailAuth();
-            }
-
             return {
                 error: serverError.getError(e)
             };

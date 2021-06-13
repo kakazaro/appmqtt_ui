@@ -16,9 +16,11 @@ const RowInfo = ({ info }) => {
                 </Placeholder>
                 :
                 <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
-                    {typeof info.main.value === 'string' && <Text style={{ fontSize: 22, color: colors.primaryText }}>{info.main.value}</Text>}
+                    {(typeof info.main.value === 'string' || typeof info.main.value === 'number') && <Text style={{ fontSize: 22, color: colors.primaryText }}>{info.main.value}</Text>}
                     {typeof info.main.value === 'object' && info.main.value}
-                    {info.main.unit && <Text style={{ fontSize: 15, color: colors.primaryText, marginStart: 3 }}>{info.main.unit}</Text>}
+
+                    {(typeof info.main.unit === 'string' || typeof info.main.unit === 'number') && <Text style={{ fontSize: 15, color: colors.primaryText, marginStart: 3 }}>{info.main.unit}</Text>}
+                    {typeof info.main.unit === 'object' && info.main.unit}
                 </View>}
         </View>
         {info.sub && <>
@@ -36,8 +38,11 @@ const RowInfo = ({ info }) => {
                         </Placeholder>
                         :
                         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
-                            <Text style={{ color: colors.secondaryText }}>{info.sub.value}</Text>
-                            {info.sub.unit && <Text style={{ color: colors.secondaryText, paddingStart: 3 }}>{info.sub.unit}</Text>}
+                            {(typeof info.sub.value === 'string' || typeof info.sub.value === 'number') && <Text style={{ color: colors.secondaryText }}>{info.sub.value}</Text>}
+                            {typeof info.sub.value === 'object' && info.sub.value}
+
+                            {(typeof info.sub.unit === 'string' || typeof info.sub.unit === 'number') && <Text style={{ color: colors.secondaryText, paddingStart: 3 }}>{info.sub.unit}</Text>}
+                            {typeof info.sub.unit === 'object' && info.sub.unit}
                         </View>}
                 </View>
             </View>

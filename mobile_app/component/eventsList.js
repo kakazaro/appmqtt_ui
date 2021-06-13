@@ -22,10 +22,10 @@ const EventsList = ({ siteId, deviceId }) => {
 
     const loadData = async (nextPageToken = '', limit = 20) => {
         try {
-            const response = await serverContext.axios.get(`event?limit=${limit}`
+            const response = await serverContext.get(`event?limit=${limit}`
                 + (nextPageToken ? `&nextPageToken=${encodeURIComponent(nextPageToken)}` : '')
-                + (siteId ? `&siteId=${encodeURIComponent(siteId)}` : '')
-                + (deviceId ? `&deviceId=${encodeURIComponent(deviceId)}` : '')
+                + (siteId ? `&site_id=${encodeURIComponent(siteId)}` : '')
+                + (deviceId ? `&device_id=${encodeURIComponent(deviceId)}` : '')
             );
             return {
                 data: (response.data && response.data.events) || [],

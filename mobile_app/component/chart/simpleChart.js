@@ -84,7 +84,7 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
             const type = { ...timeType };
             const getTime = moment(time);
             try {
-                const response = await serverContext.axios.get(url + (url.includes('?') ? '&' : '?') + `date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`);
+                const response = await serverContext.get(url + (url.includes('?') ? '&' : '?') + `date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`);
                 if (!discard) {
                     setData({
                         ...response.data,

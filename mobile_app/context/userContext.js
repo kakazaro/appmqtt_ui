@@ -9,14 +9,17 @@ const defaultUser = {
     user: {},
     isLogin: false,
     token: '',
+    isOutSession: false,
     login: () => undefined,
     logout: () => undefined,
+    resetOutSession: () => undefined
 };
 const LOGIN_DATA_KEY = '__login';
 const UserContext = createContext(defaultUser);
 
 export const UserProvider = ({ children }) => {
     const [loginData, setLoginData] = useState();
+    const [isOutSession, setIsOutSession] = useState(false);
 
     const [loading, setLoading] = useState(true);
 
@@ -85,16 +88,15 @@ export const UserProvider = ({ children }) => {
             id: loginData?.user?._id,
             isLogin: !!loginData,
             token: loginData?.token,
+            isOutSession,
             login,
-            logout: (navigation) => {
+            logout: (isOutSession) => {
+                setIsOutSession(!!isOutSession);
                 setLoginData(undefined);
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'login' }],
-                });
-            }
+            },
+            resetOutSession: () => setIsOutSession(false)
         };
-    }, [loginData]);
+    }, [loginData, isOutSession]);
 
     const dom = useMemo(() => {
         if (loading) {

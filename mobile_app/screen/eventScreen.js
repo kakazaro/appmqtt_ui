@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { useContext, useMemo } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Headline, Text } from 'react-native-paper';
 import AppBarLayout from '../component/appBarLayout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,8 +7,11 @@ import utility from '../common/utility';
 import RowInfo from '../component/rowInfo/rowInfo';
 import { colors } from '../common/themes';
 import moment from 'moment';
+import SiteContext from '../context/siteContext';
 
-const EventScreen = ({ route }) => {
+const EventScreen = ({ navigation, route }) => {
+    const siteContext = useContext(SiteContext);
+
     const eventItem = useMemo(() => route?.params?.event, [route]);
 
     return <AppBarLayout title={'Sự cố'}>
@@ -28,44 +31,41 @@ const EventScreen = ({ route }) => {
                         },
                         sub: {
                             text: 'Thời gian xảy ra',
-                            value: moment(eventItem?.timestamp).format('YYYY-MM-DD, HH:mm:ss[.]SSS')
+                            value: moment(eventItem?.timestamp).format('YYYY-MM-DD, HH:mm:ss')
                         }
                     }}/>
                     <RowInfo info={{
                         main: {
                             text: 'Trạng thái',
-                            value: <>
-                                <Text style={{ fontSize: 18, color: eventItem?.eventStatus?.color }}>{eventItem?.eventStatus?.label}</Text>
-                            </>,
+                            value: <Text style={{ fontSize: 18, color: eventItem?.eventStatus?.color }}>{eventItem?.eventStatus?.label}</Text>
                         },
                         sub: {
                             text: 'Thời gian hoàn thành',
-                            value: eventItem?.completed_at ? moment(eventItem?.completed_at).format('YYYY-MM-DD, HH:mm:ss[.]SSS') : '(Chưa có)'
+                            value: eventItem?.completed_at ? moment(eventItem?.completed_at).format('YYYY-MM-DD, HH:mm:ss') : '(Chưa có)'
                         }
                     }}/>
                     <RowInfo info={{
                         main: {
                             text: 'Trạm điện chịu ảnh hưởng',
-                            value: <>
-                                <Text style={{ fontSize: 18, color: colors.primaryText }}>{eventItem?.siteName}</Text>
-                            </>,
-                        },
-                        // sub: {
-                        //     text: 'Chi tiết',
-                        //     value: <TouchableRipple onPress={() => console.log('here')}><Text style={{ color: colors.PHILIPPINE_ORANGE, fontStyle: 'italic' }}>truy cập trạm điện</Text></TouchableRipple>
-                        // }
+                            value: <TouchableOpacity onPress={() => {
+                                navigation.navigate('site', { site: { id: eventItem?.siteId, name: eventItem?.siteName } });
+                            }}>
+                                <Text style={{ fontSize: 18, color: colors.FADING_NIGHT }}>{eventItem?.siteName}</Text>
+                            </TouchableOpacity>,
+                            unit: <MaterialCommunityIcons style={{ color: colors.FADING_NIGHT }} size={12} name={'open-in-new'}/>
+                        }
                     }}/>
                     <RowInfo info={{
                         main: {
                             text: 'Thiết bị chịu ảnh hưởng',
-                            value: <>
-                                <Text style={{ fontSize: 18, color: colors.primaryText }}>{eventItem?.deviceName}</Text>
-                            </>,
-                        },
-                        // sub: {
-                        //     text: 'Chi tiết',
-                        //     value: <TouchableRipple onPress={() => console.log('here')}><Text style={{ color: colors.PHILIPPINE_ORANGE, fontStyle: 'italic' }}>truy cập thiết bị</Text></TouchableRipple>
-                        // }
+                            value: <TouchableOpacity onPress={() => {
+                                siteContext.updateSite({ id: eventItem?.siteId, name: eventItem?.siteName });
+                                navigation.navigate('device', { device: { id: eventItem?.deviceId, name: eventItem?.deviceName } });
+                            }}>
+                                <Text style={{ fontSize: 18, color: colors.FADING_NIGHT }}>{eventItem?.deviceName}</Text>
+                            </TouchableOpacity>,
+                            unit: <MaterialCommunityIcons style={{ color: colors.FADING_NIGHT }} size={12} name={'open-in-new'}/>
+                        }
                     }}/>
                 </View>
             </ScrollView>

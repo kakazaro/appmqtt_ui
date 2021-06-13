@@ -48,7 +48,7 @@ const UserScreen = ({ navigation, route }) => {
                         id: user._id,
                         role: selectRole
                     };
-                    await serverContext.axios.post('/users/update-role', data);
+                    await serverContext.post('/users/update-role', data);
                     eventCenter.push(eventCenter.eventNames.updateUserRole, data);
                     setUpdatedUser({ role: selectRole });
                     setShowChangeRole(false);
@@ -92,7 +92,7 @@ const UserScreen = ({ navigation, route }) => {
 
             (async () => {
                 try {
-                    await serverContext.axios.post('/users/update-sites', {
+                    await serverContext.post('/users/update-sites', {
                         id: user._id,
                         action: 'remove',
                         sites: [showDeleteSite._id]
@@ -130,7 +130,7 @@ const UserScreen = ({ navigation, route }) => {
 
             (async () => {
                 try {
-                    await serverContext.axios.delete('/users', {
+                    await serverContext.delete('/users', {
                         data: {
                             user_id: user._id
                         }

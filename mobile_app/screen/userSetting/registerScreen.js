@@ -41,7 +41,7 @@ const RegisterScreen = ({ navigation }) => {
         setError('');
         (async () => {
             try {
-                const response = await serverContext.axios.post('/users/create', { email: email.toLowerCase(), password, name });
+                const response = await serverContext.post('/users/create', { email: email.toLowerCase(), password, name });
                 if (response.data?.user) {
                     const user = {
                         _id: response.data.user.id || 'newId_' + Math.floor(Math.random() * 10000000),

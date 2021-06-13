@@ -4,7 +4,7 @@ import axiosModule from 'axios';
 import 'react-native-get-random-values';
 import { v4 as uidv4 } from 'uuid';
 import constant from '../common/constant';
-import serverError from '../common/serverError';
+import serverError, { errors } from '../common/serverError';
 
 const REACT_APP_BASE_URL = constant.REACT_APP_BASE_URL;
 
@@ -60,8 +60,12 @@ function DataControl(axios) {
     };
 }
 
+const DEFAULT_AXIOS = axiosModule.create({ baseURL: '' });
+
 const defaultValue = {
-    axios: axiosModule.create({ baseURL: '' }),
+    get: (url, config) => DEFAULT_AXIOS.get(url, config),
+    post: (url, data, config) => DEFAULT_AXIOS.post(url, data, config),
+    delete: (url, config) => DEFAULT_AXIOS.delete(url, config),
     dataControl: new DataControl(undefined)
 };
 const ServerContext = createContext(defaultValue);
@@ -78,7 +82,19 @@ export const ServerProvider = ({ children }) => {
 
         return {
             ...defaultValue,
-            axios,
+            get: async (url, config) => {
+                try {
+                    return await axios.get(url, config);
+                } catch (e) {
+                    // console.log(e?.response);
+                    if (e?.response?.data?.code === errors.E40019.code) {
+                        userContext.logout(true);
+                    }
+                    throw e;
+                }
+            },
+            post: (url, data, config) => axios.post(url, data, config),
+            delete: (url, config) => axios.delete(url, config),
             dataControl: new DataControl(axios)
         };
     }, [userContext]);
