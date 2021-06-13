@@ -47,24 +47,28 @@ const EventScreen = ({ navigation, route }) => {
                     <RowInfo info={{
                         main: {
                             text: 'Trạm điện chịu ảnh hưởng',
-                            value: <TouchableOpacity onPress={() => {
-                                navigation.navigate('site', { site: { id: eventItem?.siteId, name: eventItem?.siteName } });
+                            value: <TouchableOpacity activeOpacity={1} onPress={() => {
+                                if (eventItem?.showSite) {
+                                    navigation.navigate('site', { site: { id: eventItem?.siteId, name: eventItem?.siteName } });
+                                }
                             }}>
-                                <Text style={{ fontSize: 18, color: colors.FADING_NIGHT }}>{eventItem?.siteName}</Text>
+                                <Text style={{ fontSize: 18, color: eventItem?.showSite ? colors.FADING_NIGHT : colors.primaryText }}>{eventItem?.siteName}</Text>
                             </TouchableOpacity>,
-                            unit: <MaterialCommunityIcons style={{ color: colors.FADING_NIGHT }} size={12} name={'open-in-new'}/>
+                            unit: eventItem?.showSite ? <MaterialCommunityIcons style={{ color: colors.FADING_NIGHT }} size={12} name={'open-in-new'}/> : undefined
                         }
                     }}/>
                     <RowInfo info={{
                         main: {
                             text: 'Thiết bị chịu ảnh hưởng',
-                            value: <TouchableOpacity onPress={() => {
-                                siteContext.updateSite({ id: eventItem?.siteId, name: eventItem?.siteName });
-                                navigation.navigate('device', { device: { id: eventItem?.deviceId, name: eventItem?.deviceName } });
+                            value: <TouchableOpacity activeOpacity={1} onPress={() => {
+                                if (eventItem?.showDevice) {
+                                    siteContext.updateSite({ id: eventItem?.siteId, name: eventItem?.siteName });
+                                    navigation.navigate('device', { device: { id: eventItem?.deviceId, name: eventItem?.deviceName } });
+                                }
                             }}>
-                                <Text style={{ fontSize: 18, color: colors.FADING_NIGHT }}>{eventItem?.deviceName}</Text>
+                                <Text style={{ fontSize: 18, color: eventItem?.showDevice ? colors.FADING_NIGHT : colors.primaryText }}>{eventItem?.deviceName}</Text>
                             </TouchableOpacity>,
-                            unit: <MaterialCommunityIcons style={{ color: colors.FADING_NIGHT }} size={12} name={'open-in-new'}/>
+                            unit: eventItem?.showDevice ? <MaterialCommunityIcons style={{ color: colors.FADING_NIGHT }} size={12} name={'open-in-new'}/> : undefined
                         }
                     }}/>
                 </View>

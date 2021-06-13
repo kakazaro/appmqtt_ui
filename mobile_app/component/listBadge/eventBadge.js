@@ -33,7 +33,7 @@ const EventBadge = ({ item, showSite, showDevice }) => {
 
     const onPress = () => {
         if (item) {
-            navigation.navigate('event', { event: { ...item, eventType, eventStatus } });
+            navigation.navigate('event', { event: { ...item, eventType, eventStatus, showSite, showDevice } });
         }
     };
 
