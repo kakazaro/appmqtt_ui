@@ -21,7 +21,6 @@ dist/
 
 # Maven
 target/
-dist/
 build/
 /firebase/public/
 
@@ -50,3 +49,12 @@ Thumbs.db
 *.mov
 *.wmv
 
+.expo/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
