@@ -12,6 +12,7 @@ import eventCenter from '../../common/eventCenter';
 import ListScroll from '../../component/listScroll';
 import UserSiteBadge from '../../component/listBadge/userSiteBadge';
 import UserContext from '../../context/userContext';
+import ConfirmDialog from '../../component/confirmDialog';
 
 const UserScreen = ({ navigation, route }) => {
     const userContext = useContext(UserContext);
@@ -106,21 +107,17 @@ const UserScreen = ({ navigation, route }) => {
             })();
         };
 
-        return <Portal>
-            <Dialog visible={!!showDeleteSite} dismissable={!loading} onDismiss={() => setShowDeleteSite(undefined)}>
-                <Dialog.Title>{showDeleteSite?.name}</Dialog.Title>
-                <Dialog.Content>
-                    <Text>Bạn có muốn xóa quyền truy cập của người dùng tới trạm này không?</Text>
-                    {!!error && <HelperText type='error' visible={!!error}>
-                        {error}
-                    </HelperText>}
-                </Dialog.Content>
-                <Dialog.Actions>
-                    <Button disabled={loading} onPress={() => setShowDeleteSite(undefined)} style={{ marginEnd: 15 }} labelStyle={{ color: colors.primaryText }}>Không</Button>
-                    <Button disabled={loading} mode={'contained'} loading={loading} onPress={onDelete} style={{ backgroundColor: colors.PHILIPPINE_ORANGE }}>Có</Button>
-                </Dialog.Actions>
-            </Dialog>
-        </Portal>;
+        return <ConfirmDialog
+            title={showDeleteSite?.name}
+            content={'Bạn có muốn xóa quyền truy cập của người dùng tới trạm này không?'}
+            error={error}
+            show={!!showDeleteSite}
+            dismissible={!loading}
+            loading={loading}
+            onClose={() => setShowDeleteSite(undefined)}
+            onOk={onDelete}
+            isNegative={true}
+        />;
     }, [showDeleteSite, loading, error, user]);
 
     const deleteUserModalDom = useMemo(() => {
@@ -135,6 +132,7 @@ const UserScreen = ({ navigation, route }) => {
                             user_id: user._id
                         }
                     });
+                    setShowDeleteUser(false);
                     eventCenter.push(eventCenter.eventNames.deleteUser, { id: user._id });
                     navigation.goBack();
                 } catch (e) {
@@ -144,21 +142,17 @@ const UserScreen = ({ navigation, route }) => {
             })();
         };
 
-        return <Portal>
-            <Dialog visible={!!showDeleteUser} dismissable={!loading} onDismiss={() => setShowDeleteUser(false)}>
-                <Dialog.Title>Xóa người dùng</Dialog.Title>
-                <Dialog.Content>
-                    <Text>Bạn có chắc chắn xóa người này không?</Text>
-                    {!!error && <HelperText type='error' visible={!!error}>
-                        {error}
-                    </HelperText>}
-                </Dialog.Content>
-                <Dialog.Actions>
-                    <Button disabled={loading} onPress={() => setShowDeleteUser(false)} style={{ marginEnd: 15 }} labelStyle={{ color: colors.primaryText }}>Không</Button>
-                    <Button disabled={loading} mode={'contained'} loading={loading} onPress={onDelete} style={{ backgroundColor: colors.seekerColor }}>Có</Button>
-                </Dialog.Actions>
-            </Dialog>
-        </Portal>;
+        return <ConfirmDialog
+            title={'Xóa người dùng'}
+            content={'Bạn có chắc chắn xóa người này không?'}
+            dismissible={!loading}
+            error={error}
+            loading={loading}
+            onClose={() => setShowDeleteUser(false)}
+            onOk={onDelete}
+            isNegative={true}
+            show={!!showDeleteUser}
+        />;
     }, [showDeleteUser, loading, error, user]);
 
     const onOpenChangeRole = () => {
@@ -229,7 +223,10 @@ const UserScreen = ({ navigation, route }) => {
                 <FlatButton
                     title={'Xóa người dùng'}
                     iconName={'trash-can-outline'}
-                    onPress={() => setShowDeleteUser(true)}/>
+                    onPress={() => setShowDeleteUser(true)}
+                    titleStyle={{ color: colors.fault }}
+                    iconColor={colors.fault}
+                />
             </View>}
             <View style={{ flex: 1, marginTop: 10 }}>
                 <View style={{ marginStart: 15, marginBottom: 15, flexDirection: 'row', alignItems: 'center' }}>

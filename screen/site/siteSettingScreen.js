@@ -9,8 +9,9 @@ import SiteContext from '../../context/siteContext';
 import AppBarLayout from '../../component/appBarLayout';
 import eventCenter from '../../common/eventCenter';
 import serverError from '../../common/serverError';
+import ConfirmDialog from '../../component/confirmDialog';
 
-const SiteSettingScreen = () => {
+const SiteSettingScreen = ({ navigation }) => {
     const serverContext = useContext(ServerContext);
     const siteContext = useContext(SiteContext);
 
@@ -215,19 +216,72 @@ const SiteSettingScreen = () => {
         </Portal>;
     }, [showEditPrice, editPrice, editCurrency, loading, serverContext, site, siteOverview, errorEditPrice]);
 
+    const [showDeleteSite, setShowDeleteSite] = useState(false);
+    const [errorDeleteSite, setErrorDeleteSite] = useState('');
+
+    const modelDeleteSiteDom = useMemo(() => {
+        const onDelete = () => {
+            setLoading(true);
+            setErrorDeleteSite('');
+            (async () => {
+                try {
+                    await serverContext.delete('/site?id=' + encodeURIComponent(site.id));
+                    eventCenter.push(eventCenter.eventNames.deleteSite, site);
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'home' }],
+                    });
+                    setShowDeleteSite(false);
+                } catch (e) {
+                    setErrorDeleteSite(serverError.getError(e));
+                }
+                setLoading(false);
+            })();
+        };
+
+        return <ConfirmDialog
+            title={'Xóa trạm'}
+            content={<>
+                <Text>Bạn có muốn xóa trạm "<Text style={{ fontWeight: 'bold' }}>{site.name}</Text>" không?</Text>
+                <View style={{ marginTop: 5, marginBottom: 5 }}>
+                    <Text style={styles.labelText}>
+                        Chú ý: mọi dữ liệu liên quan đến trạm sẽ bị xóa hoàn toàn và không thể khôi phục được
+                    </Text>
+                </View>
+            </>}
+            show={showDeleteSite}
+            dismissible={!loading}
+            loading={loading}
+            isNegative={true}
+            error={errorDeleteSite}
+            onClose={() => setShowDeleteSite(false)}
+            onOk={onDelete}
+            countDown={10}
+        />;
+    }, [site, showDeleteSite, loading, errorDeleteSite, serverContext]);
+
     const dom = useMemo(() => {
         if (site && siteOverview && !loading && !loadError) {
             return <ScrollView>
-                <View style={{ marginTop: 10, backgroundColor: 'white' }}>
+                <View style={{ marginTop: 10 }}>
                     {appSetting.map((setting, index) => <FlatButton
                         iconName={'chevron-right'}
                         key={index}
                         {...setting}
-                        style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER }}
+                        style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER, backgroundColor: 'white' }}
                     />)}
+                    <FlatButton
+                        title={'Xóa trạm'}
+                        iconName={'trash-can-outline'}
+                        onPress={() => setShowDeleteSite(true)}
+                        style={{ marginTop: 10, backgroundColor: 'white' }}
+                        titleStyle={{ color: colors.fault }}
+                        iconColor={colors.fault}
+                    />
                 </View>
                 {modalEditNameDom}
                 {modalEditPriceDom}
+                {modelDeleteSiteDom}
             </ScrollView>;
         } else if (loading && !loadError) {
             return <ActivityIndicator style={{ marginTop: 20 }} animating={true} color={colors.PHILIPPINE_ORANGE}/>;
@@ -236,9 +290,7 @@ const SiteSettingScreen = () => {
                 <Text>{loadError}</Text>
             </View>;
         }
-
-
-    }, [site, siteOverview, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom]);
+    }, [site, siteOverview, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom, modelDeleteSiteDom]);
 
     return <AppBarLayout title={'Cài đặt trạm'}>
         {dom}
@@ -251,7 +303,11 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'white',
         marginTop: 10
-    }
+    },
+    labelText: {
+        color: colors.secondaryText,
+        fontSize: 12
+    },
 });
 
 export default SiteSettingScreen;

@@ -1,22 +1,22 @@
 import React from 'react';
-import AppBarLayout from '../component/appBarLayout';
+import AppBarLayout from '../../component/appBarLayout';
 import { Dimensions, Image, Linking, ScrollView, Share, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { colors } from '../common/themes';
+import { colors } from '../../common/themes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const shares = [
     {
         icon: 'android',
-        qrCode: require('../assets/android-qr-code.png'),
-        badge: require('../assets/google-play-badge.png'),
+        qrCode: require('../../assets/android-qr-code.png'),
+        badge: require('../../assets/google-play-badge.png'),
         badgeStyle: { width: 155, height: 60 },
         url: 'https://play.google.com/store/apps/details?id=com.ntvorg.ntvisolar'
     },
     {
         icon: 'apple',
-        qrCode: require('../assets/ios-qr-code.png'),
-        badge: require('../assets/app_store_badge.png'),
+        qrCode: require('../../assets/ios-qr-code.png'),
+        badge: require('../../assets/app_store_badge.png'),
         badgeStyle: { width: 120, height: 40, marginTop: 10, marginBottom: 10 },
         url: 'https://apps.apple.com/vn/app/ntv-solar/id1566321133'
     }

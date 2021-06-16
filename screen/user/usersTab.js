@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import ListScroll from '../listScroll';
-import UserBadge from '../listBadge/userBadge';
+import ListScroll from '../../component/listScroll';
+import UserBadge from '../../component/listBadge/userBadge';
 import eventCenter from '../../common/eventCenter';
 
 const UsersTab = () => {

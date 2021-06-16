@@ -1,12 +1,12 @@
 import React, { useState, useContext, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, View, } from 'react-native';
 import { Avatar, Button, HelperText } from 'react-native-paper';
-import { colors } from '../common/themes';
-import ServerContext from '../context/serverContext';
-import CustomInput from '../component/customInput';
-import AppBarLayout from '../component/appBarLayout';
-import serverError from '../common/serverError';
-import eventCenter from '../common/eventCenter';
+import { colors } from '../../common/themes';
+import ServerContext from '../../context/serverContext';
+import CustomInput from '../../component/customInput';
+import AppBarLayout from '../../component/appBarLayout';
+import serverError from '../../common/serverError';
+import eventCenter from '../../common/eventCenter';
 
 const AddSiteScreen = ({ navigation }) => {
     const descriptionRef = useRef(null);

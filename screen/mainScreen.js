@@ -1,28 +1,38 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import UserContext from '../context/userContext';
 import LoginScreen from './loginScreen';
 import HomeScreen from './homeScreen';
-import SiteScreen from './siteScreen';
-import DeviceScreen from './deviceScreen';
+import SiteScreen from './site/siteScreen';
+import DeviceScreen from './device/deviceScreen';
 import HomeSettingScreen from './homeSetting/homeSettingScreen';
 import AboutScreen from './homeSetting/aboutScreen';
 import PolicyScreen from './homeSetting/policyScreen';
-import SiteSettingScreen from './siteSetting/siteSettingScreen';
+import SiteSettingScreen from './site/siteSettingScreen';
 import ChartScreen from './chartScreen';
-import UserScreen from './userSetting/userScreen';
-import UserAddSiteScreen from './userSetting/userAddSiteScreen';
-import ShareScreen from './shareScreen';
-import RegisterScreen from './userSetting/registerScreen';
-import AddSiteScreen from './addSiteScreen';
-import EventScreen from './eventScreen';
+import UserScreen from './user/userScreen';
+import UserAddSiteScreen from './user/userAddSiteScreen';
+import ShareScreen from './info/shareScreen';
+import RegisterScreen from './user/registerScreen';
+import AddSiteScreen from './site/addSiteScreen';
+import EventScreen from './event/eventScreen';
+import * as Analytics from 'expo-firebase-analytics';
+import Constants, { AppOwnership } from 'expo-constants';
 
 const Stack = createStackNavigator();
 
 const MainScreen = () => {
     const userContext = useContext(UserContext);
+
+    useEffect(() => {
+        (async () => {
+            if (Constants.isDevice) {
+                await Analytics.setDebugModeEnabled(Constants.appOwnership !== AppOwnership.Standalone);
+            }
+        })();
+    }, []);
 
     const myTransition = {
         gestureDirection: 'horizontal',

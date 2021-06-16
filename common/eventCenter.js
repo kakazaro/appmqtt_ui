@@ -13,6 +13,7 @@ class EventCenter {
             updateAddUserSite: 'updateAddUserSite',
 
             addNewSite: 'addNewSite',
+            deleteSite: 'deleteSite',
         };
     }
 

@@ -2,9 +2,9 @@ import React, { useContext, useMemo, useState } from 'react';
 import { BackHandler, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from '../common/themes';
-import SitesTab from '../component/homeTabs/sitesTab';
-import AlarmsTab from '../component/homeTabs/alarmsTab';
-import UsersTab from '../component/homeTabs/usersTab';
+import SitesTab from './site/sitesTab';
+import EventsTab from './event/eventsTab';
+import UsersTab from './user/usersTab';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Divider, IconButton, Menu, Text, Appbar } from 'react-native-paper';
 import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native';
@@ -12,7 +12,7 @@ import Toast from 'react-native-root-toast';
 import AppBarLayout from '../component/appBarLayout';
 import UserContext from '../context/userContext';
 import utility from '../common/utility';
-import InfoTab from '../component/homeTabs/InfoTab';
+import InfoTab from './info/InfoTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -109,7 +109,7 @@ const HomeScreen = ({ navigation, route }) => {
             <Tab.Screen name='alarms' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Cảnh báo lỗi</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'alert' : 'alert-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
-            }} component={AlarmsTab}/>
+            }} component={EventsTab}/>
             {userContext?.user && userContext.user.role === utility.USER_ROLES.SA.id && <Tab.Screen name='users' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Quản lý</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'account-circle' : 'account-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>

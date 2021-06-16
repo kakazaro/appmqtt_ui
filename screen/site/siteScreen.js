@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Headline, IconButton } from 'react-native-paper';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import SiteOverviewTab from '../component/siteTabs/siteOverviewTab';
-import SiteDevicesTab from '../component/siteTabs/siteDevicesTab';
-import SiteAlarmsTab from '../component/siteTabs/siteAlarmsTab';
-import { colors } from '../common/themes';
-import SiteContext from '../context/siteContext';
-import AppBarLayout from '../component/appBarLayout';
+import SiteOverviewTab from './siteTabs/siteOverviewTab';
+import SiteDevicesTab from './siteTabs/siteDevicesTab';
+import SiteAlarmsTab from './siteTabs/siteAlarmsTab';
+import { colors } from '../../common/themes';
+import SiteContext from '../../context/siteContext';
+import AppBarLayout from '../../component/appBarLayout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();

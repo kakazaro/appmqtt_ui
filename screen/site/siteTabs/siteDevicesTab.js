@@ -1,8 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import ListScroll from '../listScroll';
-import SiteContext from '../../context/siteContext';
-import DeviceBadge from '../listBadge/deviceBadge';
+import ListScroll from '../../../component/listScroll';
+import SiteContext from '../../../context/siteContext';
+import DeviceBadge from '../../../component/listBadge/deviceBadge';
 
 const SiteDevicesTab = () => {
     const siteContext = useContext(SiteContext);

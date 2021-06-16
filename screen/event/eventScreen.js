@@ -1,13 +1,13 @@
 import React, { useContext, useMemo } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Headline, Text } from 'react-native-paper';
-import AppBarLayout from '../component/appBarLayout';
+import AppBarLayout from '../../component/appBarLayout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import utility from '../common/utility';
-import RowInfo from '../component/rowInfo/rowInfo';
-import { colors } from '../common/themes';
+import utility from '../../common/utility';
+import RowInfo from '../../component/rowInfo/rowInfo';
+import { colors } from '../../common/themes';
 import moment from 'moment';
-import SiteContext from '../context/siteContext';
+import SiteContext from '../../context/siteContext';
 
 const EventScreen = ({ navigation, route }) => {
     const siteContext = useContext(SiteContext);

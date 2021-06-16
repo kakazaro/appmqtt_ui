@@ -1,13 +1,13 @@
 import React, { useContext, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import ServerContext from '../../context/serverContext';
-import SiteContext from '../../context/siteContext';
+import ServerContext from '../../../context/serverContext';
+import SiteContext from '../../../context/siteContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { DataTable, HelperText, Text } from 'react-native-paper';
-import StatusBanner from '../statusBanner';
-import { colors } from '../../common/themes';
+import StatusBanner from '../../../component/statusBanner';
+import { colors } from '../../../common/themes';
 import { Placeholder, PlaceholderLine, ShineOverlay } from 'rn-placeholder';
-import utility from '../../common/utility';
+import utility from '../../../common/utility';
 
 const DeviceOverviewTab = () => {
     const serviceContext = useContext(ServerContext);

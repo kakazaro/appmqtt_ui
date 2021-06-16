@@ -1,13 +1,14 @@
 import React, { useContext, useMemo, useState } from 'react';
 import AppBarLayout from '../../component/appBarLayout';
 import { View } from 'react-native';
-import { Button, Dialog, HelperText, Portal, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { colors } from '../../common/themes';
 import ServerContext from '../../context/serverContext';
 import serverError from '../../common/serverError';
 import eventCenter from '../../common/eventCenter';
 import ListScroll from '../../component/listScroll';
 import UserSiteBadge from '../../component/listBadge/userSiteBadge';
+import ConfirmDialog from '../../component/confirmDialog';
 
 const UserAddSiteScreen = ({ navigation, route }) => {
     const serverContext = useContext(ServerContext);
@@ -42,21 +43,17 @@ const UserAddSiteScreen = ({ navigation, route }) => {
             })();
         };
 
-        return <Portal>
-            <Dialog visible={show} dismissable={!loading} onDismiss={() => setShow(false)}>
-                <Dialog.Title>Xác nhận</Dialog.Title>
-                <Dialog.Content>
-                    <Text>{`Bạn có muốn thêm quyền truy cập cho ${selectSites.length} trạm này không?`}</Text>
-                    {!!error && <HelperText type='error' visible={!!error}>
-                        {error}
-                    </HelperText>}
-                </Dialog.Content>
-                <Dialog.Actions>
-                    <Button disabled={loading} onPress={() => setShow(false)} style={{ marginEnd: 15 }} labelStyle={{ color: colors.primaryText }}>Không</Button>
-                    <Button disabled={loading} mode={'contained'} loading={loading} onPress={onAdd} style={{ backgroundColor: colors.PHILIPPINE_ORANGE, minWidth: 60 }}>Có</Button>
-                </Dialog.Actions>
-            </Dialog>
-        </Portal>;
+        return <ConfirmDialog
+            show={show}
+            dismissible={!loading}
+            loading={loading}
+            title={'Xác nhận'}
+            content={`Bạn có muốn thêm quyền truy cập cho ${selectSites.length} trạm này không?`}
+            error={error}
+            isNegative={false}
+            onClose={() => setShow(false)}
+            onOk={onAdd}
+        />;
     }, [show, loading, error, user, selectSites]);
 
     const listSiteDom = useMemo(() => {

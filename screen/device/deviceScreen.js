@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import AppBarLayout from '../component/appBarLayout';
+import AppBarLayout from '../../component/appBarLayout';
 import { Headline } from 'react-native-paper';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { colors } from '../common/themes';
-import DeviceOverviewTab from '../component/deviceTabs/deviceOverviewTab';
-import DeviceAlarmsTab from '../component/deviceTabs/deviceAlarmsTab';
-import DeviceChartTab from '../component/deviceTabs/deviceChartTab';
-import SiteContext from '../context/siteContext';
+import { colors } from '../../common/themes';
+import DeviceOverviewTab from './deviceTabs/deviceOverviewTab';
+import DeviceAlarmsTab from './deviceTabs/deviceAlarmsTab';
+import DeviceChartTab from './deviceTabs/deviceChartTab';
+import SiteContext from '../../context/siteContext';
 
 const Tab = createMaterialTopTabNavigator();
 

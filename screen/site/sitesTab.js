@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
-import ListScroll from '../listScroll';
-import SiteBadge from '../listBadge/siteBadge';
+import ListScroll from '../../component/listScroll';
+import SiteBadge from '../../component/listBadge/siteBadge';
 import eventCenter from '../../common/eventCenter';
 import UserContext from '../../context/userContext';
 import utility from '../../common/utility';
@@ -16,7 +16,7 @@ const SitesTab = () => {
             path={'sites'}
             url={'/site/list'}
             emptyMessage={userContext?.user?.role !== utility.USER_ROLES.SA.id ? 'Bạn chưa có quyền truy cập trạm điện nào' : ''}
-            listEvents={[eventCenter.eventNames.updateSiteName, eventCenter.eventNames.addNewSite]}
+            listEvents={[eventCenter.eventNames.updateSiteName, eventCenter.eventNames.addNewSite, eventCenter.eventNames.deleteSite]}
             onEventDataChange={(eventName, data, setData) => {
                 if (eventName === eventCenter.eventNames.updateSiteName) {
                     setData(lastData => {
@@ -36,6 +36,13 @@ const SitesTab = () => {
                     setData(lastData => {
                         if (lastData?.length) {
                             return [data, ...lastData];
+                        }
+                        return lastData;
+                    });
+                } else if (eventName === eventCenter.eventNames.deleteSite) {
+                    setData(lastData => {
+                        if (lastData?.length) {
+                            return lastData.filter(d => d.id !== data.id);
                         }
                         return lastData;
                     });

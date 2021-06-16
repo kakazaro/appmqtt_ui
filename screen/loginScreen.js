@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View, } from 'react-native';
-import { Avatar, Button, Checkbox, Text, Portal, Dialog, HelperText, Appbar } from 'react-native-paper';
+import { Avatar, Button, Checkbox, Text, HelperText, Appbar } from 'react-native-paper';
 import { colors } from '../common/themes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../context/userContext';
@@ -9,6 +9,8 @@ import ServerContext from '../context/serverContext';
 import * as Analytics from 'expo-firebase-analytics';
 import CustomInput from '../component/customInput';
 import serverError from '../common/serverError';
+import ConfirmDialog from '../component/confirmDialog';
+import Constants from 'expo-constants';
 
 const RememberKey = 'RememberKey';
 const RememberIdKey = 'RememberIdKey';
@@ -59,7 +61,9 @@ const LoginScreen = ({ route }) => {
         setError('');
         (async () => {
             try {
-                await Analytics.logEvent('loginBtnClick');
+                if (Constants.isDevice) {
+                    await Analytics.logEvent('loginBtnClick');
+                }
             } catch (e) {
                 //Ignore
             }
@@ -154,40 +158,44 @@ const LoginScreen = ({ route }) => {
                     Chưa có tài khoản?
                 </Button>
             </View>
-            <Portal>
-                <Dialog visible={showInfoModal} onDismiss={() => setShowInfoModal(false)}>
-                    <Dialog.Title>Yêu cầu lập tài khoản</Dialog.Title>
-                    <Dialog.Content>
-                        <Text>Vui lòng liên hệ chúng tôi để được cấp tài khoản đăng nhập:</Text>
-                        <View style={{ marginTop: 5, marginBottom: 5 }}>
-                            <Text style={styles.labelText}>{constant.CONTACT_INFO.corp}</Text>
-                            <Text style={styles.labelText}>Địa chỉ: <Text style={styles.infoText}>{constant.CONTACT_INFO.address}</Text></Text>
-                            <Text style={styles.labelText}>Điện thoại: <Text style={styles.infoText}>{constant.CONTACT_INFO.phone}</Text></Text>
-                            <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text></Text>
-                        </View>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                        <Button onPress={() => setShowInfoModal(false)}>OK</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
-            <Portal>
-                <Dialog visible={userContext.isOutSession} onDismiss={userContext.resetOutSession}>
-                    <Dialog.Title>Hết hiệu lực đăng nhập</Dialog.Title>
-                    <Dialog.Content>
-                        <Text>Vui lòng đăng nhập lại</Text>
-                        <View style={{ marginTop: 5, marginBottom: 5 }}>
-                            <Text style={styles.labelText}>
-                                Chú thích: mỗi lần đăng nhập, bạn chỉ có thể sử dụng ứng dụng trong một khoản thời gian nhất định.
-                                Hết thời gian hiệu lực, yêu cầu bạn phải đăng nhập lại.
-                            </Text>
-                        </View>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                        <Button onPress={userContext.resetOutSession}>Đã hiểu</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
+            <ConfirmDialog
+                show={showInfoModal}
+                title={'Yêu cầu lập tài khoản'}
+                content={<>
+                    <Text>Vui lòng liên hệ chúng tôi để được cấp tài khoản đăng nhập:</Text>
+                    <View style={{ marginTop: 5, marginBottom: 5 }}>
+                        <Text style={styles.labelText}>{constant.CONTACT_INFO.corp}</Text>
+                        <Text style={styles.labelText}>Địa chỉ: <Text style={styles.infoText}>{constant.CONTACT_INFO.address}</Text></Text>
+                        <Text style={styles.labelText}>Điện thoại: <Text style={styles.infoText}>{constant.CONTACT_INFO.phone}</Text></Text>
+                        <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text></Text>
+                    </View>
+                </>}
+                onClose={() => setShowInfoModal(false)}
+                onOk={() => setShowInfoModal(false)}
+                isNegative={false}
+                negativeText={''}
+                positiveText={'OK'}
+                mode={'text'}
+            />
+            <ConfirmDialog
+                show={userContext.isOutSession}
+                title={'Hết hiệu lực đăng nhập'}
+                content={<>
+                    <Text>Vui lòng đăng nhập lại</Text>
+                    <View style={{ marginTop: 5, marginBottom: 5 }}>
+                        <Text style={styles.labelText}>
+                            Chú thích: mỗi lần đăng nhập, bạn chỉ có thể sử dụng ứng dụng trong một khoản thời gian nhất định.
+                            Hết thời gian hiệu lực, yêu cầu bạn phải đăng nhập lại.
+                        </Text>
+                    </View>
+                </>}
+                onClose={userContext.resetOutSession}
+                onOk={userContext.resetOutSession}
+                isNegative={false}
+                negativeText={''}
+                positiveText={'Đã hiểu'}
+                mode={'text'}
+            />
         </ScrollView>
     </View>;
 };

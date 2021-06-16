@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import SimpleChar from '../chart/simpleChart';
-import SiteContext from '../../context/siteContext';
+import SimpleChar from '../../../component/chart/simpleChart';
+import SiteContext from '../../../context/siteContext';
 
 const DeviceChartTab = () => {
     const siteContext = useContext(SiteContext);

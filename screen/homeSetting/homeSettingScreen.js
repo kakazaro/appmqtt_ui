@@ -8,6 +8,7 @@ import CustomInput from '../../component/customInput';
 import ServerContext from '../../context/serverContext';
 import AppBarLayout from '../../component/appBarLayout';
 import serverError from '../../common/serverError';
+import UserContext from '../../context/userContext';
 
 const LANGUAGE = [
     {
@@ -23,6 +24,7 @@ const LANGUAGE = [
 
 const HomeSettingScreen = ({ navigation }) => {
     const serverContext = useContext(ServerContext);
+    const userContext = useContext(UserContext);
 
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
@@ -61,10 +63,7 @@ const HomeSettingScreen = ({ navigation }) => {
                         'oldPassword': oldPassword,
                         'newPassword': password
                     });
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'login', params: { changedPassword: true } }],
-                    });
+                    userContext.logout();
                 } catch (e) {
                     setError(serverError.getError(e));
                     setLoading(false);
@@ -130,7 +129,7 @@ const HomeSettingScreen = ({ navigation }) => {
                 </Dialog.Actions>
             </Dialog>
         </Portal>;
-    }, [showChangePasswordModal, password, passwordConfirm, loading, oldPassword, navigation, serverContext, error]);
+    }, [showChangePasswordModal, password, passwordConfirm, loading, oldPassword, navigation, serverContext, userContext, error]);
 
     return <AppBarLayout title={'Cài đặt'}>
         <ScrollView>
