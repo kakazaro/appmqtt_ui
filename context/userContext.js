@@ -3,6 +3,8 @@ import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import constant from '../common/constant';
+import utility from '../common/utility';
+import RolePermission from '../common/rolePermission';
 
 const defaultUser = {
     id: '',
@@ -12,7 +14,8 @@ const defaultUser = {
     isOutSession: false,
     login: () => undefined,
     logout: () => undefined,
-    resetOutSession: () => undefined
+    resetOutSession: () => undefined,
+    rolePermission: new RolePermission(utility.USER_ROLES.US.id)
 };
 const LOGIN_DATA_KEY = '__login';
 const UserContext = createContext(defaultUser);
@@ -94,7 +97,8 @@ export const UserProvider = ({ children }) => {
                 setIsOutSession(!!isOutSession);
                 setLoginData(undefined);
             },
-            resetOutSession: () => setIsOutSession(false)
+            resetOutSession: () => setIsOutSession(false),
+            rolePermission: new RolePermission(loginData?.user?.role || utility.USER_ROLES.US.id)
         };
     }, [loginData, isOutSession]);
 

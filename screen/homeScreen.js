@@ -11,7 +11,6 @@ import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/
 import Toast from 'react-native-root-toast';
 import AppBarLayout from '../component/appBarLayout';
 import UserContext from '../context/userContext';
-import utility from '../common/utility';
 import InfoTab from './info/InfoTab';
 
 const Tab = createBottomTabNavigator();
@@ -75,7 +74,7 @@ const HomeScreen = ({ navigation, route }) => {
         const name = getFocusedRouteNameFromRoute(route) ?? 'sites';
 
         return <>
-            {name === 'sites' && userContext.user.role === utility.USER_ROLES.SA.id && <Appbar.Action icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} color={colors.PHILIPPINE_ORANGE} onPress={() => navigation.navigate('addSite')}/>}
+            {name === 'sites' && userContext.rolePermission.addSite && <Appbar.Action icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} color={colors.PHILIPPINE_ORANGE} onPress={() => navigation.navigate('addSite')}/>}
             {name === 'users' && <Appbar.Action icon={() => <MaterialCommunityIcons name='account-plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} color={colors.PHILIPPINE_ORANGE} onPress={() => navigation.navigate('register')}/>}
             <Menu
                 visible={visibleMenu}
@@ -110,11 +109,11 @@ const HomeScreen = ({ navigation, route }) => {
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Cảnh báo lỗi</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'alert' : 'alert-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={EventsTab}/>
-            {userContext?.user && userContext.user.role === utility.USER_ROLES.SA.id && <Tab.Screen name='users' options={{
+            {userContext?.rolePermission?.mainUserManageScreen && <Tab.Screen name='users' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Quản lý</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'account-circle' : 'account-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={UsersTab}/>}
-            {userContext?.user?.role !== utility.USER_ROLES.SA.id && <Tab.Screen name='info' options={{
+            {userContext?.rolePermission?.mainInfoScreen && <Tab.Screen name='info' options={{
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Trợ giúp</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'help-circle' : 'help-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={InfoTab}/>}

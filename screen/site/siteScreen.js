@@ -9,10 +9,12 @@ import { colors } from '../../common/themes';
 import SiteContext from '../../context/siteContext';
 import AppBarLayout from '../../component/appBarLayout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import UserContext from '../../context/userContext';
 
 const Tab = createMaterialTopTabNavigator();
 
 const SiteScreen = ({ navigation, route }) => {
+    const userContext = useContext(UserContext);
     const siteContext = useContext(SiteContext);
     const siteRoute = useMemo(() => route?.params?.site, [route]);
 
@@ -26,7 +28,7 @@ const SiteScreen = ({ navigation, route }) => {
 
     const site = useMemo(() => siteContext?.site, [siteContext]);
 
-    const menu = useMemo(() => <IconButton icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('siteSetting')}/>, []);
+    const menu = useMemo(() => userContext.rolePermission.accessSiteSetting ? <IconButton icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('siteSetting')}/> : undefined, [userContext]);
 
     return <AppBarLayout menu={menu}>
         <View style={styles.container}>

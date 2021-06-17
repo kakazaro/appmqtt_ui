@@ -4,7 +4,6 @@ import ListScroll from '../../component/listScroll';
 import SiteBadge from '../../component/listBadge/siteBadge';
 import eventCenter from '../../common/eventCenter';
 import UserContext from '../../context/userContext';
-import utility from '../../common/utility';
 
 const SitesTab = () => {
     const userContext = useContext(UserContext);
@@ -15,7 +14,7 @@ const SitesTab = () => {
             showPlaceholder={true}
             path={'sites'}
             url={'/site/list'}
-            emptyMessage={userContext?.user?.role !== utility.USER_ROLES.SA.id ? 'Bạn chưa có quyền truy cập trạm điện nào' : ''}
+            emptyMessage={userContext.rolePermission.needSettingSiteAccess ? 'Bạn chưa có quyền truy cập trạm điện nào' : ''}
             listEvents={[eventCenter.eventNames.updateSiteName, eventCenter.eventNames.addNewSite, eventCenter.eventNames.deleteSite]}
             onEventDataChange={(eventName, data, setData) => {
                 if (eventName === eventCenter.eventNames.updateSiteName) {

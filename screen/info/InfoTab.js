@@ -18,7 +18,7 @@ const InfoTab = ({ navigation }) => {
                 <View style={{ marginStart: 15, marginTop: 5, marginBottom: 5 }}>
                     <Text style={styles.labelText}>Email đăng nhập: <Text style={styles.infoText}>{userContext?.user?.email}</Text></Text>
                     <Text style={styles.labelText}>Tên người dùng: <Text style={styles.infoText}>{userContext?.user?.name}</Text></Text>
-                    {roleUser && roleUser.id !== utility.USER_ROLES.US.id && <Text style={styles.labelText}>Loại tài khoản: <Text style={styles.infoText}>{roleUser.label}</Text></Text>}
+                    {userContext.rolePermission.showUserType && <Text style={styles.labelText}>Loại tài khoản: <Text style={styles.infoText}>{roleUser.label}</Text></Text>}
                 </View>
                 <Divider/>
             </View>

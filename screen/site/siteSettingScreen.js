@@ -10,8 +10,10 @@ import AppBarLayout from '../../component/appBarLayout';
 import eventCenter from '../../common/eventCenter';
 import serverError from '../../common/serverError';
 import ConfirmDialog from '../../component/confirmDialog';
+import UserContext from '../../context/userContext';
 
 const SiteSettingScreen = ({ navigation }) => {
+    const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
     const siteContext = useContext(SiteContext);
 
@@ -231,18 +233,17 @@ const SiteSettingScreen = ({ navigation }) => {
                         index: 0,
                         routes: [{ name: 'home' }],
                     });
-                    setShowDeleteSite(false);
                 } catch (e) {
                     setErrorDeleteSite(serverError.getError(e));
+                    setLoading(false);
                 }
-                setLoading(false);
             })();
         };
 
         return <ConfirmDialog
             title={'Xóa trạm'}
             content={<>
-                <Text>Bạn có muốn xóa trạm "<Text style={{ fontWeight: 'bold' }}>{site.name}</Text>" không?</Text>
+                <Text>Bạn có muốn xóa trạm "<Text style={{ fontWeight: 'bold' }}>{site?.name}</Text>" không?</Text>
                 <View style={{ marginTop: 5, marginBottom: 5 }}>
                     <Text style={styles.labelText}>
                         Chú ý: mọi dữ liệu liên quan đến trạm sẽ bị xóa hoàn toàn và không thể khôi phục được
@@ -270,14 +271,14 @@ const SiteSettingScreen = ({ navigation }) => {
                         {...setting}
                         style={{ borderTopStyle: 'solid', borderTopWidth: index ? 1 : 0, borderTopColor: colors.UNICORN_SILVER, backgroundColor: 'white' }}
                     />)}
-                    <FlatButton
+                    {userContext.rolePermission.removeSite && <FlatButton
                         title={'Xóa trạm'}
                         iconName={'trash-can-outline'}
                         onPress={() => setShowDeleteSite(true)}
                         style={{ marginTop: 10, backgroundColor: 'white' }}
                         titleStyle={{ color: colors.fault }}
                         iconColor={colors.fault}
-                    />
+                    />}
                 </View>
                 {modalEditNameDom}
                 {modalEditPriceDom}
@@ -290,7 +291,7 @@ const SiteSettingScreen = ({ navigation }) => {
                 <Text>{loadError}</Text>
             </View>;
         }
-    }, [site, siteOverview, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom, modelDeleteSiteDom]);
+    }, [site, siteOverview, userContext, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom, modelDeleteSiteDom]);
 
     return <AppBarLayout title={'Cài đặt trạm'}>
         {dom}

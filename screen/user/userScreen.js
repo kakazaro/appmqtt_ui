@@ -13,6 +13,7 @@ import ListScroll from '../../component/listScroll';
 import UserSiteBadge from '../../component/listBadge/userSiteBadge';
 import UserContext from '../../context/userContext';
 import ConfirmDialog from '../../component/confirmDialog';
+import RolePermission from '../../common/rolePermission';
 
 const UserScreen = ({ navigation, route }) => {
     const userContext = useContext(UserContext);
@@ -168,7 +169,7 @@ const UserScreen = ({ navigation, route }) => {
             return;
         }
 
-        if (user.role === utility.USER_ROLES.SA.id) {
+        if (!new RolePermission(user.role).needSettingSiteAccess) {
             return <View style={{ alignItems: 'center' }}>
                 <Text style={{ color: colors.DARK_SOULS, marginTop: 20 }}>Quản trị viên có quyền truy cập vào mọi dữ liệu</Text>
                 <Text style={{ color: colors.DARK_SOULS }}>Không cần thêm trạn điện ở đây</Text>
@@ -231,7 +232,7 @@ const UserScreen = ({ navigation, route }) => {
             <View style={{ flex: 1, marginTop: 10 }}>
                 <View style={{ marginStart: 15, marginBottom: 15, flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ fontSize: 15, color: colors.secondaryText, flex: 1 }}>Danh sách trạm được cấp quyền</Text>
-                    {user && user.role !== utility.USER_ROLES.SA.id && <Button
+                    {new RolePermission(user?.role).needSettingSiteAccess && <Button
                         labelStyle={{ textTransform: 'none', color: colors.PHILIPPINE_ORANGE }}
                         onPress={() => navigation.navigate('userAddSite', { user })}>Thêm</Button>}
                 </View>
