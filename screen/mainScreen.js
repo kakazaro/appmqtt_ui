@@ -20,6 +20,8 @@ import AddSiteScreen from './site/addSiteScreen';
 import EventScreen from './event/eventScreen';
 import * as Analytics from 'expo-firebase-analytics';
 import Constants, { AppOwnership } from 'expo-constants';
+import SelectIotScreen from './site/selectIotScreen';
+import AddDeviceScreen from './site/addDeviceScreen';
 
 const Stack = createStackNavigator();
 
@@ -57,6 +59,8 @@ const MainScreen = () => {
                 <Stack.Screen name={'site'} component={SiteScreen}/>
                 <Stack.Screen name={'siteSetting'} component={SiteSettingScreen}/>
                 <Stack.Screen name={'addSite'} component={AddSiteScreen}/>
+                <Stack.Screen name={'selectIot'} component={SelectIotScreen}/>
+                <Stack.Screen name={'addDevice'} component={AddDeviceScreen}/>
 
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
 

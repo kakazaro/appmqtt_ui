@@ -31,8 +31,9 @@ const UsersTab = () => {
                     setData(lastData => {
                         if (lastData?.length) {
                             return [data, ...lastData];
+                        } else {
+                            return [data];
                         }
-                        return lastData;
                     });
                 } else if (eventName === eventCenter.eventNames.deleteUser) {
                     setData(lastData => {

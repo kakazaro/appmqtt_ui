@@ -14,6 +14,9 @@ class EventCenter {
 
             addNewSite: 'addNewSite',
             deleteSite: 'deleteSite',
+
+            addNewDevice: 'addNewDevice',
+            deleteDevice: 'deleteDevice',
         };
     }
 

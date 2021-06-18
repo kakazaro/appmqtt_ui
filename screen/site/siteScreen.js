@@ -28,7 +28,12 @@ const SiteScreen = ({ navigation, route }) => {
 
     const site = useMemo(() => siteContext?.site, [siteContext]);
 
-    const menu = useMemo(() => userContext.rolePermission.accessSiteSetting ? <IconButton icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('siteSetting')}/> : undefined, [userContext]);
+    const menu = useMemo(() => {
+        return <>
+            {userContext.rolePermission.addDevice && <IconButton icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('selectIot', { site: siteRoute })}/>}
+            {userContext.rolePermission.accessSiteSetting && <IconButton icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('siteSetting')}/>}
+        </>;
+    }, [userContext, siteRoute]);
 
     return <AppBarLayout menu={menu}>
         <View style={styles.container}>

@@ -221,7 +221,7 @@ const SiteSettingScreen = ({ navigation }) => {
     const [showDeleteSite, setShowDeleteSite] = useState(false);
     const [errorDeleteSite, setErrorDeleteSite] = useState('');
 
-    const modelDeleteSiteDom = useMemo(() => {
+    const modalDeleteSiteDom = useMemo(() => {
         const onDelete = () => {
             setLoading(true);
             setErrorDeleteSite('');
@@ -282,7 +282,7 @@ const SiteSettingScreen = ({ navigation }) => {
                 </View>
                 {modalEditNameDom}
                 {modalEditPriceDom}
-                {modelDeleteSiteDom}
+                {modalDeleteSiteDom}
             </ScrollView>;
         } else if (loading && !loadError) {
             return <ActivityIndicator style={{ marginTop: 20 }} animating={true} color={colors.PHILIPPINE_ORANGE}/>;
@@ -291,7 +291,7 @@ const SiteSettingScreen = ({ navigation }) => {
                 <Text>{loadError}</Text>
             </View>;
         }
-    }, [site, siteOverview, userContext, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom, modelDeleteSiteDom]);
+    }, [site, siteOverview, userContext, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom, modalDeleteSiteDom]);
 
     return <AppBarLayout title={'Cài đặt trạm'}>
         {dom}

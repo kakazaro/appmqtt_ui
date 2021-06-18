@@ -7,6 +7,7 @@ import CustomInput from '../../component/customInput';
 import AppBarLayout from '../../component/appBarLayout';
 import serverError from '../../common/serverError';
 import eventCenter from '../../common/eventCenter';
+import utility from '../../common/utility';
 
 const AddSiteScreen = ({ navigation }) => {
     const descriptionRef = useRef(null);
@@ -44,7 +45,7 @@ const AddSiteScreen = ({ navigation }) => {
                     const site = {
                         id: 'new' + Math.floor(Math.random() * 10000000),
                         name: siteName,
-                        status: 'normal',
+                        status: utility.STATUS.OFFLINE.id,
                         product: 0,
                         workingHours: 0,
                         ...response.data.site

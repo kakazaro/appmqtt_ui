@@ -6,12 +6,17 @@ const SA = utility.USER_ROLES.SA.id;
 
 function RolePermission(role) {
     return {
-        mainUserManageScreen: role === SA,
         mainInfoScreen: role === AD || role === US,
+        showUserType: role === AD || role === SA,
+
         addSite: role === SA,
         accessSiteSetting: role === AD || role === SA,
         removeSite: role === SA,
-        showUserType: role === AD || role === SA,
+
+        addDevice: role === AD || role === SA,
+        removeDevice: role === SA,
+
+        mainUserManageScreen: role === SA,
         needSettingSiteAccess: role === AD || role === US,
     };
 }
