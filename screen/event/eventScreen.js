@@ -14,7 +14,7 @@ const EventScreen = ({ navigation, route }) => {
 
     const eventItem = useMemo(() => route?.params?.event, [route]);
 
-    return <AppBarLayout title={'Sự cố'}>
+    return <AppBarLayout title={'Sự kiện'}>
         <View style={styles.container}>
             <ScrollView style={{ width: '100%' }}>
                 <View style={{ backgroundColor: 'white', width: '100%' }}>

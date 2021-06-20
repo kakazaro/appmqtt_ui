@@ -7,7 +7,7 @@ import eventCenter from '../common/eventCenter';
 import serverError from '../common/serverError';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEventDataChange, emptyMessage, onRefreshCallback }) => {
+const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEventDataChange, header, emptyMessage, onRefreshCallback }) => {
     const serverContext = useContext(ServerContext);
     const [loading, setLoading] = useState(false);
 
@@ -133,6 +133,7 @@ const ListScroll = ({ renderItem, url, path, showPlaceholder, listEvents, onEven
         onRefresh={onReload}
         onEndReached={onLoadMore}
         refreshing={loading}
+        ListHeaderComponent={header}
         ListFooterComponent={footer}
         ListEmptyComponent={<>
             {!loading && data && <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 100 }}>

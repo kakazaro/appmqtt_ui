@@ -60,7 +60,7 @@ const SelectIotScreen = ({ navigation, route }) => {
         />;
     }, [site, addIot, loading, serverContext]);
 
-    return <AppBarLayout title={'Thêm thiết bị'}>
+    return <AppBarLayout title={'Thêm Inverter'}>
         <View style={{ flex: 0, paddingStart: 15, backgroundColor: 'white', paddingBottom: 10 }}>
             <Text style={{ fontSize: 20, color: colors.primaryText }}>Bước 1: Chọn thiết bị IOT cho trạm</Text>
         </View>

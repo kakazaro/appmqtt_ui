@@ -6,7 +6,7 @@ import SitesTab from './site/sitesTab';
 import EventsTab from './event/eventsTab';
 import UsersTab from './user/usersTab';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Divider, IconButton, Menu, Text, Appbar } from 'react-native-paper';
+import { Divider, IconButton, Menu, Text } from 'react-native-paper';
 import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-root-toast';
 import AppBarLayout from '../component/appBarLayout';
@@ -19,13 +19,14 @@ const HomeScreen = ({ navigation, route }) => {
     const userContext = useContext(UserContext);
     const [requestBack, setRequestBack] = useState(false);
     const [visibleMenu, setVisibleMenu] = useState(false);
+    const [visibleAddMenu, setVisibleAddMenu] = useState(false);
 
     const appBarOptions = useMemo(() => {
         const name = getFocusedRouteNameFromRoute(route) ?? 'sites';
         const options = {};
         switch (name) {
             case 'alarms':
-                options.title = 'Cảnh Báo';
+                options.title = 'Sự kiện';
                 break;
             case 'users':
                 options.title = 'Quản Lý Người Dùng';
@@ -74,11 +75,25 @@ const HomeScreen = ({ navigation, route }) => {
         const name = getFocusedRouteNameFromRoute(route) ?? 'sites';
 
         return <>
-            {name === 'sites' && userContext.rolePermission.addSite && <Appbar.Action icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} color={colors.PHILIPPINE_ORANGE} onPress={() => navigation.navigate('addSite')}/>}
-            {name === 'users' && <Appbar.Action icon={() => <MaterialCommunityIcons name='account-plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} color={colors.PHILIPPINE_ORANGE} onPress={() => navigation.navigate('register')}/>}
+            {((name === 'sites' && userContext.rolePermission.addSite) || name === 'users') && <Menu
+                visible={visibleAddMenu}
+                onDismiss={() => setVisibleAddMenu(false)}
+                style={{ marginTop: 40 }}
+                anchor={<IconButton icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleAddMenu(!visibleAddMenu)}/>}
+            >
+                {name === 'sites' && <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='plus-network' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                    setVisibleAddMenu(false);
+                    navigation.navigate('addSite');
+                }} title='Thêm trạm điện'/>}
+                {name === 'users' && <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='account-plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                    setVisibleAddMenu(false);
+                    navigation.navigate('register');
+                }} title='Thêm người dùng'/>}
+            </Menu>}
             <Menu
                 visible={visibleMenu}
                 onDismiss={() => setVisibleMenu(false)}
+                style={{ marginTop: 40 }}
                 anchor={<IconButton icon={() => <MaterialCommunityIcons name='dots-vertical' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleMenu(!visibleMenu)}/>}
             >
                 <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
@@ -97,7 +112,7 @@ const HomeScreen = ({ navigation, route }) => {
                 }} title='Đăng xuất'/>
             </Menu>
         </>;
-    }, [visibleMenu, navigation, userContext, route]);
+    }, [visibleMenu, visibleAddMenu, navigation, userContext, route]);
 
     return <AppBarLayout {...appBarOptions} menu={menu}>
         <Tab.Navigator backBehavior='none' tabBarOptions={{ adaptive: false }}>
@@ -106,7 +121,7 @@ const HomeScreen = ({ navigation, route }) => {
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={SitesTab}/>
             <Tab.Screen name='alarms' options={{
-                tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Cảnh báo lỗi</Text>,
+                tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Sự kiện</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'alert' : 'alert-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={EventsTab}/>
             {userContext?.rolePermission?.mainUserManageScreen && <Tab.Screen name='users' options={{

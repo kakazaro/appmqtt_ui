@@ -25,27 +25,27 @@ const RowInfo = ({ info }) => {
         </View>
         {info.sub && <>
             <Divider/>
-            <View style={{ flexDirection: 'row', marginTop: 8 }}>
+            {(Array.isArray(info.sub) ? info.sub : [info.sub]).filter((sub) => !!sub).map((sub, index) => <View key={index} style={{ flexDirection: 'row', marginTop: 8 }}>
                 <View>
                     <Text style={{ fontSize: 13, color: colors.secondaryText }}>
-                        {info.sub.text}
+                        {sub.text}
                     </Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                    {info.sub.value === undefined ?
+                    {sub.value === undefined ?
                         <Placeholder Animation={ShineOverlay}>
                             <PlaceholderLine width={20} height={15} noMargin={true} style={{ marginStart: '80%' }}/>
                         </Placeholder>
                         :
                         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
-                            {(typeof info.sub.value === 'string' || typeof info.sub.value === 'number') && <Text style={{ color: colors.secondaryText }}>{info.sub.value}</Text>}
-                            {typeof info.sub.value === 'object' && info.sub.value}
+                            {(typeof sub.value === 'string' || typeof sub.value === 'number') && <Text style={{ color: colors.secondaryText }}>{sub.value}</Text>}
+                            {typeof sub.value === 'object' && sub.value}
 
-                            {(typeof info.sub.unit === 'string' || typeof info.sub.unit === 'number') && <Text style={{ color: colors.secondaryText, paddingStart: 3 }}>{info.sub.unit}</Text>}
-                            {typeof info.sub.unit === 'object' && info.sub.unit}
+                            {(typeof sub.unit === 'string' || typeof sub.unit === 'number') && <Text style={{ color: colors.secondaryText, paddingStart: 3 }}>{sub.unit}</Text>}
+                            {typeof sub.unit === 'object' && sub.unit}
                         </View>}
                 </View>
-            </View>
+            </View>)}
         </>}
     </View>;
 };

@@ -1,9 +1,9 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AppBarLayout from '../../component/appBarLayout';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../common/themes';
 import CustomInput from '../../component/customInput';
-import { Button, HelperText } from 'react-native-paper';
+import { Button, Dialog, HelperText, Portal } from 'react-native-paper';
 import isIp from 'is-ip';
 import { portValidator } from 'port-validator';
 import eventCenter from '../../common/eventCenter';
@@ -27,7 +27,7 @@ const AddDeviceScreen = ({ navigation, route }) => {
     const [ip, setIp] = useState('');
     const [port, setPort] = useState('');
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     const deviceNameError = useMemo(() => deviceName && (deviceName.length < 4 || deviceName.length > 54) ? 'Tên thiết bị không hợp lệ (4-54 ký tự)' : '', [deviceName]);
@@ -35,7 +35,49 @@ const AddDeviceScreen = ({ navigation, route }) => {
     const ipError = useMemo(() => ip && !isIp.v4(ip) ? 'IP không hợp lệ' : '', [ip]);
     const portError = useMemo(() => port && (!portValidator(port).validate() || !isFinite(parseInt(port)) || isNaN(parseInt(port)) || parseInt(port) < 0) ? 'Port không hợp lệ' : '', [port]);
 
-    const canRegister = useMemo(() => deviceName && !deviceNameError && nameplateWatts && !nameplateWattsError && ip && !ipError && port && !portError, [deviceName, deviceNameError, nameplateWatts, nameplateWattsError, ip, ipError, port, portError]);
+    const [deviceType, setDeviceType] = useState(undefined);
+    const [deviceTypes, setDeviceTypes] = useState([]);
+    const [showSelectDeviceType, setShowSelectDeviceType] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+        (async () => {
+            try {
+                const response = await serverContext.get('/device_type');
+                if (response.data?.device_types?.length) {
+                    setDeviceTypes(response.data.device_types);
+                    setLoading(false);
+                }
+            } catch (e) {
+
+            }
+        })();
+    }, [serverContext]);
+
+    const selectDeviceTypeDom = useMemo(() => {
+        return <Portal>
+            <Dialog visible={showSelectDeviceType} onDismiss={() => setShowSelectDeviceType(false)}>
+                <Dialog.Title>Chọn loại Inverter</Dialog.Title>
+                <Dialog.ScrollArea>
+                    <ScrollView>
+                        {deviceTypes.map((type) => <TouchableOpacity key={type.id} onPress={() => {
+                            setDeviceType(type);
+                            setShowSelectDeviceType(false);
+                        }}>
+                            <View style={{ margin: 5, paddingVertical: 10, paddingHorizontal: 5, backgroundColor: colors.bg1, borderRadius: 5 }}>
+                                <Text style={{ fontSize: 18, color: colors.PHILIPPINE_ORANGE }}>{type.name}</Text>
+                            </View>
+                        </TouchableOpacity>)}
+                    </ScrollView>
+                </Dialog.ScrollArea>
+                <Dialog.Actions>
+                    <Button labelStyle={{ color: colors.PHILIPPINE_ORANGE }} onPress={() => setShowSelectDeviceType(false)}>Đóng</Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>;
+    }, [showSelectDeviceType, deviceTypes]);
+
+    const canRegister = useMemo(() => deviceName && deviceType && !deviceNameError && nameplateWatts && !nameplateWattsError && ip && !ipError && port && !portError, [deviceName, deviceType, deviceNameError, nameplateWatts, nameplateWattsError, ip, ipError, port, portError]);
 
     const onRegisterClick = () => {
         if (loading || !canRegister) {
@@ -52,6 +94,7 @@ const AddDeviceScreen = ({ navigation, route }) => {
                     describe: deviceDescription,
                     station: site.id,
                     iot_device: iot.id,
+                    device_type: deviceType.id,
                     nameplateWatts: parseFloat(nameplateWatts) * 1000,
                     IP: ip,
                     port: parseInt(port)
@@ -75,9 +118,9 @@ const AddDeviceScreen = ({ navigation, route }) => {
         })();
     };
 
-    return <AppBarLayout title={'Thêm thiết bị'}>
+    return <AppBarLayout title={'Thêm Inverter'}>
         <View style={{ flex: 0, paddingStart: 15, backgroundColor: 'white', paddingBottom: 10 }}>
-            <Text style={{ fontSize: 20, color: colors.primaryText }}>Bước 2: Nhập thông tin thiết bị</Text>
+            <Text style={{ fontSize: 20, color: colors.primaryText }}>Bước 2: Nhập thông tin Inverter</Text>
         </View>
         <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center' }}>
             <View style={{ width: '90%' }}>
@@ -88,10 +131,22 @@ const AddDeviceScreen = ({ navigation, route }) => {
                     disabled={true}
                 />
 
+                <Button
+                    mode='text'
+                    icon={deviceType ? '' : 'chevron-down'}
+                    labelStyle={{ color: colors.secondaryText, textTransform: 'none' }}
+                    style={{ width: '100%', marginTop: 15, borderColor: colors.secondaryText, borderWidth: 2 }}
+                    disabled={loading}
+                    onPress={() => setShowSelectDeviceType(true)}
+                    loading={loading}
+                >
+                    {deviceType ? deviceType.name : 'Chọn loại Inverter*'}
+                </Button>
+
                 <CustomInput
                     style={styles.textInput}
                     value={deviceName}
-                    label={'Tên thiết bị*'}
+                    label={'Tên Inverter*'}
                     onChangeText={text => setDeviceName(text)}
                     textContentType={'name'}
                     disabled={loading}
@@ -164,7 +219,7 @@ const AddDeviceScreen = ({ navigation, route }) => {
                     onPress={onRegisterClick}
                     loading={loading}
                 >
-                    Tạo thiết bị
+                    Tạo Inverter
                 </Button>
                 <Button
                     color={colors.PHILIPPINE_ORANGE}
@@ -177,6 +232,7 @@ const AddDeviceScreen = ({ navigation, route }) => {
                 </Button>
             </View>
         </ScrollView>
+        {selectDeviceTypeDom}
     </AppBarLayout>;
 };
 

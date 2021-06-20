@@ -8,7 +8,7 @@ import serverError, { errors } from '../common/serverError';
 
 const REACT_APP_BASE_URL = constant.REACT_APP_BASE_URL;
 
-function DataControl(axios) {
+function DataControl(axios, logout) {
     const start = {};
 
     const loopGetSiteData = (url, handler, handlerError, query, uid, duration = 5000) => {
@@ -29,7 +29,9 @@ function DataControl(axios) {
                     }
                 } catch (err) {
                     // console.log(err);
-                    if (handlerError) {
+                    if (err?.response?.data?.code === errors.E40019.code && logout) {
+                        logout(true);
+                    } else if (handlerError) {
                         handlerError(serverError.getError(err));
                     }
                 }
@@ -95,7 +97,7 @@ export const ServerProvider = ({ children }) => {
             },
             post: (url, data, config) => axios.post(url, data, config),
             delete: (url, config) => axios.delete(url, config),
-            dataControl: new DataControl(axios)
+            dataControl: new DataControl(axios, userContext.logout)
         };
     }, [userContext]);
 

@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Headline, IconButton } from 'react-native-paper';
+import { Headline, IconButton, Menu } from 'react-native-paper';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SiteOverviewTab from './siteTabs/siteOverviewTab';
 import SiteDevicesTab from './siteTabs/siteDevicesTab';
@@ -28,12 +28,25 @@ const SiteScreen = ({ navigation, route }) => {
 
     const site = useMemo(() => siteContext?.site, [siteContext]);
 
+    const [visibleAddMenu, setVisibleAddMenu] = useState(false);
+
     const menu = useMemo(() => {
         return <>
-            {userContext.rolePermission.addDevice && <IconButton icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('selectIot', { site: siteRoute })}/>}
+            {userContext.rolePermission.addDevice && <Menu
+                visible={visibleAddMenu}
+                onDismiss={() => setVisibleAddMenu(false)}
+                style={{ marginTop: 40 }}
+                anchor={<IconButton icon={() => <MaterialCommunityIcons name='plus' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => setVisibleAddMenu(!visibleAddMenu)}/>}
+            >
+                <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='plus-network' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
+                    setVisibleAddMenu(false);
+                    navigation.navigate('selectIot', { site: siteRoute });
+                }} title='Thêm Inverter'/>
+            </Menu>}
+
             {userContext.rolePermission.accessSiteSetting && <IconButton icon={() => <MaterialCommunityIcons name='cog-outline' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => navigation.navigate('siteSetting')}/>}
         </>;
-    }, [userContext, siteRoute]);
+    }, [userContext, visibleAddMenu, siteRoute]);
 
     return <AppBarLayout menu={menu}>
         <View style={styles.container}>
