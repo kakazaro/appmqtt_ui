@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Appbar, Menu, Divider, IconButton } from 'react-native-paper';
+import { Image, StyleSheet, View } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import { colors } from '../common/themes';
 import { useFonts } from 'expo-font';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -26,11 +26,21 @@ const AppBarLayout = ({ title, subtitle, children, menu, brand }) => {
         return {};
     }, [fontsLoaded, brand]);
 
+    const appBarContent = useMemo(() => {
+        if (!brand) {
+            return <Appbar.Content titleStyle={[styles.title, { color: colors.primaryText }, fontTitle]} title={title || ''} subtitle={subtitle || ''}/>;
+        }
+
+        return <View style={{ flex: 1, paddingStart: 10 }}>
+            <Image style={{ width: 90, height: 40, resizeMode: 'contain' }} source={require('../assets/Logo_NTV_home.png')}/>
+        </View>;
+    }, [brand, fontTitle, title, subtitle]);
+
     return <View style={{ flex: 1 }}>
         <View>
             <Appbar.Header style={styles.bar}>
                 {isCanBack && <Appbar.BackAction onPress={() => navigation.goBack()}/>}
-                <Appbar.Content titleStyle={[styles.title, { color: brand ? colors.PHILIPPINE_ORANGE : colors.primaryText }, fontTitle]} title={title || ''} subtitle={subtitle || ''}/>
+                {appBarContent}
                 {menu}
             </Appbar.Header>
         </View>
