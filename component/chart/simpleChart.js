@@ -185,7 +185,6 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
             let space = duration / series.length;
 
             for (let i = 0; i < series.length; i++) {
-                // dataLabels.push(start.toDate().getTime());
                 tableLabels.push(start.format(timeType.timeFormatTable));
                 times.push(start.toDate().getTime());
                 start = start.add(space, 'ms');
@@ -204,18 +203,7 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
         const date = timeType ? moment(time).format(timeType.format) : '';
 
         const { div, unit } = findUnitDiv(dataSeries);
-        dataSeries = dataSeries.map(s => (s || 0) / div).map(s => Math.floor(s * 100) / 100);
-
-        // Remove data in future
-        for (let i = dataSeries.length - 1; i >= 0; i--) {
-            const t = times[i];
-            const d = dataSeries[i];
-            if (!t || t <= (Date.now() - 5 * 60 * 1000) || (typeof d === 'number' && d !== 0)) {
-                break;
-            }
-
-            dataSeries[i] = undefined;
-        }
+        dataSeries = dataSeries.map(s => s ? Math.floor(s * 100 / div) / 100 : s);
 
         return { dataSeries, Component, times, tableLabels, legend, unit, div, timeType, date };
     }, [data]);
