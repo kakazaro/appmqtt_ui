@@ -24,11 +24,24 @@ const timeTypes = [
         space: 'h',
         timeFormatChart: 'H',
         timeFormatTable: 'HH[:]mm',
-        type: 'power',
-        chartType: 'line',
-        legend: 'Công xuất',
         stroke: { width: 2 },
-        findUnitDiv: (series) => utility.findUnit(series, 'W', 1)
+        findUnitDiv: (series) => utility.findUnit(series, 'W', 1),
+        chartType: 'line',
+        type: 'power',
+        sources: {
+            device: [
+                {
+                    path: 'trend',
+                    legend: 'Công xuất',
+                }
+            ],
+            site: [
+                {
+                    path: 'trend',
+                    legend: 'Công xuất',
+                }
+            ]
+        }
     },
     {
         id: 'month',
@@ -40,11 +53,28 @@ const timeTypes = [
         space: 'd',
         timeFormatChart: 'D',
         timeFormatTable: 'D[/]MM',
-        type: 'energy',
-        chartType: 'bar',
-        legend: 'Sản lương',
         stroke: { width: 0 },
-        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1)
+        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1),
+        chartType: 'bar',
+        type: 'energy',
+        sources: {
+            device: [
+                {
+                    path: 'trend',
+                    legend: 'Sản lương',
+                }
+            ],
+            site: [
+                {
+                    path: 'trend',
+                    legend: 'Sản lương',
+                },
+                {
+                    path: 'load/trend',
+                    legend: 'Tiêu thụ',
+                }
+            ]
+        }
     },
     {
         id: 'year',
@@ -58,13 +88,35 @@ const timeTypes = [
         timeFormatTable: 'MM[/]YYYY',
         type: 'energy',
         chartType: 'bar',
-        legend: 'Sản lương',
         stroke: { width: 0 },
-        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1)
+        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1),
+        sources: {
+            device: [
+                {
+                    path: 'trend',
+                    legend: 'Sản lương',
+                }
+            ],
+            site: [
+                {
+                    path: 'trend',
+                    legend: 'Sản lương',
+                },
+                {
+                    path: 'load/trend',
+                    legend: 'Tiêu thụ',
+                }
+            ]
+        }
     },
 ];
 
-const SimpleChar = ({ url, showTable, hideExpand }) => {
+export const ENUM_SOURCE = {
+    device: 'device',
+    site: 'site'
+};
+
+const SimpleChar = ({ source, id, showTable, hideExpand }) => {
     const serverContext = useContext(ServerContext);
 
     const [timeType, setTimeType] = useState(timeTypes[0]);
@@ -75,22 +127,31 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const [processedData, setProcessedData] = useState();
+
     useEffect(() => {
         let discard = false;
         setLoading(true);
         setError('');
+        setData(undefined);
 
         (async () => {
             const type = { ...timeType };
             const getTime = moment(time);
             try {
-                const response = await serverContext.get(url + (url.includes('?') ? '&' : '?') + `date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`);
-                if (!discard) {
-                    setData({
+                let data = [];
+                for (let i = 0; i < type.sources[source].length; i++) {
+                    const { path, legend } = timeType.sources[source][i];
+                    const url = `/${source}/${path}?id=${id}&date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`;
+                    const response = await serverContext.get(url);
+                    data.push({
                         ...response.data,
-                        timeType: type,
-                        time: getTime.toDate()
+                        legend
                     });
+                }
+
+                if (!discard) {
+                    setData(data);
                 } else {
                     return;
                 }
@@ -104,7 +165,7 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
         return () => {
             discard = true;
         };
-    }, [url, time, timeType, serverContext]);
+    }, [time, timeType, serverContext, source, id]);
 
     const dateTypeDom = useMemo(() => {
         return <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', marginTop: 5, marginBottom: 5 }}>
@@ -172,56 +233,59 @@ const SimpleChar = ({ url, showTable, hideExpand }) => {
         </>;
     }, [timeType, time, showPicker, dateTimeButtonDom]);
 
-    const processedData = useMemo(() => {
-        let dataSeries = [0, 0], times = [0, 1], tableLabels = ['', ''];
-        let { series, timeType, time } = (data || {});
-        if (series?.length) {
-            times = [];
-            tableLabels = [];
-            let start = moment(time).startOf(timeType.start);
-            let end = moment(time).startOf(timeType.start).add(1, timeType.start);
-
-            let duration = end.toDate().getTime() - start.toDate().getTime();
-            let space = duration / series.length;
-
-            for (let i = 0; i < series.length; i++) {
-                tableLabels.push(start.format(timeType.timeFormatTable));
-                times.push(start.toDate().getTime());
-                start = start.add(space, 'ms');
-
-                if (timeType.id === 'year') {
-                    start = start.add(1, 'd');
-                }
-            }
-
-            dataSeries = series;
+    useEffect(() => {
+        if (!data?.length) {
+            return;
         }
 
-        const Component = timeType ? timeType.chartType : timeTypes[0].chartType;
-        const legend = timeType?.legend || timeTypes[0].legend;
-        const findUnitDiv = timeType?.findUnitDiv || timeTypes[0].findUnitDiv;
-        const date = timeType ? moment(time).format(timeType.format) : '';
+        let dataSeries, divNumber, times, names, tableLabels;
 
-        const { div, unit } = findUnitDiv(dataSeries);
-        dataSeries = dataSeries.map(s => s ? Math.floor(s * 100 / div) / 100 : s);
+        let { series } = data[0];
 
-        return { dataSeries, Component, times, tableLabels, legend, unit, div, timeType, date };
-    }, [data]);
+        times = [];
+        tableLabels = [];
+        let start = moment(time).startOf(timeType.start);
+        let end = moment(time).startOf(timeType.start).add(1, timeType.start);
+
+        let duration = end.toDate().getTime() - start.toDate().getTime();
+        let space = duration / series.length;
+
+        for (let i = 0; i < series.length; i++) {
+            tableLabels.push(start.format(timeType.timeFormatTable));
+            times.push(start.toDate().getTime());
+            start = start.add(space, 'ms');
+
+            if (timeType.id === 'year') {
+                start = start.add(1, 'd');
+            }
+        }
+
+        dataSeries = [];
+        divNumber = [];
+        names = [];
+
+        data.forEach((d) => {
+            const { div, unit } = timeType.findUnitDiv(d.series);
+            dataSeries.push(d.series.map(s => s ? Math.floor(s * 100 / div) / 100 : s));
+            divNumber.push({ div, unit });
+            names.push(d.legend);
+        });
+
+        const date = moment(time).format(timeType.format);
+
+        setProcessedData({ dataSeries, names, times, tableLabels, divNumber, timeType: { ...timeType, findUnitDiv: '' }, date });
+    }, [data, timeType, time]);
 
     const tableDom = useMemo(() => {
-        if (!showTable || loading) {
-            return;
+        if (!showTable || loading || processedData) {
+            return <></>;
         }
 
         return <TableChart data={processedData}/>;
     }, [processedData, showTable, loading]);
 
     const webChartDom = useMemo(() => {
-        const { legend, unit, div } = processedData;
-
-        const data = { ...processedData, name: legend, divNumber: { unit, div } };
-
-        return <WebChart data={data} error={error} loading={loading} hideExpand={hideExpand}/>;
+        return <WebChart data={processedData} error={error} loading={loading} hideExpand={hideExpand}/>;
     }, [processedData, error, loading, hideExpand]);
 
     return <View style={{ width: '100%', backgroundColor: 'white', marginTop: 5 }}>

@@ -10,13 +10,13 @@ const TableChart = ({ data }) => {
 
     return useMemo(() => {
         if (!data) {
-            return;
+            return <></>;
         }
 
-        const { dataSeries, tableLabels, legend, unit } = data;
+        const { dataSeries, tableLabels, names, divNumber } = data;
 
-        if (dataSeries.length !== tableLabels.length) {
-            return;
+        if (!dataSeries?.length || dataSeries.every((series) => series.length !== tableLabels?.length)) {
+            return <></>;
         }
 
         const pageLimit = 35;
@@ -24,21 +24,21 @@ const TableChart = ({ data }) => {
         const from = page * pageLimit;
         const to = (page + 1) * pageLimit;
 
-        const slidedSeries = dataSeries.slice(pageLimit * page, pageLimit * (page + 1));
+        const slidedSeries = dataSeries.map((series) => series.slice(pageLimit * page, pageLimit * (page + 1)));
         const slidedSLabel = tableLabels.slice(pageLimit * page, pageLimit * (page + 1));
 
         return <DataTable>
             <DataTable.Header style={{ flex: 0, paddingVertical: 5, height: 35 }}>
                 <DataTable.Title style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>Thời gian</Text></DataTable.Title>
-                <DataTable.Title style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{legend + ` (${unit})`}</Text></DataTable.Title>
+                {names.map((name, index) => <DataTable.Title key={name} style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{name + ` (${divNumber[index].unit})`}</Text></DataTable.Title>)}
             </DataTable.Header>
-            {slidedSeries.map((value, index) => <DataTable.Row key={index}>
+            {slidedSLabel.map((label, index) => <DataTable.Row key={index}>
                 <DataTable.Cell>
-                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{slidedSLabel[index]}</Text>
+                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{label}</Text>
                 </DataTable.Cell>
-                <DataTable.Cell>
-                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{typeof slidedSeries[index] === 'undefined' ? '--' : slidedSeries[index]}</Text>
-                </DataTable.Cell>
+                {slidedSeries.map((series, seriesIndex) => <DataTable.Cell key={seriesIndex}>
+                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>{typeof series[index] === 'undefined' ? '--' : series[index]}</Text>
+                </DataTable.Cell>)}
             </DataTable.Row>)}
             {dataSeries.length > pageLimit && <DataTable.Pagination
                 page={page}

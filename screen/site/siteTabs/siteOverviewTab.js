@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { HelperText } from 'react-native-paper';
 import utility from '../../../common/utility';
 import ServerContext from '../../../context/serverContext';
-import SimpleChar from '../../../component/chart/simpleChart';
+import SimpleChar, { ENUM_SOURCE } from '../../../component/chart/simpleChart';
 import SiteContext from '../../../context/siteContext';
 import { useFocusEffect } from '@react-navigation/native';
 import eventCenter from '../../../common/eventCenter';
@@ -85,6 +85,19 @@ const SiteOverviewTab = () => {
         </>;
     }, [overviewData]);
 
+    const consumeDom = useMemo(() => {
+        const data = overviewData?.site;
+
+        return <>
+            <RowInfo info={{
+                main: {
+                    text: 'Điện năng tiêu thụ',
+                    ...(data ? utility.makeupProduct(data.comsumeEnergy || data.consumeEnergy) : undefined)
+                }
+            }}/>
+        </>;
+    }, [overviewData]);
+
     const incomeDom = useMemo(() => {
         const data = overviewData?.site;
         let price = data?.price;
@@ -123,7 +136,7 @@ const SiteOverviewTab = () => {
         }}/>;
     }, [overviewData]);
 
-    const chartDom = useMemo(() => siteId ? <SimpleChar url={'/site/trend?id=' + encodeURIComponent(siteId)}/> : <></>, [siteId]);
+    const chartDom = useMemo(() => siteId ? <SimpleChar source={ENUM_SOURCE.site} id={siteId}/> : <></>, [siteId]);
 
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>
@@ -131,6 +144,7 @@ const SiteOverviewTab = () => {
             {!!overviewDataError && <HelperText style={{ marginStart: 5 }} type={'error'} visible={true}>Lỗi: {overviewDataError}</HelperText>}
             {infoDom}
             {incomeDom}
+            {consumeDom}
             {chartDom}
         </ScrollView>
     </View>;

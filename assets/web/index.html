@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="../favicon.png"/>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+
+</head>
+<body style='margin: 0; height: 100%; overflow: hidden'>
+<div class='container'>
+    <div id='chart' class='chartDoc' style='margin: 0; height: 100%; overflow: hidden'></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script>
+    function getOptions({ dataSeries, times, names, divNumber, timeType }) {
+        const colors = ['#ff7300', '#536DFE', '#7B1FA2', '#00796B'];
+        const defaultYaxis = {
+            show: true,
+            tickAmount: 1,
+            labels: {
+                show: true,
+                style: {
+                    fontSize: '11px',
+                },
+                formatter: (value) => value,
+            },
+        };
+
+        window.ReactNativeWebView.postMessage(JSON.stringify(names));
+
+        return {
+            series: names ? names.map((name, index) => ({
+                name: (name && divNumber[index]) ? `${name} (${divNumber[index].unit})` : '',
+                data: dataSeries[index] || []
+            })) : [],
+            chart: {
+                type: (timeType && timeType.chartType) || 'line',
+                toolbar: {
+                    show: false,
+                    offsetY: 10,
+                    offsetX: -10,
+                    tools: {
+                        download: false,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false,
+                        customIcons: [{
+                            icon: '<i class="fas fa-expand-alt"/>',
+                            index: 0,
+                            title: 'tooltip of the icon',
+                            class: 'custom-icon'
+                        }]
+                    }
+                },
+                selection: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            colors: colors,
+            fill: {
+                type: 'solid',
+                colors: colors
+            },
+            stroke: {
+                show: true,
+                ...((timeType && timeType.stroke) || { width: 0 })
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    borderRadius: 3,
+                    columnWidth: '70%',
+                    distributed: false,
+                    rangeBarOverlap: true,
+                    rangeBarGroupRows: false,
+                }
+            },
+            grid: {
+                show: true,
+                position: 'back',
+                borderColor: 'rgba(154,154,154,0.28)',
+                xaxis: {
+                    lines: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    lines: {
+                        show: true
+                    }
+                },
+            },
+            xaxis: {
+                show: true,
+                // type: 'number',
+                categories: times,
+                tickAmount: 4,
+                axisTicks: {
+                    show: false,
+                },
+                axisBorder: {
+                    show: false,
+                },
+                labels: {
+                    show: true,
+                    rotate: 0,
+                    style: {
+                        colors: 'rgba(154,154,154,0.57)',
+                        fontSize: '11px',
+                    },
+                    // rotate: 0,
+                    formatter: (value) => {
+                        return moment(new Date(value)).format((timeType && timeType.timeFormatChart) ? timeType.timeFormatChart : 'D/M');
+                    },
+                },
+            },
+            yaxis: dataSeries ? dataSeries.map((series, index) => ({
+                ...defaultYaxis,
+                opposite: index > 0,
+                labels: {
+                    ...defaultYaxis.labels,
+                    style: {
+                        ...defaultYaxis.labels.style,
+                        colors: colors[index]
+                    }
+                }
+            })) : defaultYaxis,
+            tooltip: {
+                enabled: true,
+                x: {
+                    show: false,
+                    formatter: (index) => {
+                        return timeType ? moment(times[index - 1]).format(timeType.timeFormatTable) : '';
+                    },
+                },
+                y: {
+                    formatter: (value, { seriesIndex }) => {
+                        if (typeof value !== 'number') {
+                            return '-';
+                        }
+                        return value + ' ' + (divNumber[seriesIndex] && divNumber[seriesIndex].unit);
+                    },
+                    title: {
+                        formatter: () => '',
+                    },
+                },
+            },
+            legend: {
+                show: true,
+                showForSingleSeries: true,
+                position: 'top',
+                horizontalAlign: 'left',
+                fontSize: '12px',
+                offsetX: 0,
+                markers: {
+                    width: 7,
+                    height: 7
+                },
+                onItemClick: {
+                    toggleDataSeries: false
+                },
+                onItemHover: {
+                    highlightDataSeries: false
+                }
+            }
+        };
+    }
+
+    window.loadChart = (data) => {
+        if (window.chart) {
+            window.chart.updateOptions(getOptions(data));
+        }
+    };
+
+    function onLoad() {
+        const chart = new ApexCharts(document.querySelector('#chart'), getOptions({}));
+        window.chart = chart;
+        chart.render();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        onLoad();
+    });
+</script>
+</body>
+</html>

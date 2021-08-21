@@ -1,12 +1,12 @@
 import React, { useContext, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import SimpleChar from '../../../component/chart/simpleChart';
+import SimpleChar, { ENUM_SOURCE } from '../../../component/chart/simpleChart';
 import SiteContext from '../../../context/siteContext';
 
 const DeviceChartTab = () => {
     const siteContext = useContext(SiteContext);
 
-    const chartDom = useMemo(() => siteContext?.device?.id ? <SimpleChar url={'/device/trend?id=' + encodeURIComponent(siteContext.device.id)} showTable={false} hideExpand={false}/> : <></>, [siteContext]);
+    const chartDom = useMemo(() => siteContext?.device?.id ? <SimpleChar source={ENUM_SOURCE.device} id={siteContext.device.id} showTable={false} hideExpand={false}/> : <></>, [siteContext]);
 
     return <View style={styles.container}>
         <ScrollView style={{ width: '100%' }}>

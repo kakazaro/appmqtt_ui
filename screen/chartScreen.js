@@ -22,7 +22,7 @@ const ChartScreen = ({ route }) => {
         </View>;
     }, [chartData]);
 
-    const title = useMemo(() => chartData?.data ? `${chartData.data.name} (${chartData.data.date})` : '', [chartData]);
+    const title = useMemo(() => chartData?.data ? chartData.data.date : '', [chartData]);
 
     return <AppBarLayout title={title}>
         {dom}

@@ -40,6 +40,9 @@ const WebChart = ({ data, error, loading, hideExpand }) => {
                     source={{ html: HTML }}
                     androidHardwareAccelerationDisabled={true}
                     onLoad={() => setLoaded(true)}
+                    onMessage={(event) => {
+                        // console.log(event);
+                    }}
                 />
                 {data && !hideExpand && <TouchableRipple
                     style={{ position: 'absolute', top: 0, right: 10, borderRadius: 4, padding: 6, backgroundColor: colors.UNICORN_SILVER }}
@@ -67,15 +70,27 @@ const HTML = '<!DOCTYPE html>\n' +
     '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>\n' +
     '<script src="https://momentjs.com/downloads/moment.js"></script>\n' +
     '<script>\n' +
-    '\n' +
-    '    function getOptions({ dataSeries, times, name, divNumber, timeType }) {\n' +
-    '        return {\n' +
-    '            series: [\n' +
-    '                {\n' +
-    '                    name: (name && divNumber) ? `${name} (${divNumber.unit})` : \'\',\n' +
-    '                    data: dataSeries || []\n' +
+    '    function getOptions({ dataSeries, times, names, divNumber, timeType }) {\n' +
+    '        const colors = [\'#ff7300\', \'#536DFE\', \'#7B1FA2\', \'#00796B\'];\n' +
+    '        const defaultYaxis = {\n' +
+    '            show: true,\n' +
+    '            tickAmount: 1,\n' +
+    '            labels: {\n' +
+    '                show: true,\n' +
+    '                style: {\n' +
+    '                    fontSize: \'11px\',\n' +
     '                },\n' +
-    '            ],\n' +
+    '                formatter: (value) => value,\n' +
+    '            },\n' +
+    '        };\n' +
+    '\n' +
+    '        window.ReactNativeWebView.postMessage(JSON.stringify(names));\n' +
+    '\n' +
+    '        return {\n' +
+    '            series: names ? names.map((name, index) => ({\n' +
+    '                name: (name && divNumber[index]) ? `${name} (${divNumber[index].unit})` : \'\',\n' +
+    '                data: dataSeries[index] || []\n' +
+    '            })) : [],\n' +
     '            chart: {\n' +
     '                type: (timeType && timeType.chartType) || \'line\',\n' +
     '                toolbar: {\n' +
@@ -105,10 +120,10 @@ const HTML = '<!DOCTYPE html>\n' +
     '            dataLabels: {\n' +
     '                enabled: false\n' +
     '            },\n' +
-    '            colors: [\'#ff7300\'],\n' +
+    '            colors: colors,\n' +
     '            fill: {\n' +
     '                type: \'solid\',\n' +
-    '                colors: [\'#ff7300\']\n' +
+    '                colors: colors\n' +
     '            },\n' +
     '            stroke: {\n' +
     '                show: true,\n' +
@@ -163,18 +178,17 @@ const HTML = '<!DOCTYPE html>\n' +
     '                    },\n' +
     '                },\n' +
     '            },\n' +
-    '            yaxis: {\n' +
-    '                show: true,\n' +
-    '                tickAmount: 1,\n' +
+    '            yaxis: dataSeries ? dataSeries.map((series, index) => ({\n' +
+    '                ...defaultYaxis,\n' +
+    '                opposite: index > 0,\n' +
     '                labels: {\n' +
-    '                    show: true,\n' +
+    '                    ...defaultYaxis.labels,\n' +
     '                    style: {\n' +
-    '                        colors: \'rgba(154,154,154,0.57)\',\n' +
-    '                        fontSize: \'11px\',\n' +
-    '                    },\n' +
-    '                    formatter: (value) => value,\n' +
-    '                },\n' +
-    '            },\n' +
+    '                        ...defaultYaxis.labels.style,\n' +
+    '                        colors: colors[index]\n' +
+    '                    }\n' +
+    '                }\n' +
+    '            })) : defaultYaxis,\n' +
     '            tooltip: {\n' +
     '                enabled: true,\n' +
     '                x: {\n' +
@@ -184,8 +198,11 @@ const HTML = '<!DOCTYPE html>\n' +
     '                    },\n' +
     '                },\n' +
     '                y: {\n' +
-    '                    formatter: (value) => {\n' +
-    '                        return value + \' \' + (divNumber && divNumber.unit);\n' +
+    '                    formatter: (value, { seriesIndex }) => {\n' +
+    '                        if (typeof value !== \'number\') {\n' +
+    '                            return \'-\';\n' +
+    '                        }\n' +
+    '                        return value + \' \' + (divNumber[seriesIndex] && divNumber[seriesIndex].unit);\n' +
     '                    },\n' +
     '                    title: {\n' +
     '                        formatter: () => \'\',\n' +
