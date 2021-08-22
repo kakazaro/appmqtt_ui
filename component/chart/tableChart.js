@@ -30,7 +30,7 @@ const TableChart = ({ data }) => {
         return <DataTable>
             <DataTable.Header style={{ flex: 0, paddingVertical: 5, height: 35 }}>
                 <DataTable.Title style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>Thời gian</Text></DataTable.Title>
-                {names.map((name, index) => <DataTable.Title key={name} style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{name + ` (${divNumber[index].unit})`}</Text></DataTable.Title>)}
+                {names.map((name) => <DataTable.Title key={name} style={{ paddingVertical: 0 }}><Text style={{ color: colors.secondaryText, fontSize: 13, fontWeight: 'bold' }}>{name + ` (${divNumber.unit})`}</Text></DataTable.Title>)}
             </DataTable.Header>
             {slidedSLabel.map((label, index) => <DataTable.Row key={index}>
                 <DataTable.Cell>

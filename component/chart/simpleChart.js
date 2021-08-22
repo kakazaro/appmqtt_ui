@@ -260,14 +260,14 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
             }
         }
 
+        const { div, unit } = timeType.findUnitDiv(data.reduce((all, d) => all.concat(d.series), []));
+        divNumber = { div, unit };
+
         dataSeries = [];
-        divNumber = [];
         names = [];
 
         data.forEach((d) => {
-            const { div, unit } = timeType.findUnitDiv(d.series);
             dataSeries.push(d.series.map(s => s ? Math.floor(s * 100 / div) / 100 : s));
-            divNumber.push({ div, unit });
             names.push(d.legend);
         });
 

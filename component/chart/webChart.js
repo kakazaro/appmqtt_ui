@@ -72,23 +72,12 @@ const HTML = '<!DOCTYPE html>\n' +
     '<script>\n' +
     '    function getOptions({ dataSeries, times, names, divNumber, timeType }) {\n' +
     '        const colors = [\'#ff7300\', \'#536DFE\', \'#7B1FA2\', \'#00796B\'];\n' +
-    '        const defaultYaxis = {\n' +
-    '            show: true,\n' +
-    '            tickAmount: 1,\n' +
-    '            labels: {\n' +
-    '                show: true,\n' +
-    '                style: {\n' +
-    '                    fontSize: \'11px\',\n' +
-    '                },\n' +
-    '                formatter: (value) => value,\n' +
-    '            },\n' +
-    '        };\n' +
     '\n' +
     '        window.ReactNativeWebView.postMessage(JSON.stringify(names));\n' +
     '\n' +
     '        return {\n' +
     '            series: names ? names.map((name, index) => ({\n' +
-    '                name: (name && divNumber[index]) ? `${name} (${divNumber[index].unit})` : \'\',\n' +
+    '                name: (name && divNumber) ? `${name} (${divNumber.unit})` : \'\',\n' +
     '                data: dataSeries[index] || []\n' +
     '            })) : [],\n' +
     '            chart: {\n' +
@@ -178,17 +167,17 @@ const HTML = '<!DOCTYPE html>\n' +
     '                    },\n' +
     '                },\n' +
     '            },\n' +
-    '            yaxis: dataSeries ? dataSeries.map((series, index) => ({\n' +
-    '                ...defaultYaxis,\n' +
-    '                opposite: index > 0,\n' +
+    '            yaxis: {\n' +
+    '                show: true,\n' +
+    '                tickAmount: 1,\n' +
     '                labels: {\n' +
-    '                    ...defaultYaxis.labels,\n' +
+    '                    show: true,\n' +
     '                    style: {\n' +
-    '                        ...defaultYaxis.labels.style,\n' +
-    '                        colors: colors[index]\n' +
-    '                    }\n' +
+    '                        fontSize: \'11px\',\n' +
+    '                    },\n' +
+    '                    formatter: (value) => value,\n' +
     '                }\n' +
-    '            })) : defaultYaxis,\n' +
+    '            },\n' +
     '            tooltip: {\n' +
     '                enabled: true,\n' +
     '                x: {\n' +
@@ -198,11 +187,11 @@ const HTML = '<!DOCTYPE html>\n' +
     '                    },\n' +
     '                },\n' +
     '                y: {\n' +
-    '                    formatter: (value, { seriesIndex }) => {\n' +
+    '                    formatter: (value) => {\n' +
     '                        if (typeof value !== \'number\') {\n' +
     '                            return \'-\';\n' +
     '                        }\n' +
-    '                        return value + \' \' + (divNumber[seriesIndex] && divNumber[seriesIndex].unit);\n' +
+    '                        return value + \' \' + (divNumber && divNumber.unit);\n' +
     '                    },\n' +
     '                    title: {\n' +
     '                        formatter: () => \'\',\n' +

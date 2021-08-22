@@ -17,23 +17,12 @@
 <script>
     function getOptions({ dataSeries, times, names, divNumber, timeType }) {
         const colors = ['#ff7300', '#536DFE', '#7B1FA2', '#00796B'];
-        const defaultYaxis = {
-            show: true,
-            tickAmount: 1,
-            labels: {
-                show: true,
-                style: {
-                    fontSize: '11px',
-                },
-                formatter: (value) => value,
-            },
-        };
 
         window.ReactNativeWebView.postMessage(JSON.stringify(names));
 
         return {
             series: names ? names.map((name, index) => ({
-                name: (name && divNumber[index]) ? `${name} (${divNumber[index].unit})` : '',
+                name: (name && divNumber) ? `${name} (${divNumber.unit})` : '',
                 data: dataSeries[index] || []
             })) : [],
             chart: {
@@ -123,17 +112,17 @@
                     },
                 },
             },
-            yaxis: dataSeries ? dataSeries.map((series, index) => ({
-                ...defaultYaxis,
-                opposite: index > 0,
+            yaxis: {
+                show: true,
+                tickAmount: 1,
                 labels: {
-                    ...defaultYaxis.labels,
+                    show: true,
                     style: {
-                        ...defaultYaxis.labels.style,
-                        colors: colors[index]
-                    }
+                        fontSize: '11px',
+                    },
+                    formatter: (value) => value,
                 }
-            })) : defaultYaxis,
+            },
             tooltip: {
                 enabled: true,
                 x: {
@@ -143,11 +132,11 @@
                     },
                 },
                 y: {
-                    formatter: (value, { seriesIndex }) => {
+                    formatter: (value) => {
                         if (typeof value !== 'number') {
                             return '-';
                         }
-                        return value + ' ' + (divNumber[seriesIndex] && divNumber[seriesIndex].unit);
+                        return value + ' ' + (divNumber && divNumber.unit);
                     },
                     title: {
                         formatter: () => '',
