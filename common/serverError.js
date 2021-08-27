@@ -34,6 +34,41 @@ const errors = {
 
     E40020: { code: 40020, message: 'Email is incorrect', error: 'Email đăng nhập không đúng' },
     E40021: { code: 40021, message: 'Password is incorrect', error: 'Sai mật khẩu, vui lòng thử lại' },
+    E40022: { code: 40022, message: 'Unauthorized', error: 'Lỗi định danh' },
+
+    E40100: { code: 40100, message: 'The site name is exist in database', error: 'Tên trạm đã tồn tại' },
+    E40101: { code: 40101, message: 'The site name is required', error: 'Tên trạm không hợp lệ' },
+    E40102: { code: 40102, message: 'The price is required', error: 'Giá tiền không hợp lệ' },
+    E40103: { code: 40103, message: 'The currency is required', error: 'Loại tiền tệ không hợp lệ' },
+    E40104: { code: 40104, message: 'The status is incorrect', error: 'Trạng thái không hợp lệ' },
+
+    E40200: { code: 40200, message: 'The iot name is exist in database', error: 'Tên IOT đã tồn tại' },
+    E40201: { code: 40201, message: 'The iot name is required', error: 'Tên IOT không hợp lệ' },
+    E40202: { code: 40202, message: 'The iot code is required', error: 'Mã IOT không hợp lệ' },
+    E40203: { code: 40203, message: 'The site_id is required', error: 'Mã trạm không hợp lệ' },
+    E40204: { code: 40204, message: 'IOT Code is incorrect', error: 'Mã IOT không chính xác' },
+
+    //Device
+    E40300: { code: 40300, message: 'The device name is exist in database', error: 'Tên thiết bị đã tồn tại' },
+    E40301: { code: 40301, message: 'Device type is required', error: 'Loại thiết bị không hợp lệ' },
+
+    E40305: { code: 40305, message: 'Basetime is incorrect. [month or year]', error: 'Lỗi đầu vào "Basetime"' },
+
+    E40400: { code: 40400, message: 'Can not find user', error: 'Người dùng không tồn tại' },
+
+    E40500: { code: 40500, message: 'Can not find device', error: 'Thiết bị không tồn tại' },
+
+    E40600: { code: 40600, message: 'Can not find site', error: 'Trạm không tồn tại' },
+
+    E40700: { code: 40700, message: 'Status event is incorrect', error: 'Trạng thái không chính xác' },
+    E40701: { code: 40701, message: 'Event type is incorrect', error: 'Loại sự kiện không chính xác' },
+
+    // add
+    E40800: { code: 40800, message: 'Device is not active or dont have data', error: 'Thiệt bị không hoặc động hoặc không có dữ liệu' },
+
+    //Report
+    E41000: { code: 41000, message: 'The distance between start date and end date is too far. Select data in 2 months range', error: 'Khoảng thời gian báo cáo quá lớn, vui lòng nhập không quá 2 tháng' },
+    E41001: { code: 41001, message: 'Too many requests from this IP, please try again after 10s', error: 'Yêu cầu quá tải, vui lòng thử lại sau 10 giây nữa' },
 };
 
 export { errors };

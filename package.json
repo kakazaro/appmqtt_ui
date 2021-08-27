@@ -5,7 +5,7 @@
     "a": "expo start --android",
     "i": "expo start --ios",
     "w": "expo start --web",
-    "p": "expo p && expo p --release-channel 1.1.0",
+    "p": "expo p && expo p --release-channel 1.1.0 && expo p --release-channel 1.2.0",
     "e": "expo eject"
   },
   "dependencies": {

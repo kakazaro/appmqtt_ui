@@ -10,9 +10,9 @@ const FlatButton = ({ title, style, description, currentValue, onPress, iconName
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={{ flex: 1 }}>
                     <Text style={[{ color: colors.primaryText, fontSize: 15 }, titleStyle]}>{title}</Text>
-                    {description && <Text style={{ color: colors.secondaryText, fontSize: 11 }}>{description}</Text>}
+                    {!!description && <Text style={{ color: colors.secondaryText, fontSize: 11 }}>{description}</Text>}
                 </View>
-                {currentValue && <Text style={[{ color: colors.secondaryText, fontSize: 13, marginEnd: 10 }, valueStyle]}>{currentValue}</Text>}
+                {!!currentValue && <Text style={[{ color: colors.secondaryText, fontSize: 13, marginEnd: 10 }, valueStyle]}>{currentValue}</Text>}
                 {!!iconName && <MaterialCommunityIcons name={iconName} size={24} color={disabled ? colors.DARK_SOULS : (iconColor || colors.primaryText)} style={iconStyle}/>}
             </View>
         </TouchableRipple>

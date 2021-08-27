@@ -17,6 +17,7 @@ import UserAddSiteScreen from './user/userAddSiteScreen';
 import ShareScreen from './info/shareScreen';
 import RegisterScreen from './user/registerScreen';
 import AddSiteScreen from './site/addSiteScreen';
+import SiteReportsScreen from './site/siteReports/siteReportsScreen';
 import EventScreen from './event/eventScreen';
 import * as Analytics from 'expo-firebase-analytics';
 import Constants, { AppOwnership } from 'expo-constants';
@@ -62,6 +63,7 @@ const MainScreen = () => {
                 <Stack.Screen name={'addSite'} component={AddSiteScreen}/>
                 <Stack.Screen name={'selectIot'} component={SelectIotScreen}/>
                 <Stack.Screen name={'addDevice'} component={AddDeviceScreen}/>
+                <Stack.Screen name={'siteReports'} component={SiteReportsScreen}/>
 
                 <Stack.Screen name={'device'} component={DeviceScreen}/>
                 <Stack.Screen name={'iot'} component={IotScreen}/>

@@ -82,9 +82,15 @@ const SiteSettingScreen = ({ navigation }) => {
                 currentValue: !siteOverview ? '' : (!siteOverview.price || !siteOverview.currency) ? 'chưa cài đặt' : `${siteOverview.price} ${siteOverview.currency}`,
                 iconName: 'pencil',
                 onPress: () => setShowEditPrice(true)
+            },
+            {
+                title: 'Báo cáo',
+                disabled,
+                onPress: () => navigation.navigate('siteReports')
+
             }
         ];
-    }, [site, siteOverview, loading]);
+    }, [site, siteOverview, loading, navigation]);
 
     const updateSite = (id, name, price, currency) => {
         return serverContext.post('/site/update?id=' + encodeURIComponent(id), {
