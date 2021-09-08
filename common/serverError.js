@@ -69,6 +69,7 @@ const errors = {
     //Report
     E41000: { code: 41000, message: 'The distance between start date and end date is too far. Select data in 2 months range', error: 'Khoảng thời gian báo cáo quá lớn, vui lòng nhập không quá 2 tháng' },
     E41001: { code: 41001, message: 'Too many requests from this IP, please try again after 10s', error: 'Yêu cầu quá tải, vui lòng thử lại sau 10 giây nữa' },
+    E41002: { code: 41002, message: '"Range" value is incorrect. Refer value [1, 7, 14, 30]', error: 'Khoảng thời gian cài đặt phải là 1 trong những giá trị sau: 1, 7, 14, 30 ngày' },
 };
 
 export { errors };

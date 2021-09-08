@@ -122,7 +122,7 @@ const ManualReportsTab = () => {
                 />
                 {TimePicker.map((type) => <View key={type.key} style={{ marginTop: 10 }}>
                     <Text>{type.title}</Text>
-                    <TouchableRipple onPress={() => setShowPicker(type.key)} style={{ paddingHorizontal: 10, paddingVertical: 10, borderRadius: 5, borderColor: colors.MORE_THAN_A_WEEK, borderStyle: 'solid', borderWidth: 1 }}>
+                    <TouchableRipple disabled={sending} onPress={() => setShowPicker(type.key)} style={{ paddingHorizontal: 10, paddingVertical: 10, borderRadius: 5, borderColor: colors.MORE_THAN_A_WEEK, borderStyle: 'solid', borderWidth: 1 }}>
                         <Text>{moment(manualSetting[type.key] || Date.now()).format('YYYY-MM-DD')}</Text>
                     </TouchableRipple>
                 </View>)}
