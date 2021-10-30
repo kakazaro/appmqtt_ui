@@ -33,12 +33,19 @@ const timeTypes = [
                 {
                     path: 'trend',
                     legend: 'Công xuất',
+                    unit: 'W'
                 }
             ],
             site: [
                 {
                     path: 'trend',
                     legend: 'Công xuất',
+                    unit: 'W'
+                },
+                {
+                    path: 'load/trend',
+                    legend: 'Tiêu thụ',
+                    unit: 'Wh'
                 }
             ]
         }
@@ -62,16 +69,19 @@ const timeTypes = [
                 {
                     path: 'trend',
                     legend: 'Sản lương',
+                    unit: 'Wh'
                 }
             ],
             site: [
                 {
                     path: 'trend',
                     legend: 'Sản lương',
+                    unit: 'Wh'
                 },
                 {
                     path: 'load/trend',
                     legend: 'Tiêu thụ',
+                    unit: 'Wh'
                 }
             ]
         }
@@ -95,16 +105,19 @@ const timeTypes = [
                 {
                     path: 'trend',
                     legend: 'Sản lương',
+                    unit: 'Wh'
                 }
             ],
             site: [
                 {
                     path: 'trend',
                     legend: 'Sản lương',
+                    unit: 'Wh'
                 },
                 {
                     path: 'load/trend',
                     legend: 'Tiêu thụ',
+                    unit: 'Wh'
                 }
             ]
         }
@@ -141,12 +154,12 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
             try {
                 let data = [];
                 for (let i = 0; i < type.sources[source].length; i++) {
-                    const { path, legend } = timeType.sources[source][i];
-                    const url = `/${source}/${path}?id=${id}&date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`;
+                    const sources = timeType.sources[source][i];
+                    const url = `/${source}/${sources.path}?id=${id}&date=${getTime.format('YYYY-MM-DD')}&basedTime=${type.basedTime}&type=${type.type}`;
                     const response = await serverContext.get(url);
                     data.push({
                         ...response.data,
-                        legend
+                        ...sources
                     });
                 }
 
@@ -238,7 +251,7 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
             return;
         }
 
-        let dataSeries, divNumber, times, names, tableLabels;
+        let dataSeries, times, names, tableLabels, unit;
 
         let { series } = data[0];
 
@@ -250,6 +263,9 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
         let duration = end.toDate().getTime() - start.toDate().getTime();
         let space = duration / series.length;
 
+        const allData = data.reduce((all, d) => all.concat(d.series), []);
+        const { div, unit: shortUnit } = utility.findUnit(allData, '', 1);
+
         for (let i = 0; i < series.length; i++) {
             tableLabels.push(start.format(timeType.timeFormatTable));
             times.push(start.toDate().getTime());
@@ -260,20 +276,19 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
             }
         }
 
-        const { div, unit } = timeType.findUnitDiv(data.reduce((all, d) => all.concat(d.series), []));
-        divNumber = { div, unit };
-
         dataSeries = [];
         names = [];
+        unit = [];
 
         data.forEach((d) => {
-            dataSeries.push(d.series.map(s => s ? Math.floor(s * 100 / div) / 100 : s));
+            dataSeries.push((d.series || []).map(s => s ? Math.floor(s * 100 / div) / 100 : s));
             names.push(d.legend);
+            unit.push(shortUnit + d.unit);
         });
 
         const date = moment(time).format(timeType.format);
 
-        setProcessedData({ dataSeries, names, times, tableLabels, divNumber, timeType: { ...timeType, findUnitDiv: '' }, date });
+        setProcessedData({ dataSeries, names, times, tableLabels, unit, timeType: { ...timeType, findUnitDiv: '' }, date });
     }, [data, timeType, time]);
 
     const tableDom = useMemo(() => {

@@ -15,14 +15,14 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
 <script>
-    function getOptions({ dataSeries, times, names, divNumber, timeType }) {
+    function getOptions({ dataSeries, times, names, unit, timeType }) {
         const colors = ['#ff7300', '#536DFE', '#7B1FA2', '#00796B'];
 
         window.ReactNativeWebView.postMessage(JSON.stringify(names));
 
         return {
             series: names ? names.map((name, index) => ({
-                name: (name && divNumber) ? `${name} (${divNumber.unit})` : '',
+                name: (name && unit) ? `${name} (${unit[index]})` : '',
                 data: dataSeries[index] || []
             })) : [],
             chart: {
@@ -132,11 +132,11 @@
                     },
                 },
                 y: {
-                    formatter: (value) => {
+                    formatter: (value, { seriesIndex }) => {
                         if (typeof value !== 'number') {
                             return '-';
                         }
-                        return value + ' ' + (divNumber && divNumber.unit);
+                        return value + ' ' + (unit && unit[seriesIndex]);
                     },
                     title: {
                         formatter: () => '',

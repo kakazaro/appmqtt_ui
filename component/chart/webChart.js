@@ -70,14 +70,14 @@ const HTML = '<!DOCTYPE html>\n' +
     '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>\n' +
     '<script src="https://momentjs.com/downloads/moment.js"></script>\n' +
     '<script>\n' +
-    '    function getOptions({ dataSeries, times, names, divNumber, timeType }) {\n' +
+    '    function getOptions({ dataSeries, times, names, unit, timeType }) {\n' +
     '        const colors = [\'#ff7300\', \'#536DFE\', \'#7B1FA2\', \'#00796B\'];\n' +
     '\n' +
     '        window.ReactNativeWebView.postMessage(JSON.stringify(names));\n' +
     '\n' +
     '        return {\n' +
     '            series: names ? names.map((name, index) => ({\n' +
-    '                name: (name && divNumber) ? `${name} (${divNumber.unit})` : \'\',\n' +
+    '                name: (name && unit) ? `${name} (${unit[index]})` : \'\',\n' +
     '                data: dataSeries[index] || []\n' +
     '            })) : [],\n' +
     '            chart: {\n' +
@@ -187,11 +187,11 @@ const HTML = '<!DOCTYPE html>\n' +
     '                    },\n' +
     '                },\n' +
     '                y: {\n' +
-    '                    formatter: (value) => {\n' +
+    '                    formatter: (value, { seriesIndex }) => {\n' +
     '                        if (typeof value !== \'number\') {\n' +
     '                            return \'-\';\n' +
     '                        }\n' +
-    '                        return value + \' \' + (divNumber && divNumber.unit);\n' +
+    '                        return value + \' \' + (unit && unit[seriesIndex]);\n' +
     '                    },\n' +
     '                    title: {\n' +
     '                        formatter: () => \'\',\n' +
