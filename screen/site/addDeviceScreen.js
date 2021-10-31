@@ -172,7 +172,7 @@ const AddDeviceScreen = ({ navigation, route }) => {
                     ref={nameplateWattsRef}
                     style={styles.textInput}
                     value={nameplateWatts}
-                    label={'Công xuất định danh (kWp)*'}
+                    label={'Công suất định danh (kWp)*'}
                     onChangeText={text => setNameplateWatts(text)}
                     textContentType={'name'}
                     disabled={loading}

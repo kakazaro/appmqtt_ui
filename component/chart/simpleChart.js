@@ -25,27 +25,29 @@ const timeTypes = [
         timeFormatChart: 'H',
         timeFormatTable: 'HH[:]mm',
         stroke: { width: 2 },
-        findUnitDiv: (series) => utility.findUnit(series, 'W', 1),
         chartType: 'line',
         type: 'power',
         sources: {
             device: [
                 {
                     path: 'trend',
-                    legend: 'Công xuất',
+                    legend: 'Công suất PV',
+                    legendShort: 'CS PV',
                     unit: 'W'
                 }
             ],
             site: [
                 {
                     path: 'trend',
-                    legend: 'Công xuất',
+                    legend: 'Công suất PV',
+                    legendShort: 'CS PV',
                     unit: 'W'
                 },
                 {
                     path: 'load/trend',
-                    legend: 'Tiêu thụ',
-                    unit: 'Wh'
+                    legend: 'Công suất tiêu thụ',
+                    legendShort: 'CS tiêu thụ',
+                    unit: 'W'
                 }
             ]
         }
@@ -61,21 +63,20 @@ const timeTypes = [
         timeFormatChart: 'D',
         timeFormatTable: 'D[/]MM',
         stroke: { width: 0 },
-        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1),
         chartType: 'bar',
         type: 'energy',
         sources: {
             device: [
                 {
                     path: 'trend',
-                    legend: 'Sản lương',
+                    legend: 'PV',
                     unit: 'Wh'
                 }
             ],
             site: [
                 {
                     path: 'trend',
-                    legend: 'Sản lương',
+                    legend: 'PV',
                     unit: 'Wh'
                 },
                 {
@@ -99,19 +100,18 @@ const timeTypes = [
         type: 'energy',
         chartType: 'bar',
         stroke: { width: 0 },
-        findUnitDiv: (series) => utility.findUnit(series, 'Wh', 1),
         sources: {
             device: [
                 {
                     path: 'trend',
-                    legend: 'Sản lương',
+                    legend: 'PV',
                     unit: 'Wh'
                 }
             ],
             site: [
                 {
                     path: 'trend',
-                    legend: 'Sản lương',
+                    legend: 'PV',
                     unit: 'Wh'
                 },
                 {
@@ -251,7 +251,7 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
             return;
         }
 
-        let dataSeries, times, names, tableLabels, unit;
+        let dataSeries, times, names, namesTable, tableLabels, unit;
 
         let { series } = data[0];
 
@@ -278,17 +278,19 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
 
         dataSeries = [];
         names = [];
+        namesTable = [];
         unit = [];
 
         data.forEach((d) => {
             dataSeries.push((d.series || []).map(s => s ? Math.floor(s * 100 / div) / 100 : s));
             names.push(d.legend);
+            namesTable.push(d.legendShort || d.legend)
             unit.push(shortUnit + d.unit);
         });
 
         const date = moment(time).format(timeType.format);
 
-        setProcessedData({ dataSeries, names, times, tableLabels, unit, timeType: { ...timeType, findUnitDiv: '' }, date });
+        setProcessedData({ dataSeries, names, namesTable, times, tableLabels, unit, timeType: { ...timeType, findUnitDiv: '' }, date });
     }, [data, timeType, time]);
 
     const tableDom = useMemo(() => {

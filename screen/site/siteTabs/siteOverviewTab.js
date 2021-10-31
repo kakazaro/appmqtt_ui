@@ -64,11 +64,11 @@ const SiteOverviewTab = () => {
         return <>
             <RowInfo info={{
                 main: {
-                    text: 'Công xuất hiện tại',
+                    text: 'Công suất hiện tại',
                     ...(data ? utility.makeupPower(data.curSumActPower) : undefined)
                 },
                 sub: {
-                    text: 'Công xuất danh định',
+                    text: 'Công suất danh định',
                     ...(data ? utility.makeupPower(data.ratedSumPower, 'p') : undefined)
                 }
             }}/>
@@ -109,13 +109,12 @@ const SiteOverviewTab = () => {
         let value, unit, totalValue, totalUnit;
         if (data && price && currency) {
             let makeup = utility.makeupMoney(data.todaySumEnergy * price / 1000);
-            value = makeup.value + makeup.unit;
+            value = makeup.value;
+            unit = makeup.unit + ' ' + currency;
 
             makeup = utility.makeupMoney(data.allSumEnergy * price / 1000);
-            totalValue = makeup.value + makeup.unit;
-
-            unit = currency;
-            totalUnit = currency;
+            totalValue = makeup.value;
+            totalUnit = makeup.unit + ' ' + currency;
         }
 
         return <RowInfo info={{

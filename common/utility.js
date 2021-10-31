@@ -83,10 +83,10 @@ export default {
 
         const value = values.reduce((max, cur) => cur > max ? cur : max, 0);
 
-        if (value * multiple > 1000 * 1000 * 1000) {
+        if (value * multiple > 1000 * 1000 * 1000 * 100) {
             unit = 'G';
             div = 1000 * 1000 * 1000;
-        } else if (value * multiple > 1000 * 1000) {
+        } else if (value * multiple > 1000 * 1000 * 100) {
             unit = 'M';
             div = 1000 * 1000;
         } else if (value * multiple > 1000) {
@@ -104,13 +104,13 @@ export default {
         // const odd = value - even;
         let unit = '';
         if (even > 1000 * 1000 * 1000) {
-            unit = 'B';
+            unit = 'tỷ';
             even = Math.floor(even / (1000 * 1000 * 100)) / 10;
         } else if (even > 1000 * 1000) {
-            unit = 'M';
+            unit = 'triệu';
             even = Math.floor(even / (1000 * 100)) / 10;
         } else if (even > 1000) {
-            unit = 'K';
+            unit = 'nghìn';
             even = Math.floor(even / 100) / 10;
         }
 
