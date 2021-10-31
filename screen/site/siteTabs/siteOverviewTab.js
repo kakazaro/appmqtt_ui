@@ -64,7 +64,7 @@ const SiteOverviewTab = () => {
         return <>
             <RowInfo info={{
                 main: {
-                    text: 'Công suất hiện tại',
+                    text: 'Công suất PV hiện tại',
                     ...(data ? utility.makeupPower(data.curSumActPower) : undefined)
                 },
                 sub: {
@@ -74,11 +74,11 @@ const SiteOverviewTab = () => {
             }}/>
             <RowInfo info={{
                 main: {
-                    text: 'Tổng Sản lượng điện trong ngày',
+                    text: 'Tổng lượng điện PV trong ngày',
                     ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
                 },
                 sub: {
-                    text: 'Tổng Sản lượng tích lũy',
+                    text: 'Tổng lượng điện PV tích lũy',
                     ...(data ? utility.makeupProduct(data.allSumEnergy) : undefined)
                 }
             }}/>
@@ -91,7 +91,7 @@ const SiteOverviewTab = () => {
         return <>
             <RowInfo info={{
                 main: {
-                    text: 'Điện năng tiêu thụ',
+                    text: 'Tổng điện năng tiêu thụ trong ngày',
                     ...(data ? utility.makeupProduct(data.comsumeEnergy || data.consumeEnergy) : undefined)
                 }
             }}/>
@@ -126,7 +126,7 @@ const SiteOverviewTab = () => {
                 } : undefined)
             },
             sub: {
-                text: 'Tổng doanh thu',
+                text: 'Tổng lợi nhuận tích lũy',
                 ...(data ? {
                     value: totalValue ? totalValue : '--',
                     unit: totalUnit ? totalUnit : ''

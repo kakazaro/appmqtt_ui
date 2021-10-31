@@ -282,9 +282,22 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
         unit = [];
 
         data.forEach((d) => {
-            dataSeries.push((d.series || []).map(s => s ? Math.floor(s * 100 / div) / 100 : s));
+            dataSeries.push((d.series || []).map(s => {
+                if (s) {
+                    const afterDiv = Math.floor(s / div);
+                    if (afterDiv > 99) {
+                        return afterDiv;
+                    }
+                    if (afterDiv > 9) {
+                        return Math.floor(s * 10 / div) / 10;
+                    } else {
+                        return Math.floor(s * 100 / div) / 100;
+                    }
+                }
+                return s;
+            }));
             names.push(d.legend);
-            namesTable.push(d.legendShort || d.legend)
+            namesTable.push(d.legendShort || d.legend);
             unit.push(shortUnit + d.unit);
         });
 
