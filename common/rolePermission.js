@@ -1,8 +1,8 @@
 import utility from '../common/utility';
 
-const US = utility.USER_ROLES.US.id;
-const AD = utility.USER_ROLES.AD.id;
-const SA = utility.USER_ROLES.SA.id;
+const US = utility.USER_ROLES.US.id; // Người dùng thường
+const AD = utility.USER_ROLES.AD.id; // Admin
+const SA = utility.USER_ROLES.SA.id; // System Admin
 
 function RolePermission(role) {
     return {
@@ -18,6 +18,10 @@ function RolePermission(role) {
 
         mainUserManageScreen: role === SA,
         needSettingSiteAccess: role === AD || role === US,
+
+        canSeePrice: role === SA || role === AD || role === US,
+        canSeeDiscount: role === SA || role === AD,
+        canSeeVAT: role === SA || role === AD,
     };
 }
 

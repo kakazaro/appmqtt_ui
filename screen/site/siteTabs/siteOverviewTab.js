@@ -77,22 +77,28 @@ const SiteOverviewTab = () => {
                     text: 'Tổng lượng điện PV trong ngày',
                     ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
                 },
+                details: [
+                    {
+                        text: 'Khung giờ cao điểm',
+                        ...(data ? utility.makeupProduct(0) : undefined)
+                    },
+                    {
+                        text: 'Khung giờ bình thưởng',
+                        ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
+                    },
+                    {
+                        text: 'Khung giờ thấp điểm',
+                        ...(data ? utility.makeupProduct(0) : undefined)
+                    },
+                    {
+                        text: 'TỔNG',
+                        isSum: true,
+                        ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
+                    }
+                ],
                 sub: {
                     text: 'Tổng lượng điện PV tích lũy',
                     ...(data ? utility.makeupProduct(data.allSumEnergy) : undefined)
-                }
-            }}/>
-        </>;
-    }, [overviewData]);
-
-    const consumeDom = useMemo(() => {
-        const data = overviewData?.site;
-
-        return <>
-            <RowInfo info={{
-                main: {
-                    text: 'Tổng điện năng tiêu thụ trong ngày',
-                    ...(data ? utility.makeupProduct(data.comsumeEnergy || data.consumeEnergy) : undefined)
                 }
             }}/>
         </>;
@@ -118,6 +124,7 @@ const SiteOverviewTab = () => {
         }
 
         return <RowInfo info={{
+
             main: {
                 text: 'Lợi nhuận trong ngày',
                 ...(data ? {
@@ -125,6 +132,37 @@ const SiteOverviewTab = () => {
                     unit: unit ? unit : 'chưa cài đặt'
                 } : undefined)
             },
+            details: [
+                {
+                    text: 'Khung giờ cao điểm',
+                    ...(data ? {
+                        value: 0,
+                        unit: 'VND'
+                    } : undefined)
+                },
+                {
+                    text: 'Khung giờ bình thưởng',
+                    ...(data ? {
+                        value: value ? value : '',
+                        unit: unit ? unit : 'chưa cài đặt'
+                    } : undefined)
+                },
+                {
+                    text: 'Khung giờ thấp điểm',
+                    ...(data ? {
+                        value: 0,
+                        unit: 'VND'
+                    } : undefined)
+                },
+                {
+                    text: 'TỔNG',
+                    isSum: true,
+                    ...(data ? {
+                        value: value ? value : '',
+                        unit: unit ? unit : 'chưa cài đặt'
+                    } : undefined)
+                }
+            ],
             sub: {
                 text: 'Tổng lợi nhuận tích lũy',
                 ...(data ? {
@@ -133,6 +171,19 @@ const SiteOverviewTab = () => {
                 } : undefined)
             }
         }}/>;
+    }, [overviewData]);
+
+    const consumeDom = useMemo(() => {
+        const data = overviewData?.site;
+
+        return <>
+            <RowInfo info={{
+                main: {
+                    text: 'Tổng điện năng tiêu thụ trong ngày',
+                    ...(data ? utility.makeupProduct(data.comsumeEnergy || data.consumeEnergy) : undefined)
+                }
+            }}/>
+        </>;
     }, [overviewData]);
 
     const chartDom = useMemo(() => siteId ? <SimpleChar source={ENUM_SOURCE.site} id={siteId}/> : <></>, [siteId]);

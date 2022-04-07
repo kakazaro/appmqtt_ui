@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import AppBarLayout from '../../component/appBarLayout';
 import { Headline, IconButton, Text } from 'react-native-paper';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -14,6 +14,8 @@ import eventCenter from '../../common/eventCenter';
 import serverError from '../../common/serverError';
 import ConfirmDialog from '../../component/confirmDialog';
 import ServerContext from '../../context/serverContext';
+import Clipboard from 'expo-clipboard';
+import Toast from 'react-native-root-toast';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -79,8 +81,15 @@ const DeviceScreen = ({ navigation, route }) => {
 
     return <AppBarLayout menu={menu}>
         <View style={styles.container}>
-            <View style={{ backgroundColor: 'white', width: '100%' }}>
-                <Headline style={{ margin: 0, paddingStart: 15, paddingEnd: 15 }}>{device?.name}</Headline>
+            <View style={{ flexDirection: 'row', backgroundColor: 'white', width: '100%', paddingStart: 15, paddingEnd: 15, paddingBottom: 5, alignItems: 'center' }}>
+                <Headline style={{ flex: 1, margin: 0, color: colors.PHILIPPINE_ORANGE }}>{device?.name}</Headline>
+                {!!device?.id && <TouchableOpacity style={{ backgroundColor: colors.UNICORN_SILVER, padding: 5, borderRadius: 5 }}
+                                                   onPress={() => {
+                                                       Clipboard.setString(device.id);
+                                                       Toast.show('Đã copy vào ID device clipboard', { duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM, shadow: true, animation: true, hideOnPress: true, delay: 0 });
+                                                   }}>
+                    <Text style={{ color: colors.secondaryText, fontSize: 12 }}>Copy ID</Text>
+                </TouchableOpacity>}
             </View>
             {isDone && <View style={{ flex: 1, width: '100%' }}>
                 <Tab.Navigator tabBarOptions={{

@@ -6,16 +6,19 @@ import ServerContext from '../../../../context/serverContext';
 import serverError from '../../../../common/serverError';
 import { colors } from '../../../../common/themes';
 import CustomInput from '../../../../component/customInput';
-import constant from '../../../../common/constant';
 import ConfirmDialog from '../../../../component/confirmDialog';
+import UserContext from '../../../../context/userContext';
 
 const EmailTo = 'email_to';
 const Range = 'range';
 const IsActive = 'is_active';
 
-const RangeList = [1, 7, 14, 30];
+const RangeList = Array(31).fill('').map((_, i) => i + 1).reverse();
+
+const IsLock = true;
 
 const AutoReportsTab = () => {
+    const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
     const siteContext = useContext(SiteContext);
 
@@ -24,7 +27,7 @@ const AutoReportsTab = () => {
 
     const [saving, setSaving] = useState(false);
     const [autoSetting, setAutoSetting] = useState({});
-    const [error, setError] = useState();
+    const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
     const [showRange, setShowRange] = useState(false);
@@ -37,8 +40,7 @@ const AutoReportsTab = () => {
         if (siteId) {
             (async () => {
                 try {
-                    const response = await serverContext.get('/auto/mail' +
-                        `?site_id=${encodeURIComponent(siteId)}`);
+                    const response = await serverContext.get('/auto/mail' + `?site_id=${encodeURIComponent(siteId)}`);
                     setAutoSetting(response.data || {});
                 } catch (err) {
                     setLoadError(serverError.getError(err));
@@ -49,7 +51,7 @@ const AutoReportsTab = () => {
     }, [siteId]);
 
     const dom = useMemo(() => {
-        if (loading) {
+        if (loading || !userContext?.user?.email) {
             return <ActivityIndicator style={{ marginTop: 20 }} animating={true} color={colors.PHILIPPINE_ORANGE}/>;
         }
 
@@ -60,13 +62,14 @@ const AutoReportsTab = () => {
 
             (async () => {
                 try {
-                    await serverContext.post('/auto/mail/save', {
-                        site_id: siteId,
-                        [Range]: autoSetting[Range] || RangeList[RangeList.length - 1],
-                        [EmailTo]: autoSetting[EmailTo],
-                        [IsActive]: !!autoSetting[IsActive] ? 1 : 0
-                    });
-                    setSuccess(true);
+                    if (!IsLock) {
+                        await serverContext.post('/auto/mail/save', {
+                            site_id: siteId, [Range]: autoSetting[Range] || RangeList[RangeList.length - 1], [EmailTo]: userContext.user.email, [IsActive]: !!autoSetting[IsActive] ? 1 : 0
+                        });
+                        setSuccess(true);
+                    } else {
+                        setError('Chức năng báo cáo đang bị tạm khóa, vui lòng thử lại sau');
+                    }
                 } catch (err) {
                     setError(serverError.getError(err));
                 }
@@ -74,32 +77,11 @@ const AutoReportsTab = () => {
             })();
         };
 
-        const emailError = autoSetting[EmailTo] && !constant.emailRegex.test(autoSetting[EmailTo]) ? 'Email không hợp lệ' : '';
         const disabled = saving || !!loadError;
 
         return <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center' }}>
             <View style={{ width: '90%' }}>
                 {!!loadError && <HelperText style={{ marginBottom: 5 }} type={'error'} visible={true}>Lỗi: {loadError}</HelperText>}
-                <CustomInput
-                    style={styles.textInput}
-                    value={autoSetting[EmailTo] || ''}
-                    label={'Địa chỉ email'}
-                    onChangeText={text => setAutoSetting(last => ({ ...last, [EmailTo]: text }))}
-                    autoCapitalize={'none'}
-                    textContentType={'emailAddress'}
-                    disabled={disabled}
-                    returnKeyType={'done'}
-                    onSubmitEditing={() => false}
-                    error={emailError}
-                />
-
-                <View style={{ marginTop: 10 }}>
-                    <Text>{'Khoảng thời gian báo cáo'}</Text>
-                    <TouchableRipple disabled={disabled} onPress={() => setShowRange(true)} style={{ paddingHorizontal: 10, paddingVertical: 10, borderRadius: 5, borderColor: colors.MORE_THAN_A_WEEK, borderStyle: 'solid', borderWidth: 1 }}>
-                        <Text>{`${autoSetting[Range] || RangeList[RangeList.length - 1]} ngày`}</Text>
-                    </TouchableRipple>
-                </View>
-
                 <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginTop: 10 }}>
                     <Checkbox.Android
                         status={!!autoSetting[IsActive] ? 'checked' : 'unchecked'}
@@ -110,10 +92,49 @@ const AutoReportsTab = () => {
                     <Text style={{ fontSize: 16 }} onPress={() => !disabled && setAutoSetting(last => ({ ...last, [IsActive]: !last[IsActive] }))}>Bật chức năng báo cáo tự động</Text>
                 </View>
 
+                <CustomInput
+                    style={styles.textInput}
+                    value={userContext.user.email}
+                    label={'Địa chỉ nhận email'}
+                    onChangeText={() => false}
+                    autoCapitalize={'none'}
+                    textContentType={'emailAddress'}
+                    disabled={true}
+                />
+
+                <View style={{ marginTop: 10 }}>
+                    <Text>Báo cáo định kỳ theo tháng tại</Text>
+                    <TouchableRipple disabled={disabled} onPress={() => setShowRange(true)} style={{ paddingHorizontal: 10, paddingVertical: 10, borderRadius: 5, borderColor: colors.MORE_THAN_A_WEEK, borderStyle: 'solid', borderWidth: 1 }}>
+                        <Text>{`ngày ${autoSetting[Range] || RangeList[RangeList.length - 1]}`}</Text>
+                    </TouchableRipple>
+                </View>
+                <Text style={{ marginTop: 0, fontSize: 12, color: colors.secondaryText }}>Lưu ý: nếu tháng không có ngày chỉ định, báo cáo sẽ được gửi vào ngày cuối tháng. ví dụ: ngày 29, 30, 31.</Text>
+
+                <Text style={{ marginTop: 10 }}>Loại báo cáo</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                    <Checkbox.Android
+                        status={'checked'}
+                        onPress={() => false}
+                        color={colors.PHILIPPINE_ORANGE}
+                        disabled={true}
+                    />
+                    <Text style={{ fontSize: 16 }}>Báo cáo tiêu chuẩn</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                    <Checkbox.Android
+                        status={'unchecked'}
+                        onPress={() => false}
+                        color={colors.PHILIPPINE_ORANGE}
+                        disabled={true}
+                    />
+                    <Text style={{ fontSize: 16 }}>Báo cáo theo khung giờ</Text>
+                </View>
+                <Text style={{ marginTop: 0, fontSize: 12, color: colors.secondaryText }}>Chức năng chọn loại báo cáo đang được phát triển, hiện tại chỉ hỗ trợ "Báo cáo tiêu chuẩn".</Text>
+
                 <Button
                     mode='contained'
                     style={{ backgroundColor: colors.PHILIPPINE_ORANGE, width: '100%', marginTop: 25 }}
-                    disabled={disabled || !!emailError || !siteId}
+                    disabled={disabled || !siteId}
                     onPress={onSubmit}
                     loading={saving}
                 >
@@ -129,7 +150,7 @@ const AutoReportsTab = () => {
     const selectRangeDom = useMemo(() => {
         return <Portal>
             <Dialog visible={showRange} onDismiss={() => setShowRange(false)}>
-                <Dialog.Title>Chọn thời gian báo cáo</Dialog.Title>
+                <Dialog.Title>Chọn ngày báo cáo</Dialog.Title>
                 <Dialog.ScrollArea>
                     <ScrollView>
                         {RangeList.map((range) => <TouchableOpacity key={range} onPress={() => {
@@ -137,7 +158,7 @@ const AutoReportsTab = () => {
                             setShowRange(false);
                         }}>
                             <View style={{ margin: 5, paddingVertical: 10, paddingHorizontal: 5, backgroundColor: colors.bg1, borderRadius: 5 }}>
-                                <Text style={{ fontSize: 18, color: colors.PHILIPPINE_ORANGE }}>{`${range} ngày`}</Text>
+                                <Text style={{ fontSize: 18, color: colors.PHILIPPINE_ORANGE }}>{`ngày ${range}`}</Text>
                             </View>
                         </TouchableOpacity>)}
                     </ScrollView>
@@ -155,11 +176,9 @@ const AutoReportsTab = () => {
         <ConfirmDialog
             show={success}
             title={'Thành công!'}
-            content={
-                <Text style={{ color: colors.secondaryText, fontSize: 12 }}>
-                    Đã lưu cài đặt thành công.
-                </Text>
-            }
+            content={<Text style={{ color: colors.secondaryText, fontSize: 12 }}>
+                Đã lưu cài đặt thành công.
+            </Text>}
             onClose={() => setSuccess(false)}
             onOk={() => setSuccess(false)}
             isNegative={false}
@@ -172,17 +191,9 @@ const AutoReportsTab = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        marginTop: 10,
-        paddingStart: 30,
-        paddingEnd: 30,
-        backgroundColor: 'white'
-    },
-    textInput: {
-        fontSize: 16,
-        width: '100%',
-        backgroundColor: 'white',
-        marginTop: 10
+        flex: 1, marginTop: 10, paddingStart: 30, paddingEnd: 30, backgroundColor: 'white'
+    }, textInput: {
+        fontSize: 16, width: '100%', backgroundColor: 'white', marginTop: 10
     }
 });
 

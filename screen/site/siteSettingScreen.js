@@ -188,8 +188,16 @@ const SiteSettingScreen = ({ navigation }) => {
                 <Dialog.Content>
                     <CustomInput
                         style={styles.textInput}
+                        value={'Tính năng đang được hoàn thiện'}
+                        label={'Giá giờ cao điểm'}
+                        onChangeText={() => false}
+                        disabled={true}
+                        isDialog={true}
+                    />
+                    <CustomInput
+                        style={styles.textInput}
                         value={editPrice}
-                        label={'Giá mới'}
+                        label={'Giá giờ bình thường'}
                         placeholder={'1000'}
                         onChangeText={text => setEditPrice(text)}
                         disabled={loading}
@@ -197,6 +205,30 @@ const SiteSettingScreen = ({ navigation }) => {
                         returnKeyType={'next'}
                         error={errorPrice}
                         keyboardType={'numeric'}
+                        isDialog={true}
+                    />
+                    <CustomInput
+                        style={styles.textInput}
+                        value={'Tính năng đang được hoàn thiện'}
+                        label={'Giá giờ thấp điểm'}
+                        onChangeText={() => false}
+                        disabled={true}
+                        isDialog={true}
+                    />
+                    <CustomInput
+                        style={styles.textInput}
+                        value={'Tính năng đang được hoàn thiện'}
+                        label={'Chiết khấu (%)'}
+                        onChangeText={() => false}
+                        disabled={true}
+                        isDialog={true}
+                    />
+                    <CustomInput
+                        style={styles.textInput}
+                        value={'Tính năng đang được hoàn thiện'}
+                        label={'VAT (%)'}
+                        onChangeText={() => false}
+                        disabled={true}
                         isDialog={true}
                     />
                     <CustomInput
