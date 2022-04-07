@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Headline, IconButton, Menu } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Headline, IconButton, Menu, Text } from 'react-native-paper';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SiteOverviewTab from './siteTabs/siteOverviewTab';
 import SiteDevicesTab from './siteTabs/siteDevicesTab';
@@ -10,6 +10,8 @@ import SiteContext from '../../context/siteContext';
 import AppBarLayout from '../../component/appBarLayout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import UserContext from '../../context/userContext';
+import Clipboard from 'expo-clipboard';
+import Toast from 'react-native-root-toast';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -50,8 +52,15 @@ const SiteScreen = ({ navigation, route }) => {
 
     return <AppBarLayout menu={menu}>
         <View style={styles.container}>
-            <View style={{ backgroundColor: 'white', width: '100%' }}>
-                <Headline style={{ margin: 0, paddingStart: 15, paddingEnd: 15 }}>{site?.name}</Headline>
+            <View style={{ flexDirection: 'row', backgroundColor: 'white', width: '100%', paddingStart: 15, paddingEnd: 15, paddingBottom: 5, alignItems: 'center' }}>
+                <Headline style={{ flex: 1, margin: 0, color: colors.PHILIPPINE_ORANGE }}>{site?.name}</Headline>
+                {!!site?.id && <TouchableOpacity style={{ backgroundColor: colors.UNICORN_SILVER, padding: 5, borderRadius: 5 }}
+                                                onPress={() => {
+                                                    Clipboard.setString(site.id);
+                                                    Toast.show('Đã copy ID Trạm vào clipboard', { duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM, shadow: true, animation: true, hideOnPress: true, delay: 0 });
+                                                }}>
+                    <Text style={{ color: colors.secondaryText, fontSize: 12 }}>Copy ID</Text>
+                </TouchableOpacity>}
             </View>
             <View style={{ flex: 1, width: '100%' }}>
                 <Tab.Navigator tabBarOptions={{

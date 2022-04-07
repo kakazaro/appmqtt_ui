@@ -19,7 +19,7 @@ const IotScreen = ({ route }) => {
                     {!!iot?.id && <TouchableOpacity style={{ backgroundColor: colors.UNICORN_SILVER, padding: 5, borderRadius: 5 }}
                                                     onPress={() => {
                                                         Clipboard.setString(iot.id);
-                                                        Toast.show('Đã copy vào ID IOT clipboard', { duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM, shadow: true, animation: true, hideOnPress: true, delay: 0 });
+                                                        Toast.show('Đã copy ID IOT vào clipboard', { duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM, shadow: true, animation: true, hideOnPress: true, delay: 0 });
                                                     }}>
                         <Text style={{ color: colors.secondaryText, fontSize: 12 }}>Copy ID</Text>
                     </TouchableOpacity>}

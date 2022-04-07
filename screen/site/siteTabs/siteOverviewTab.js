@@ -83,7 +83,7 @@ const SiteOverviewTab = () => {
                         ...(data ? utility.makeupProduct(0) : undefined)
                     },
                     {
-                        text: 'Khung giờ bình thưởng',
+                        text: 'Khung giờ bình thường',
                         ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
                     },
                     {
@@ -141,7 +141,7 @@ const SiteOverviewTab = () => {
                     } : undefined)
                 },
                 {
-                    text: 'Khung giờ bình thưởng',
+                    text: 'Khung giờ bình thường',
                     ...(data ? {
                         value: value ? value : '',
                         unit: unit ? unit : 'chưa cài đặt'
