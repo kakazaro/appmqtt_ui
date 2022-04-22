@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Dialog, HelperText, Portal, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Dialog, HelperText, IconButton, Portal, Text } from 'react-native-paper';
 import { colors } from '../../common/themes';
 import FlatButton from '../../component/flatButton';
 import CustomInput from '../../component/customInput';
@@ -11,6 +11,9 @@ import eventCenter from '../../common/eventCenter';
 import serverError from '../../common/serverError';
 import ConfirmDialog from '../../component/confirmDialog';
 import UserContext from '../../context/userContext';
+import Clipboard from 'expo-clipboard';
+import Toast from 'react-native-root-toast';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const priceKey = [
     { key: 'unit_price_td', title: 'Giá giờ thấp điểm' }, { key: 'unit_price_bt', title: 'Giá giờ bình thường' }, { key: 'unit_price_cd', title: 'Giá giờ cao điểm' }
@@ -323,7 +326,16 @@ const SiteSettingScreen = ({ navigation }) => {
         }
     }, [site, siteOverview, userContext, loading, loadError, appSetting, modalEditNameDom, modalEditPriceDom, modalDeleteSiteDom]);
 
-    return <AppBarLayout title={'Cài đặt trạm'}>
+    return <AppBarLayout
+        title={'Cài đặt trạm'}
+        menu={<IconButton icon={() => <MaterialCommunityIcons name='content-copy' size={24} color={colors.PHILIPPINE_ORANGE}/>}
+                          onPress={() => {
+                              Clipboard.setString(site?.id || '');
+                              Toast.show('Đã copy ID Trạm vào clipboard', {
+                                  duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM,
+                                  shadow: true, animation: true, hideOnPress: true, delay: 0
+                              });
+                          }}/>}>
         {dom}
     </AppBarLayout>;
 };

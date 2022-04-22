@@ -80,7 +80,7 @@ const SiteOverviewTab = () => {
                 details: [
                     {
                         text: 'Khung giờ cao điểm',
-                        ...(data ? utility.makeupProduct((data['kwh_td'] || 0) * 1000) : {})
+                        ...(data ? utility.makeupProduct((data['kwh_cd'] || 0) * 1000) : {})
                     },
                     {
                         text: 'Khung giờ bình thường',
@@ -88,7 +88,7 @@ const SiteOverviewTab = () => {
                     },
                     {
                         text: 'Khung giờ thấp điểm',
-                        ...(data ? utility.makeupProduct((data['kwh_cd'] || 0) * 1000) : {})
+                        ...(data ? utility.makeupProduct((data['kwh_td'] || 0) * 1000) : {})
                     },
                     {
                         text: 'TỔNG',
@@ -116,7 +116,7 @@ const SiteOverviewTab = () => {
             details: [
                 {
                     text: 'Khung giờ cao điểm',
-                    ...(data ? utility.makeupMoney(data['price_td'], currency) : {})
+                    ...(data ? utility.makeupMoney(data['price_cd'], currency) : {})
                 },
                 {
                     text: 'Khung giờ bình thường',
@@ -124,7 +124,7 @@ const SiteOverviewTab = () => {
                 },
                 {
                     text: 'Khung giờ thấp điểm',
-                    ...(data ? utility.makeupMoney(data['price_cd'], currency) : {})
+                    ...(data ? utility.makeupMoney(data['price_td'], currency) : {})
                 },
                 {
                     text: 'TỔNG',

@@ -115,10 +115,10 @@ export default {
         let unit = '';
         if (even > 1000 * 1000 * 1000) {
             unit = 'tỷ';
-            even = Math.round(even / (1000 * 1000 * 100)) / 10;
+            even = Math.round(even / (1000 * 1000 * 10)) / 100;
         } else if (even > 1000 * 1000) {
             unit = 'triệu';
-            even = Math.round(even / (1000 * 100)) / 10;
+            even = Math.round(even / (1000 * 10)) / 100;
         } else if (even > 1000) {
             unit = 'nghìn';
             even = Math.round(even / 100) / 10;
