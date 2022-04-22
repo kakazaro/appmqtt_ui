@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Dialog, HelperText, Portal, Text } from 'react-native-paper';
 import { colors } from '../../common/themes';
@@ -12,16 +12,34 @@ import serverError from '../../common/serverError';
 import ConfirmDialog from '../../component/confirmDialog';
 import UserContext from '../../context/userContext';
 
+const priceKey = [
+    { key: 'unit_price_td', title: 'Giá giờ thấp điểm' }, { key: 'unit_price_bt', title: 'Giá giờ bình thường' }, { key: 'unit_price_cd', title: 'Giá giờ cao điểm' }
+];
+
+const percentKey = [
+    { key: 'discount', title: 'Chiết khấu (%)' }, { key: 'vat', title: 'VAT (%)' }
+];
+
 const SiteSettingScreen = ({ navigation }) => {
     const userContext = useContext(UserContext);
     const serverContext = useContext(ServerContext);
     const siteContext = useContext(SiteContext);
 
     const site = useMemo(() => siteContext?.site, [siteContext]);
-    const [siteOverview, setSiteOverview] = useState();
+    const [siteOverview, setSiteOverview] = useState(undefined);
 
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState('');
+
+    const [showEditName, setShowEditName] = useState(false);
+    const [editName, setEditName] = useState('');
+    const [errorEditName, setErrorEditName] = useState('');
+
+    const [showEditPrice, setShowEditPrice] = useState(false);
+    const [editPrice, setEditPrice] = useState(priceKey.reduce((s, p) => ({ ...s, [p.key]: '' }), {}));
+    const [editPercent, setEditPercent] = useState(percentKey.reduce((s, p) => ({ ...s, [p.key]: '' }), {}));
+    const [editCurrency, setEditCurrency] = useState('');
+    const [errorEditPrice, setErrorEditPrice] = useState('');
 
     useEffect(() => {
         let discard = false;
@@ -39,7 +57,8 @@ const SiteSettingScreen = ({ navigation }) => {
                     setEditName(site.name || '');
                     const siteOverview = response.data.site;
                     setSiteOverview(siteOverview);
-                    setEditPrice((siteOverview?.price || '') + '');
+                    setEditPrice(priceKey.reduce((s, p) => ({ ...s, [p.key]: ((siteOverview && siteOverview[p.key]) || '').toString() }), {}));
+                    setEditPercent(percentKey.reduce((s, p) => ({ ...s, [p.key]: ((siteOverview && siteOverview[p.key]) || 0).toString() }), {}));
                     setEditCurrency(siteOverview?.currency || '');
                 } catch (e) {
                     if (discard) {
@@ -56,49 +75,31 @@ const SiteSettingScreen = ({ navigation }) => {
         };
     }, [site, serverContext]);
 
-    const [showEditName, setShowEditName] = useState(false);
-    const [editName, setEditName] = useState('');
-    const [errorEditName, setErrorEditName] = useState('');
-
-    const [showEditPrice, setShowEditPrice] = useState(false);
-    const [editPrice, setEditPrice] = useState('');
-    const [editCurrency, setEditCurrency] = useState('');
-    const [errorEditPrice, setErrorEditPrice] = useState('');
-
     const appSetting = useMemo(() => {
         const disabled = loading || loadError;
-        return [
-            {
-                title: 'Tên',
-                currentValue: site?.name || '',
-                disabled,
-                iconName: 'pencil',
-                onPress: () => setShowEditName(true)
-            },
-            {
-                title: 'Biểu giá',
-                description: 'Giá tiền cho mỗi kWh',
-                disabled,
-                currentValue: !siteOverview ? '' : (!siteOverview.price || !siteOverview.currency) ? 'chưa cài đặt' : `${siteOverview.price} ${siteOverview.currency}`,
-                iconName: 'pencil',
-                onPress: () => setShowEditPrice(true)
-            },
-            {
-                title: 'Báo cáo',
-                disabled,
-                onPress: () => navigation.navigate('siteReports')
+        const setting = [];
+        // console.log(userContext.rolePermission)
+        if (userContext.rolePermission.canEditName) {
+            setting.push({
+                title: 'Tên', currentValue: site?.name || '', disabled, iconName: 'pencil', onPress: () => setShowEditName(true)
+            });
+        }
 
-            }
-        ];
-    }, [site, siteOverview, loading, navigation]);
-
-    const updateSite = (id, name, price, currency) => {
-        return serverContext.post('/site/update?id=' + encodeURIComponent(id), {
-            name: name || 'Station name',
-            price: price || 0,
-            currency: currency || ''
+        setting.push({
+            title: 'Biểu giá', description: 'Giá tiền cho mỗi kWh', disabled, currentValue: '', iconName: 'pencil', onPress: () => setShowEditPrice(true)
         });
-    };
+        setting.push({
+            title: 'Báo cáo', disabled, onPress: () => navigation.navigate('siteReports')
+        });
+        return setting;
+    }, [site, siteOverview, loading, navigation, userContext]);
+
+    const updateSite = useCallback((updatedSite) => {
+        console.log(updatedSite);
+        return serverContext.post('/site/update?id=' + encodeURIComponent(updatedSite.id), {
+            ...siteOverview, ...updatedSite, id: undefined,
+        });
+    }, [siteOverview]);
 
     const modalEditNameDom = useMemo(() => {
         const errorName = editName && editName.length < 4 || editName.length > 40 ? 'Tên trạm điện phải từ 4 đến 40 ký tự' : '';
@@ -110,12 +111,10 @@ const SiteSettingScreen = ({ navigation }) => {
 
             (async () => {
                 try {
-                    await updateSite(site.id, editName, siteOverview?.price, siteOverview?.currency);
+                    const update = { id: site.id, name: editName };
+                    await updateSite(update);
                     setShowEditName(false);
-                    eventCenter.push(eventCenter.eventNames.updateSiteName, {
-                        id: site.id,
-                        name: editName
-                    });
+                    eventCenter.push(eventCenter.eventNames.updateSiteName, update);
                 } catch (e) {
                     setErrorEditName(serverError.getError(e));
                 }
@@ -144,19 +143,30 @@ const SiteSettingScreen = ({ navigation }) => {
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button style={{ minWidth: 70 }} labelStyle={{ color: colors.primaryText }} disabled={loading} onPress={() => setShowEditName(false)}>Hủy</Button>
-                    <Button style={{ marginStart: 10, minWidth: 70, backgroundColor: colors.PHILIPPINE_ORANGE }} onPress={onChangeName} disabled={!canChange || loading} loading={loading} mode='contained'>Sửa</Button>
+                    <Button style={{ marginStart: 10, minWidth: 70, backgroundColor: colors.PHILIPPINE_ORANGE }} onPress={onChangeName} disabled={!canChange || loading}
+                            loading={loading} mode='contained'>Sửa</Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>;
-    }, [showEditName, editName, loading, serverContext, site, siteOverview, errorEditName]);
+    }, [showEditName, editName, loading, serverContext, site, errorEditName, updateSite]);
 
-    const currencyRef = useRef();
+    const currencyRef = useRef(null);
+    const priceRef = useRef(Array(priceKey.length).fill(null));
+    const percentRef = useRef(Array(percentKey.length).fill(null));
 
     const modalEditPriceDom = useMemo(() => {
-        const price = parseFloat(editPrice);
-        const errorPrice = !editPrice || (!(/[^\d.]/i.test(editPrice)) && price && isFinite(price) && !isNaN(price) && price > 0) ? '' : 'Phải là số hợp lệ và lớn hơn 0';
+        const priceParsed = Object.keys(editPrice).reduce((s, key) => {
+            const price = parseInt(editPrice[key]);
+            const error = !editPrice[key] || (!(/[^\d.]/i.test(editPrice[key])) && price && isFinite(price) && !isNaN(price) && price > 0) ? '' : 'Phải là số hợp lệ và lớn hơn 0';
+            return { ...s, [key]: price, ['error_' + key]: error };
+        }, {});
+        const percentParsed = Object.keys(editPercent).reduce((s, key) => {
+            const percent = parseFloat(editPercent[key]);
+            const error = !editPercent[key] || (!(/[^\d.]/i.test(editPercent[key])) && isFinite(percent) && !isNaN(percent) && percent >= 0 && percent <= 100) ? '' : 'Phải là số hợp lệ và từ 0 đến 100';
+            return { ...s, [key]: percent, ['error_' + key]: error };
+        }, {});
         const errorCurrency = editCurrency && editCurrency.length < 1 && editCurrency.length > 8 ? 'Mệnh giá phải từ 1 đến 8 ký tự' : '';
-        const canChange = editPrice && !errorPrice && editCurrency && !errorCurrency;
+        const canChange = priceKey.every(p => !!editPrice[p.key] && !priceParsed['error_' + p.key]) && percentKey.every(p => !!editPercent[p.key] && !percentParsed['error_' + p.key]) && editCurrency && !errorCurrency;
 
         const onChangePrice = () => {
             setLoading(true);
@@ -164,18 +174,14 @@ const SiteSettingScreen = ({ navigation }) => {
 
             (async () => {
                 try {
-                    await updateSite(site.id, site.name, price, editCurrency);
-                    setSiteOverview({
-                        ...siteOverview,
-                        price,
-                        currency: editCurrency
-                    });
+                    const update = {
+                        id: site.id, ...priceKey.reduce((s, p) => ({ ...s, [p.key]: priceParsed[p.key] }), {}), ...percentKey.reduce((s, p) => ({
+                            ...s, [p.key]: percentParsed[p.key]
+                        }), {}), currency: editCurrency
+                    };
+                    await updateSite(update);
                     setShowEditPrice(false);
-                    eventCenter.push(eventCenter.eventNames.updateSitePrice, {
-                        id: site.id,
-                        price,
-                        currency: editCurrency
-                    });
+                    eventCenter.push(eventCenter.eventNames.updateSitePrice, update);
                 } catch (e) {
                     setErrorEditPrice(serverError.getError(e));
                 }
@@ -186,75 +192,62 @@ const SiteSettingScreen = ({ navigation }) => {
         return <Portal>
             <Dialog visible={showEditPrice} dismissable={!loading} onDismiss={() => setShowEditPrice(false)}>
                 <Dialog.Content>
-                    <CustomInput
+                    {priceKey.map((p, index) => <CustomInput
+                        key={p.key}
+                        ref={e => priceRef.current[index] = e}
                         style={styles.textInput}
-                        value={'Tính năng đang được hoàn thiện'}
-                        label={'Giá giờ cao điểm'}
-                        onChangeText={() => false}
-                        disabled={true}
-                        isDialog={true}
-                    />
-                    <CustomInput
-                        style={styles.textInput}
-                        value={editPrice}
-                        label={'Giá giờ bình thường'}
+                        value={editPrice[p.key]}
+                        label={p.title}
                         placeholder={'1000'}
-                        onChangeText={text => setEditPrice(text)}
-                        disabled={loading}
-                        onSubmitEditing={() => currencyRef?.current?.focus()}
+                        onChangeText={text => setEditPrice(last => ({ ...last, [p.key]: text }))}
+                        disabled={loading || !userContext.rolePermission.canEditPrice}
+                        onSubmitEditing={() => (index < priceKey.length - 1 ? priceRef.current[index + 1] : percentRef.current[0])?.focus()}
                         returnKeyType={'next'}
-                        error={errorPrice}
+                        error={priceParsed['error_' + p.key]}
                         keyboardType={'numeric'}
                         isDialog={true}
-                    />
-                    <CustomInput
+                    />)}
+                    {userContext.rolePermission.canSeePercent && percentKey.map((p, index) => <CustomInput
+                        key={p.key}
+                        ref={e => percentRef.current[index] = e}
                         style={styles.textInput}
-                        value={'Tính năng đang được hoàn thiện'}
-                        label={'Giá giờ thấp điểm'}
-                        onChangeText={() => false}
-                        disabled={true}
+                        value={editPercent[p.key]}
+                        label={p.title}
+                        placeholder={'8'}
+                        onChangeText={text => setEditPercent(last => ({ ...last, [p.key]: text }))}
+                        disabled={loading || !userContext.rolePermission.canEditPercent}
+                        onSubmitEditing={() => (index < percentKey.length - 1 ? percentRef.current[index + 1] : currencyRef.current)?.focus()}
+                        returnKeyType={'next'}
+                        error={percentParsed['error_' + p.key]}
+                        keyboardType={'numeric'}
                         isDialog={true}
-                    />
-                    <CustomInput
-                        style={styles.textInput}
-                        value={'Tính năng đang được hoàn thiện'}
-                        label={'Chiết khấu (%)'}
-                        onChangeText={() => false}
-                        disabled={true}
-                        isDialog={true}
-                    />
-                    <CustomInput
-                        style={styles.textInput}
-                        value={'Tính năng đang được hoàn thiện'}
-                        label={'VAT (%)'}
-                        onChangeText={() => false}
-                        disabled={true}
-                        isDialog={true}
-                    />
-                    <CustomInput
+                    />)}
+                    {<CustomInput
                         ref={currencyRef}
                         style={styles.textInput}
                         value={editCurrency}
                         label={'Loại tiền tệ'}
                         placeholder={'VNĐ, đ, $'}
                         onChangeText={text => setEditCurrency(text)}
-                        disabled={loading}
-                        onSubmitEditing={onChangePrice}
+                        disabled={loading || !userContext.rolePermission.canEditPrice}
+                        onSubmitEditing={() => (canChange && !loading) ? onChangePrice() : false}
                         returnKeyType={'done'}
                         error={errorCurrency}
                         isDialog={true}
-                    />
+                    />}
                     {!!errorEditPrice && <HelperText type='error'>
                         {errorEditPrice}
                     </HelperText>}
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button style={{ minWidth: 70 }} labelStyle={{ color: colors.primaryText }} disabled={loading} onPress={() => setShowEditPrice(false)}>Hủy</Button>
-                    <Button style={{ marginStart: 10, minWidth: 70, backgroundColor: colors.PHILIPPINE_ORANGE }} onPress={onChangePrice} disabled={!canChange || loading} loading={loading} mode='contained'>Đổi</Button>
+                    <Button style={{ marginStart: 10, minWidth: 70, backgroundColor: colors.PHILIPPINE_ORANGE }} onPress={onChangePrice}
+                            disabled={!canChange || loading || (!userContext.rolePermission.canEditPrice && !userContext.rolePermission.canEditPercent)}
+                            loading={loading} mode='contained'>Đổi</Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>;
-    }, [showEditPrice, editPrice, editCurrency, loading, serverContext, site, siteOverview, errorEditPrice]);
+    }, [showEditPrice, editPrice, editPercent, editCurrency, loading, serverContext, site, errorEditPrice, updateSite, userContext]);
 
     const [showDeleteSite, setShowDeleteSite] = useState(false);
     const [errorDeleteSite, setErrorDeleteSite] = useState('');
@@ -268,8 +261,7 @@ const SiteSettingScreen = ({ navigation }) => {
                     await serverContext.delete('/site?id=' + encodeURIComponent(site.id));
                     eventCenter.push(eventCenter.eventNames.deleteSite, site);
                     navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'home' }],
+                        index: 0, routes: [{ name: 'home' }],
                     });
                 } catch (e) {
                     setErrorDeleteSite(serverError.getError(e));
@@ -338,14 +330,9 @@ const SiteSettingScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     textInput: {
-        fontSize: 16,
-        width: '100%',
-        backgroundColor: 'white',
-        marginTop: 10
-    },
-    labelText: {
-        color: colors.secondaryText,
-        fontSize: 12
+        fontSize: 16, width: '100%', backgroundColor: 'white', marginTop: 10
+    }, labelText: {
+        color: colors.secondaryText, fontSize: 12
     },
 });
 

@@ -65,12 +65,22 @@ export default {
         AD: {
             id: 'AD',
             label: 'Admin',
-            icon: 'account-hard-hat'
+            icon: 'account-cog'
         },
         SA: {
             id: 'SA',
             label: 'System Admin',
+            icon: 'account-key'
+        },
+        MA: {
+            id: 'MA',
+            label: 'Manager',
             icon: 'account-tie'
+        },
+        EN: {
+            id: 'EN',
+            label: 'Engineer',
+            icon: 'account-hard-hat'
         }
     },
     findUnit(values, baseUnit = 'W', multiple = 1) {
@@ -99,25 +109,25 @@ export default {
 
         return { unit: unit + baseUnit, div: div / multiple };
     },
-    makeupMoney(value) {
-        let even = Math.floor(value);
+    makeupMoney(value, currency) {
+        let even = Math.round(value || 0);
         // const odd = value - even;
         let unit = '';
         if (even > 1000 * 1000 * 1000) {
             unit = 'tỷ';
-            even = Math.floor(even / (1000 * 1000 * 100)) / 10;
+            even = Math.round(even / (1000 * 1000 * 100)) / 10;
         } else if (even > 1000 * 1000) {
             unit = 'triệu';
-            even = Math.floor(even / (1000 * 100)) / 10;
+            even = Math.round(even / (1000 * 100)) / 10;
         } else if (even > 1000) {
             unit = 'nghìn';
-            even = Math.floor(even / 100) / 10;
+            even = Math.round(even / 100) / 10;
         }
 
         even = even.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         // return even + '.' + Math.floor(odd * 100);
 
-        return { value: even, unit: unit };
+        return { value: even, unit: unit + (currency ? (' ' + currency) : '') };
     },
     makeupPower(value = 0, postfix = '') {
         let { unit, div } = this.findUnit([value], 'W', 1);

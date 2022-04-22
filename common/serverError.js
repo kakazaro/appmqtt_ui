@@ -19,7 +19,7 @@ export default {
 
 const errors = {
     E40001: { code: 40001, message: 'System code. Please contact with your admin', error: 'Đã có lỗi không xác định xảy ra' },
-    E40002: { code: 40002, message: 'Role is incorrect systax. Please use [SA, AD, US]', error: 'Quyền người dùng không hợp lệ' },
+    E40002: { code: 40002, message: 'Role is incorrect systax. Please use [SA, AD, US, MA, EN]', error: 'Quyền người dùng không hợp lệ' },
     E40010: { code: 40010, message: 'Basetime or type is incorrect', error: 'Lỗi giá trị đầu vào chưa đúng' },
     E40011: { code: 40011, message: 'Username or passwork is incorrect', error: 'Tài khoản hoặc mật khẩu không chính xác' },
     E40012: { code: 40012, message: 'There is no data in device data', error: 'Không có dữ liệu' },

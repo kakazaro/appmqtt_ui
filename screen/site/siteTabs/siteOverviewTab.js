@@ -65,40 +65,40 @@ const SiteOverviewTab = () => {
             <RowInfo info={{
                 main: {
                     text: 'Công suất PV hiện tại',
-                    ...(data ? utility.makeupPower(data.curSumActPower) : undefined)
+                    ...(data ? utility.makeupPower(data.curSumActPower) : {})
                 },
                 sub: {
                     text: 'Công suất danh định',
-                    ...(data ? utility.makeupPower(data.ratedSumPower, 'p') : undefined)
+                    ...(data ? utility.makeupPower(data.ratedSumPower, 'p') : {})
                 }
             }}/>
             <RowInfo info={{
                 main: {
                     text: 'Tổng lượng điện PV trong ngày',
-                    ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
+                    ...(data ? utility.makeupProduct((data['kwh_total'] || 0) * 1000) : {})
                 },
                 details: [
                     {
                         text: 'Khung giờ cao điểm',
-                        ...(data ? utility.makeupProduct(0) : undefined)
+                        ...(data ? utility.makeupProduct((data['kwh_td'] || 0) * 1000) : {})
                     },
                     {
                         text: 'Khung giờ bình thường',
-                        ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
+                        ...(data ? utility.makeupProduct((data['kwh_bt'] || 0) * 1000) : {})
                     },
                     {
                         text: 'Khung giờ thấp điểm',
-                        ...(data ? utility.makeupProduct(0) : undefined)
+                        ...(data ? utility.makeupProduct((data['kwh_cd'] || 0) * 1000) : {})
                     },
                     {
                         text: 'TỔNG',
                         isSum: true,
-                        ...(data ? utility.makeupProduct(data.todaySumEnergy) : undefined)
+                        ...(data ? utility.makeupProduct((data['kwh_total'] || 0) * 1000) : {})
                     }
                 ],
                 sub: {
                     text: 'Tổng lượng điện PV tích lũy',
-                    ...(data ? utility.makeupProduct(data.allSumEnergy) : undefined)
+                    ...(data ? utility.makeupProduct((data['kwh_sum'] || 0) * 1000) : {})
                 }
             }}/>
         </>;
@@ -106,69 +106,35 @@ const SiteOverviewTab = () => {
 
     const incomeDom = useMemo(() => {
         const data = overviewData?.site;
-        let price = data?.price;
         const currency = data?.currency;
 
-        price = price ? parseInt(price) : 0;
-        price = isFinite(price) && !isNaN(price) && price > 0 ? price : 0;
-
-        let value, unit, totalValue, totalUnit;
-        if (data && price && currency) {
-            let makeup = utility.makeupMoney(data.todaySumEnergy * price / 1000);
-            value = makeup.value;
-            unit = makeup.unit + ' ' + currency;
-
-            makeup = utility.makeupMoney(data.allSumEnergy * price / 1000);
-            totalValue = makeup.value;
-            totalUnit = makeup.unit + ' ' + currency;
-        }
-
         return <RowInfo info={{
-
             main: {
                 text: 'Lợi nhuận trong ngày',
-                ...(data ? {
-                    value: value ? value : '',
-                    unit: unit ? unit : 'chưa cài đặt'
-                } : undefined)
+                ...(data ? utility.makeupMoney(data['total_price'], currency) : {})
             },
             details: [
                 {
                     text: 'Khung giờ cao điểm',
-                    ...(data ? {
-                        value: 0,
-                        unit: 'VND'
-                    } : undefined)
+                    ...(data ? utility.makeupMoney(data['price_td'], currency) : {})
                 },
                 {
                     text: 'Khung giờ bình thường',
-                    ...(data ? {
-                        value: value ? value : '',
-                        unit: unit ? unit : 'chưa cài đặt'
-                    } : undefined)
+                    ...(data ? utility.makeupMoney(data['price_bt'], currency) : {})
                 },
                 {
                     text: 'Khung giờ thấp điểm',
-                    ...(data ? {
-                        value: 0,
-                        unit: 'VND'
-                    } : undefined)
+                    ...(data ? utility.makeupMoney(data['price_cd'], currency) : {})
                 },
                 {
                     text: 'TỔNG',
                     isSum: true,
-                    ...(data ? {
-                        value: value ? value : '',
-                        unit: unit ? unit : 'chưa cài đặt'
-                    } : undefined)
+                    ...(data ? utility.makeupMoney(data['total_price'], currency) : {})
                 }
             ],
             sub: {
                 text: 'Tổng lợi nhuận tích lũy',
-                ...(data ? {
-                    value: totalValue ? totalValue : '--',
-                    unit: totalUnit ? totalUnit : ''
-                } : undefined)
+                ...(data ? utility.makeupMoney(data['price_sum'], currency) : {})
             }
         }}/>;
     }, [overviewData]);
