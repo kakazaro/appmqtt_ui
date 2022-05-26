@@ -253,7 +253,9 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
 
         let dataSeries, times, names, namesTable, tableLabels, unit;
 
-        let { series } = data[0];
+        let { series } = data[0] || data[1];
+        if (!series)
+            return;
 
         times = [];
         tableLabels = [];
