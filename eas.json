@@ -6,7 +6,7 @@
     "base": {
       "node": "14.18.1",
       "android": {
-        "image": "default",
+        "image": "ubuntu-20.04-jdk-11-ndk-r23b",
         "env": {
           "PLATFORM": "android"
         }
