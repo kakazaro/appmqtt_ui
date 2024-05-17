@@ -18,13 +18,13 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ntvorg.ntvisolar",
+      "bundleIdentifier": "com.ntv.isolar",
       "googleServicesFile": "./GoogleService-Info.plist",
       "buildNumber": "1.3.1",
       "requireFullScreen": true
     },
     "android": {
-      "package": "com.ntvorg.ntvisolar",
+      "package": "com.ntv.isolar",
       "versionCode": 1003001,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {

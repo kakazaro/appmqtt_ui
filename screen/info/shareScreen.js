@@ -11,7 +11,7 @@ const shares = [
         qrCode: require('../../assets/android-qr-code.png'),
         badge: require('../../assets/google-play-badge.png'),
         badgeStyle: { width: 155, height: 60 },
-        url: 'https://play.google.com/store/apps/details?id=com.ntvorg.ntvisolar'
+        url: 'https://play.google.com/store/apps/details?id=com.ntv.isolar'
     },
     {
         icon: 'apple',
