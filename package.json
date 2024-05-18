@@ -56,7 +56,9 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.0",
+    "eas-cli": "^9.0.7",
+    "expo-cli": "^6.3.10"
   },
   "private": true
 }
