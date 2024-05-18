@@ -26,6 +26,7 @@
     "expo-firebase-analytics": "~4.0.2",
     "expo-font": "~9.1.0",
     "expo-localization": "~10.1.0",
+    "expo-modules-core": "^1.12.11",
     "expo-screen-orientation": "~3.1.0",
     "expo-splash-screen": "~0.10.2",
     "expo-status-bar": "~1.0.4",
