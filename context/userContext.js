@@ -1,10 +1,10 @@
 import React, { createContext, useEffect, useMemo, useState } from 'react';
-import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import constant from '../common/constant';
 import utility from '../common/utility';
 import RolePermission from '../common/rolePermission';
+import * as SplashScreen from 'expo-splash-screen';
 
 const defaultUser = {
     id: '',
@@ -42,6 +42,7 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
+            await SplashScreen.preventAutoHideAsync();
             const dataString = (await AsyncStorage.getItem(LOGIN_DATA_KEY)) || '{}';
             let data;
             try {
@@ -73,6 +74,7 @@ export const UserProvider = ({ children }) => {
             }
 
             setLoading(false);
+            await SplashScreen.hideAsync();
         })();
     }, []);
 
@@ -104,7 +106,7 @@ export const UserProvider = ({ children }) => {
 
     const dom = useMemo(() => {
         if (loading) {
-            return <AppLoading/>;
+            return null;
         }
 
         return children;
