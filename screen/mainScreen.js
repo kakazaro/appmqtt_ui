@@ -19,8 +19,6 @@ import RegisterScreen from './user/registerScreen';
 import AddSiteScreen from './site/addSiteScreen';
 import SiteReportsScreen from './site/siteReports/siteReportsScreen';
 import EventScreen from './event/eventScreen';
-import * as Analytics from 'expo-firebase-analytics';
-import Constants, { AppOwnership } from 'expo-constants';
 import SelectIotScreen from './site/selectIotScreen';
 import AddDeviceScreen from './site/addDeviceScreen';
 import IotScreen from './iot/iotScreen';
@@ -29,14 +27,6 @@ const Stack = createStackNavigator();
 
 const MainScreen = () => {
     const userContext = useContext(UserContext);
-
-    useEffect(() => {
-        (async () => {
-            if (Constants.isDevice) {
-                await Analytics.setDebugModeEnabled(Constants.appOwnership !== AppOwnership.Standalone);
-            }
-        })();
-    }, []);
 
     const myTransition = {
         gestureDirection: 'horizontal',

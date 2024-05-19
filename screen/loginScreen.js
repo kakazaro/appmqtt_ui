@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../context/userContext';
 import constant from '../common/constant';
 import ServerContext from '../context/serverContext';
-import * as Analytics from 'expo-firebase-analytics';
 import CustomInput from '../component/customInput';
 import serverError from '../common/serverError';
 import ConfirmDialog from '../component/confirmDialog';
@@ -60,13 +59,6 @@ const LoginScreen = ({ route }) => {
         setLoading(true);
         setError('');
         (async () => {
-            try {
-                if (Constants.isDevice) {
-                    await Analytics.logEvent('loginBtnClick');
-                }
-            } catch (e) {
-                //Ignore
-            }
             try {
                 const response = await serverContext.post('/users/login', { email: email.toLowerCase(), password });
                 await AsyncStorage.setItem(RememberKey, rememberPassword ? 'true' : '');
