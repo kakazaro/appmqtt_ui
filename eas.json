@@ -4,9 +4,9 @@
   },
   "build": {
     "base": {
-      "node": "latest",
+      "node": "14.18.1",
       "android": {
-        "image": "ubuntu-22.04-jdk-11-ndk-r21e",
+        "image": "latest",
         "env": {
           "PLATFORM": "android"
         }
