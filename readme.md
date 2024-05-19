@@ -3,3 +3,6 @@ https://docs.expo.dev/deploy/build-project/
 ```bash
 eas build --platform android
 ```
+### Google play console
+email: solar.ntv@gmail.com
+password: Hochiminh01!
