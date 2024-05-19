@@ -4,7 +4,7 @@
   },
   "build": {
     "base": {
-      "node": "14.18.1",
+      "node": "latest",
       "android": {
         "image": "ubuntu-22.04-jdk-11-ndk-r21e",
         "env": {
