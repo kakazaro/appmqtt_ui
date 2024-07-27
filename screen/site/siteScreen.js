@@ -54,14 +54,7 @@ const SiteScreen = ({ navigation, route }) => {
                 <Headline style={{ flex: 1, margin: 0, color: colors.PHILIPPINE_ORANGE }}>{site?.name}</Headline>
             </View>
             <View style={{ flex: 1, width: '100%' }}>
-                <Tab.Navigator tabBarOptions={{
-                    labelStyle: { fontSize: 15, textTransform: 'none' },
-                    tabStyle: { padding: 0 },
-                    activeTintColor: colors.PHILIPPINE_ORANGE,
-                    inactiveTintColor: colors.secondaryText,
-                    indicatorStyle: { backgroundColor: colors.PHILIPPINE_ORANGE, width: (100 / 3 - 5 * 3) + '%', marginStart: '5%' },
-                    style: { elevation: 0, borderBottomColor: colors.UNICORN_SILVER, borderBottomStyle: 'solid', borderBottomWidth: 1 }
-                }}>
+                <Tab.Navigator>
                     <Tab.Screen name='siteOverview' options={{ title: 'Thông tin chung' }} component={SiteOverviewTab}/>
                     <Tab.Screen name='siteDevices' options={{ title: 'Thiết bị' }} component={SiteDevicesTab}/>
                     <Tab.Screen name='siteAlarms' options={{ title: 'Sự cố' }} component={SiteAlarmsTab}/>

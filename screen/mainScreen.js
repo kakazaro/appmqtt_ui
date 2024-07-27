@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, HeaderStyleInterpolators, TransitionSpecs } from '@react-navigation/stack';
 import UserContext from '../context/userContext';
@@ -22,26 +21,26 @@ import EventScreen from './event/eventScreen';
 import SelectIotScreen from './site/selectIotScreen';
 import AddDeviceScreen from './site/addDeviceScreen';
 import IotScreen from './iot/iotScreen';
+import { SafeAreaView, StatusBar } from 'react-native';
 
 const Stack = createStackNavigator();
 
 const MainScreen = () => {
     const userContext = useContext(UserContext);
 
-    const myTransition = {
-        gestureDirection: 'horizontal',
-        transitionSpec: {
-            open: TransitionSpecs.TransitionIOSSpec,
-            close: TransitionSpecs.TransitionIOSSpec,
-        },
-        headerStyleInterpolator: HeaderStyleInterpolators.forFade,
-    };
-
-    return <>
-        <StatusBar style='auto'/>
+    return <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar/>
         {!userContext.isLogin && <LoginScreen/>}
         {userContext.isLogin && <NavigationContainer>
-            <Stack.Navigator initialRouteName={'home'} headerMode='none' screenOptions={{ ...myTransition }}>
+            <Stack.Navigator initialRouteName={'home'} screenOptions={{
+                transitionSpec: {
+                    open: TransitionSpecs.TransitionIOSSpec,
+                    close: TransitionSpecs.TransitionIOSSpec,
+                },
+                gestureDirection: 'horizontal',
+                headerStyleInterpolator: HeaderStyleInterpolators.forFade,
+                headerShown: false
+            }}>
                 <Stack.Screen name={'home'} component={HomeScreen}/>
 
                 <Stack.Screen name={'setting'} component={HomeSettingScreen}/>
@@ -69,7 +68,7 @@ const MainScreen = () => {
                 <Stack.Screen name={'share'} component={ShareScreen}/>
             </Stack.Navigator>
         </NavigationContainer>}
-    </>;
+    </SafeAreaView>;
 };
 
 export default MainScreen;
