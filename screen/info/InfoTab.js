@@ -16,9 +16,9 @@ const InfoTab = ({ navigation }) => {
             <View>
                 <Text style={styles.sectionText}>Thông tin người dùng:</Text>
                 <View style={{ marginStart: 15, marginTop: 5, marginBottom: 5 }}>
-                    <Text style={styles.labelText}>Email đăng nhập: <Text style={styles.infoText}>{userContext?.user?.email}</Text></Text>
-                    <Text style={styles.labelText}>Tên người dùng: <Text style={styles.infoText}>{userContext?.user?.name}</Text></Text>
-                    {userContext.rolePermission.showUserType && <Text style={styles.labelText}>Loại tài khoản: <Text style={styles.infoText}>{roleUser.label}</Text></Text>}
+                    <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{userContext?.user?.email}</Text></Text>
+                    <Text style={styles.labelText}>Tên: <Text style={styles.infoText}>{userContext?.user?.name}</Text></Text>
+                    {userContext.rolePermission.showUserType && <Text style={styles.labelText}>Tài khoản: <Text style={styles.infoText}>{roleUser.label}</Text></Text>}
                 </View>
                 <Divider/>
             </View>

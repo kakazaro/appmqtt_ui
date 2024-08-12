@@ -49,7 +49,7 @@ const ShareScreen = () => {
                     <TouchableOpacity onPress={() => onShareClick(share.url)}>
                         <Image style={{ width: imgWidth, height: imgWidth }} source={share.qrCode}/>
                     </TouchableOpacity>
-                    <Text style={{ color: colors.secondaryText, fontSize: 12, marginTop: 10 }}>nhấn vào mã QR trên để gửi chia sẻ</Text>
+                    <Text style={{ color: colors.secondaryText, fontSize: 12, marginTop: 10 }}>nhấn vào mã QR trên để chia sẻ ứng dụng</Text>
                 </View>
             </View>)}
 
