@@ -15,7 +15,9 @@ const defaultUser = {
     login: () => undefined,
     logout: () => undefined,
     resetOutSession: () => undefined,
-    rolePermission: new RolePermission(utility.USER_ROLES.US.id)
+    rolePermission: new RolePermission(utility.USER_ROLES.US.id),
+    isAskLogout: false,
+    askLogout: () => undefined,
 };
 const LOGIN_DATA_KEY = '__login';
 const UserContext = createContext(defaultUser);
@@ -25,6 +27,7 @@ export const UserProvider = ({ children }) => {
     const [isOutSession, setIsOutSession] = useState(false);
 
     const [loading, setLoading] = useState(true);
+    const [isAskLogout, setIsAskLogout] = useState(false);
 
     const verifyLoginData = (data) => {
         return data?.token && data?.user?._id && data?.user?.name && data?.user?.email && data?.user?.role;
@@ -98,11 +101,14 @@ export const UserProvider = ({ children }) => {
             logout: (isOutSession) => {
                 setIsOutSession(!!isOutSession);
                 setLoginData(undefined);
+                setIsAskLogout(false);
             },
             resetOutSession: () => setIsOutSession(false),
-            rolePermission: new RolePermission(loginData?.user?.role || utility.USER_ROLES.US.id)
+            rolePermission: new RolePermission(loginData?.user?.role || utility.USER_ROLES.US.id),
+            isAskLogout,
+            askLogout: (value) => setIsAskLogout(value)
         };
-    }, [loginData, isOutSession]);
+    }, [loginData, isOutSession, isAskLogout]);
 
     const dom = useMemo(() => {
         if (loading) {

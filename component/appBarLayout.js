@@ -1,13 +1,16 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Text } from 'react-native-paper';
 import { colors } from '../common/themes';
 import { useFonts } from 'expo-font';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
+import ConfirmDialog from './confirmDialog';
+import UserContext from '../context/userContext';
 
 const AppBarLayout = ({ title, subtitle, children, menu, brand }) => {
     const navigation = useNavigation();
     const routeLength = useNavigationState(state => state?.routes?.length);
+    const userContext = useContext(UserContext);
 
     let [fontsLoaded] = useFonts({
         'trivial-font': require('../assets/fonts/trivial-bold.otf')
@@ -47,6 +50,19 @@ const AppBarLayout = ({ title, subtitle, children, menu, brand }) => {
         <View style={{ flex: 1 }}>
             {children}
         </View>
+        <ConfirmDialog
+            show={userContext.isAskLogout}
+            title={'Đăng xuất'}
+            content={<>
+                <Text>Bạn có muốn đăng xuất khỏi hệ thống không?</Text>
+            </>}
+            onClose={() => userContext.askLogout(false)}
+            onOk={() => userContext.logout()}
+            isNegative={true}
+            negativeText={'Không'}
+            positiveText={'Có'}
+            mode={'text'}
+        />
     </View>;
 };
 

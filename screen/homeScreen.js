@@ -108,7 +108,7 @@ const HomeScreen = ({ navigation, route }) => {
                 <Divider/>
                 <Menu.Item titleStyle={styles.menuTitle} icon={() => <MaterialCommunityIcons name='power' size={24} color={colors.PHILIPPINE_ORANGE}/>} onPress={() => {
                     setVisibleMenu(false);
-                    userContext.logout();
+                    userContext.askLogout(true);
                 }} title='Đăng xuất'/>
             </Menu>
         </>;
