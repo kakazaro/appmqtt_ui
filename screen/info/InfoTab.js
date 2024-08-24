@@ -16,19 +16,37 @@ const InfoTab = ({ navigation }) => {
             <View>
                 <Text style={styles.sectionText}>Thông tin người dùng:</Text>
                 <View style={{ marginStart: 15, marginTop: 5, marginBottom: 5 }}>
-                    <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{userContext?.user?.email}</Text></Text>
-                    <Text style={styles.labelText}>Tên: <Text style={styles.infoText}>{userContext?.user?.name}</Text></Text>
-                    {userContext.rolePermission.showUserType && <Text style={styles.labelText}>Tài khoản: <Text style={styles.infoText}>{roleUser.label}</Text></Text>}
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: 'column', marginEnd: 8 }}>
+                            <Text style={styles.labelText}>Email:</Text>
+                            <Text style={styles.labelText}>Tên:</Text>
+                            {userContext.rolePermission.showUserType && <Text style={styles.labelText}>Tài khoản:</Text>}
+                        </View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={styles.infoText}>{userContext?.user?.email}</Text>
+                            <Text style={styles.infoText}>{userContext?.user?.name}</Text>
+                            {userContext.rolePermission.showUserType && <Text style={styles.infoText}>{roleUser.label}</Text>}
+                        </View>
+                    </View>
                 </View>
                 <Divider/>
             </View>
             <View>
                 <Text style={styles.sectionText}>Liên hệ để yêu cầu cấp quyền truy cập:</Text>
                 <View style={{ marginStart: 15, marginTop: 5, marginBottom: 5 }}>
-                    <Text style={styles.labelText}>{constant.CONTACT_INFO.corp}</Text>
-                    <Text style={styles.labelText}>Địa chỉ: <Text style={styles.infoText}>{constant.CONTACT_INFO.address}</Text></Text>
-                    <Text style={styles.labelText}>Điện thoại: <Text style={styles.infoText}>{constant.CONTACT_INFO.phone}</Text></Text>
-                    <Text style={styles.labelText}>Email: <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text></Text>
+                    <Text style={{ ...styles.infoText, fontSize: 14, marginBottom: 4 }}>{constant.CONTACT_INFO.corp}</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: 'column', marginEnd: 8 }}>
+                            <Text style={styles.labelText}>Địa chỉ:</Text>
+                            <Text style={styles.labelText}>Điện thoại:</Text>
+                            <Text style={styles.labelText}>Email:</Text>
+                        </View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={styles.infoText}>{constant.CONTACT_INFO.address}</Text>
+                            <Text style={styles.infoText}>{constant.CONTACT_INFO.phone}</Text>
+                            <Text style={styles.infoText}>{constant.CONTACT_INFO.email}</Text>
+                        </View>
+                    </View>
                 </View>
                 <Divider/>
             </View>
@@ -59,6 +77,7 @@ const styles = StyleSheet.create({
     },
     infoText: {
         color: colors.primaryText,
+        fontSize: 12,
     }
 });
 
