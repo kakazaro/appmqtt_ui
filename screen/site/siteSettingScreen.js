@@ -11,7 +11,7 @@ import eventCenter from '../../common/eventCenter';
 import serverError from '../../common/serverError';
 import ConfirmDialog from '../../component/confirmDialog';
 import UserContext from '../../context/userContext';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-root-toast';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -330,11 +330,11 @@ const SiteSettingScreen = ({ navigation }) => {
         title={'Cài đặt trạm'}
         menu={<IconButton icon={() => <MaterialCommunityIcons name='content-copy' size={24} color={colors.PHILIPPINE_ORANGE}/>}
                           onPress={() => {
-                              Clipboard.setString(site?.id || '');
-                              Toast.show('Đã copy ID Trạm vào clipboard', {
-                                  duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM,
-                                  shadow: true, animation: true, hideOnPress: true, delay: 0
-                              });
+                              Clipboard.setStringAsync(site?.id || '')
+                                  .then(() => Toast.show('Đã copy ID Trạm vào clipboard', {
+                                      duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM,
+                                      shadow: true, animation: true, hideOnPress: true, delay: 0
+                                  }));
                           }}/>}>
         {dom}
     </AppBarLayout>;

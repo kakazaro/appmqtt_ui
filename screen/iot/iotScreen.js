@@ -4,7 +4,7 @@ import { Headline, Text } from 'react-native-paper';
 import AppBarLayout from '../../component/appBarLayout';
 import RowInfo from '../../component/rowInfo/rowInfo';
 import { colors } from '../../common/themes';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-root-toast';
 
 const IotScreen = ({ route }) => {
@@ -18,8 +18,14 @@ const IotScreen = ({ route }) => {
                     <Headline style={{ flex: 1, margin: 0, color: colors.PHILIPPINE_ORANGE }}>{iot?.name}</Headline>
                     {!!iot?.id && <TouchableOpacity style={{ backgroundColor: colors.UNICORN_SILVER, padding: 5, borderRadius: 5 }}
                                                     onPress={() => {
-                                                        Clipboard.setString(iot.id);
-                                                        Toast.show('Đã copy ID IOT vào clipboard', { duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM, shadow: true, animation: true, hideOnPress: true, delay: 0 });
+                                                        Clipboard.setStringAsync(iot.id)
+                                                            .then(() => Toast.show('Đã copy ID IOT vào clipboard', {
+                                                                duration: Toast.durations.SHORT,
+                                                                position: Toast.positions.BOTTOM,
+                                                                shadow: true, animation: true,
+                                                                hideOnPress: true,
+                                                                delay: 0,
+                                                            }));
                                                     }}>
                         <Text style={{ color: colors.secondaryText, fontSize: 12 }}>Copy ID</Text>
                     </TouchableOpacity>}

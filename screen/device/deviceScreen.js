@@ -14,7 +14,7 @@ import eventCenter from '../../common/eventCenter';
 import serverError from '../../common/serverError';
 import ConfirmDialog from '../../component/confirmDialog';
 import ServerContext from '../../context/serverContext';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-root-toast';
 
 const Tab = createMaterialTopTabNavigator();
@@ -85,8 +85,15 @@ const DeviceScreen = ({ navigation, route }) => {
                 <Headline style={{ flex: 1, margin: 0, color: colors.PHILIPPINE_ORANGE }}>{device?.name}</Headline>
                 {!!device?.id && <TouchableOpacity style={{ backgroundColor: colors.UNICORN_SILVER, padding: 5, borderRadius: 5 }}
                                                    onPress={() => {
-                                                       Clipboard.setString(device.id);
-                                                       Toast.show('Đã copy ID Thiết bị vào clipboard', { duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM, shadow: true, animation: true, hideOnPress: true, delay: 0 });
+                                                       Clipboard.setStringAsync(device.id)
+                                                           .then(() => Toast.show('Đã copy ID Thiết bị vào clipboard', {
+                                                               duration: Toast.durations.SHORT,
+                                                               position: Toast.positions.BOTTOM,
+                                                               shadow: true,
+                                                               animation: true,
+                                                               hideOnPress: true,
+                                                               delay: 0,
+                                                           }));
                                                    }}>
                     <Text style={{ color: colors.secondaryText, fontSize: 12 }}>Copy ID</Text>
                 </TouchableOpacity>}
