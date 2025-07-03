@@ -23,7 +23,10 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "buildNumber": "1.3.9",
       "requireFullScreen": true,
-      "userInterfaceStyle": "light"
+      "userInterfaceStyle": "light",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.ntv.isolar",
