@@ -7,9 +7,8 @@ https://docs.expo.dev/deploy/build-project/
 ```bash
 eas build --platform android
 ```
-### build apk:
 ```bash
-eas build --platform android --profile preview
+eas build --platform ios
 ```
 ### build apk:
 ```bash

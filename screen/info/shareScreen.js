@@ -18,7 +18,7 @@ const shares = [
         qrCode: require('../../assets/ios-qr-code.png'),
         badge: require('../../assets/app_store_badge.png'),
         badgeStyle: { width: 120, height: 40, marginTop: 10, marginBottom: 10 },
-        url: 'https://apps.apple.com/vn/app/ntv-solar/id1566321133'
+        url: 'https://apps.apple.com/vn/app/ntv-solar/id6748142807'
     }
 ];
 
