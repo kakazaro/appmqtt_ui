@@ -44,7 +44,7 @@ const ManualReportsTab = () => {
         (async () => {
             const setting = await AsyncStorage.getItem(ManualReportsSetting);
             try {
-                setManualSetting(JSON.parse(setting));
+                setManualSetting(JSON.parse(setting) || {});
             } catch (e) {
                 // ignore
             }
