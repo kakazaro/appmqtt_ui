@@ -115,24 +115,23 @@ const HomeScreen = ({ navigation, route }) => {
     }, [visibleMenu, visibleAddMenu, navigation, userContext, route]);
 
     return <AppBarLayout {...appBarOptions} menu={menu}>
-        <Tab.Navigator backBehavior="none">
+        <Tab.Navigator backBehavior="none" screenOptions={{
+            tabBarLabelPosition: 'below-icon',
+            headerShown: false,
+        }}>
             <Tab.Screen name="sites" options={{
-                headerShown: false,
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Trạm điện</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={SitesTab}/>
             <Tab.Screen name='alarms' options={{
-                headerShown: false,
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Sự kiện</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'alert' : 'alert-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={EventsTab}/>
             {userContext?.rolePermission?.mainUserManageScreen && <Tab.Screen name='users' options={{
-                headerShown: false,
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Quản lý</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'account-circle' : 'account-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={UsersTab}/>}
             {userContext?.rolePermission?.mainInfoScreen && <Tab.Screen name='info' options={{
-                headerShown: false,
                 tabBarLabel: ({ focused }) => <Text style={[styles.tabTitle, (focused ? styles.tabTitleFocus : {})]}>Trợ giúp</Text>,
                 tabBarIcon: ({ focused, size }) => <MaterialCommunityIcons name={focused ? 'help-circle' : 'help-circle-outline'} color={focused ? colors.PHILIPPINE_ORANGE : colors.DARK_SOULS} size={size}/>
             }} component={InfoTab}/>}

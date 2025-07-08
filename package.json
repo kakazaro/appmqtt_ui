@@ -20,7 +20,7 @@
     "@react-navigation/material-top-tabs": "^6.2.29",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
-    "axios": "1.6.0",
+    "axios": "^1.8.2",
     "expo": "^51.0.22",
     "expo-clipboard": "~6.0.3",
     "expo-constants": "~16.0.2",
