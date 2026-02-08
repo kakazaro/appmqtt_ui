@@ -64,10 +64,9 @@ const HomeScreen = ({ navigation, route }) => {
                 return true;
             };
 
-            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            const sub = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-            return () =>
-                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+            return () => sub.remove();
         }, [requestBack])
     );
 
