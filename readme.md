@@ -21,7 +21,7 @@ npx expo start --web
 
 ### Google play console
 email: solar.ntv@gmail.com
-password: Hochiminh01!
+password: Ntv@2025
 
 ### App Store
 email: solarntv.apple@gmail.com
