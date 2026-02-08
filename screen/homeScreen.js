@@ -114,7 +114,7 @@ const HomeScreen = ({ navigation, route }) => {
     }, [visibleMenu, visibleAddMenu, navigation, userContext, route]);
 
     return <AppBarLayout {...appBarOptions} menu={menu}>
-        <Tab.Navigator backBehavior="none" screenOptions={{
+        <Tab.Navigator id="main-nav" backBehavior="none" screenOptions={{
             tabBarLabelPosition: 'below-icon',
             headerShown: false,
         }}>
