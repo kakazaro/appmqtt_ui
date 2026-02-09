@@ -21,18 +21,18 @@ import EventScreen from './event/eventScreen';
 import SelectIotScreen from './site/selectIotScreen';
 import AddDeviceScreen from './site/addDeviceScreen';
 import IotScreen from './iot/iotScreen';
-import { SafeAreaView, StatusBar } from 'react-native';
+import {StatusBar, View} from 'react-native';
 
 const Stack = createStackNavigator();
 
 const MainScreen = () => {
     const userContext = useContext(UserContext);
 
-    return <SafeAreaView style={{ flex: 1 }}>
+    return <View style={{ flex: 1 }}>
         <StatusBar/>
         {!userContext.isLogin && <LoginScreen/>}
         {userContext.isLogin && <NavigationContainer>
-            <Stack.Navigator initialRouteName={'home'} screenOptions={{
+            <Stack.Navigator id='main-screen-nav' initialRouteName={'home'} screenOptions={{
                 transitionSpec: {
                     open: TransitionSpecs.TransitionIOSSpec,
                     close: TransitionSpecs.TransitionIOSSpec,
@@ -68,7 +68,7 @@ const MainScreen = () => {
                 <Stack.Screen name={'share'} component={ShareScreen}/>
             </Stack.Navigator>
         </NavigationContainer>}
-    </SafeAreaView>;
+    </View>;
 };
 
 export default MainScreen;

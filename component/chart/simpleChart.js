@@ -203,6 +203,7 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
         </View>;
     }, [timeType, time]);
 
+    const lang = useMemo(() => (Localization.getLocales()[0]?.languageCode) || 'vi', []);
     const dateTimePickerDom = useMemo(() => {
         return <>
             {showPicker && timeType.id === 'day' && <DateTimePicker
@@ -225,8 +226,8 @@ const SimpleChar = ({ source, id, showTable, hideExpand }) => {
                             selectedDate={moment(time)}
                             initialView={moment(time)}
                             swipable={true}
-                            localeLanguage={Localization.locale.split('-')[0]}
-                            localeSettings={moment.locale(Localization.locale.split('-')[0])}
+                            localeLanguage={lang}
+                            localeSettings={moment.locale(lang)}
                             selectedBackgroundColor={colors.PHILIPPINE_ORANGE}
                             currentMonthTextStyle={{ color: colors.PHILIPPINE_ORANGE }}
                             monthTextStyle={{ fontSize: 13, color: colors.primaryText }}
