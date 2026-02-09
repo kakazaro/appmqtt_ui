@@ -2,7 +2,7 @@
   "expo": {
     "name": "NTV solar",
     "slug": "ntv_solar",
-    "version": "1.4.4",
+    "version": "1.4.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ntv.isolarz",
-      "buildNumber": "1.4.4",
+      "buildNumber": "1.4.5",
       "requireFullScreen": true,
       "userInterfaceStyle": "light",
       "infoPlist": {
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.ntv.isolarz",
-      "versionCode": 1004004,
+      "versionCode": 1004005,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#f47321"
